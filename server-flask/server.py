@@ -263,9 +263,7 @@ def onedata():
             SELECT tbl1.url, tbl1.method, tbl1.status
             FROM crawl_status tbl1
             JOIN project_name tbl2 ON tbl1.project_name_id = tbl2.project_name_id
-            WHERE tbl2.username = %s AND tbl2.project_name_id = %s
-
-        """
+            WHERE tbl2.username = %s AND tbl2.project_name_id = %s"""
         
         db.execute(query, (user, project_name_id))
         crawl_data = db.fetchall()
