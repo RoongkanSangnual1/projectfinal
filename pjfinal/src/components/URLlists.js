@@ -9,7 +9,7 @@ const URLlist=()=> {
     const user = localStorage.user
 
     useEffect(() => {
-      //ยิงtoken แทน user
+      //ยิงtoken แทน user แบบheaders
       axios.get(`http://127.0.0.1:5000/onedata?user=${user}&project_name_id=${project_name_id}`)
           .then(response => {
             const Index = response.data.crawl_data.map((data, index) => [index + 1, ...data])
