@@ -5,6 +5,7 @@ import Login from './Login';
 import Navbar from './navbar';
 import URLlist from './URLlists';
 import { useParams } from 'react-router-dom';
+import { useDispatch } from "react-redux";
 const tabList = [
     {
       key: 'tab1',
@@ -33,6 +34,11 @@ const ProjectDash = () => {
     const [activeTabKey1, setActiveTabKey1] = useState('tab1');
     const project_name_id = useParams()
     console.log(project_name_id)
+    const dispatch = useDispatch()
+    dispatch({
+      type:'id',
+      payload:project_name_id.project_name_id
+})
 
     const onTab1Change = (key) => {
         setActiveTabKey1(key);
