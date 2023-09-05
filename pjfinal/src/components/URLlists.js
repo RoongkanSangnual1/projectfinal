@@ -29,12 +29,12 @@ const URLlist=()=> {
   {
     title:'URL',
     dataIndex:'1',
-    key:'method'
+    key:'URL'
   },
   {
     title:'METHOD',
     dataIndex:'2',
-    key:'url'
+    key:'METHOD'
 
   },
 

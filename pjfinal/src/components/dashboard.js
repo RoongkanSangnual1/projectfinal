@@ -10,7 +10,7 @@ const Dashboard = () => {
     const user = localStorage.user
     const [projectdata, setProjectData] = useState([]);
     const [deletee,setDelete] = useState([]);
-  
+
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/home?user=${user}`)
             .then(response => {
@@ -24,7 +24,7 @@ const Dashboard = () => {
     }, []);
 
       const Deleteprojuct=(id)=>{
-         /// ส่ง token user
+                /// ส่ง token user แบบheaders
         
           axios.delete(`http://127.0.0.1:5000/onedelete?user=${user}&project_name_id=${id}`)
 
