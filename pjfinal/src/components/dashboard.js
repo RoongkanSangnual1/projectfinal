@@ -45,7 +45,7 @@ const Dashboard = () => {
               <Card title="My Project" extra={<Link to='/create'><Button type="primary" icon={<PlusOutlined />}>Add to create</Button></Link>}>
                 {projectdata.map((project, index) => (
 
-  
+                  //<Link to={`/myproject/${project[1]}/${project[2]}`}>details</Link>
                   //onClick={()=>Deleteprojuct(project[2])}
                   //
                   <div className="projindash">
@@ -64,11 +64,9 @@ const Dashboard = () => {
                       {
                         key: {index},
                         label: <div className="projcollaspehead">
-                          <Link to={`/myproject/${project[1]}/${project[2]}`}><h2>{project[1]}</h2></Link>
+                                  <h2>{project[1]}</h2>
                                 </div>,
-                        children: <p>{project[0]}</p>
-                        ,
-                        
+                        children: <p>{project[0]}</p>,
                       },
                       ]}
                       
