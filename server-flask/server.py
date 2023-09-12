@@ -191,7 +191,7 @@ def crawl_endpoint():
                 db = mysql.connection.cursor()
                 select_project_name_id_query = "SELECT project_name_id FROM project_name WHERE project_name = %s AND  username = %s"
                 db.execute(select_project_name_id_query,(project_name, user))             
-                project_name_id_result = db.fetchone()   
+                project_name_id_result = db.fetchall()   
         
                 insert_query = ("INSERT INTO crawl_status (url, method, uri, host, httpver, requestheader, requestbody, status, reason, responseheader, responsebody, project_name_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
                 values = (url_str, method_str, URI_str, Host_str, HTTPVer_str, requestheader_str, requestbody_str, status_str, reason_str, responseheader_str, responsebody_str, project_name_id_result[0])
@@ -228,7 +228,7 @@ def crawl_endpoint():
             s = Response(csv_read,content_type='text/csv')
             s.headers['Content-Disposition']=f'attrachment; filename="{csv_show}"'
             csv_file.close()
-            return ({"crawl_data": project_name_id_result})
+        return ({"project_name_id_result": project_name_id_result})
     except Exception as e:
         return jsonify({"error": str(e)})
     

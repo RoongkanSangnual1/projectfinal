@@ -5,6 +5,8 @@ import Navbar from "./navbar";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
 import { CloseOutlined,RobotOutlined} from '@ant-design/icons';
+// import { useSelector } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 const Target_url=()=>{
     const [project_name,setProjet_name] = useState("")
     const [url,setUrl] = useState("")
@@ -13,6 +15,7 @@ const Target_url=()=>{
     const [Er,setEr] = useState(false)
     const [description,setDescription] = useState("")
     const authUser = localStorage.user
+    // const project_name_id = useSelector((state) => state);
 
   
     const Formsummit=()=>{
@@ -20,8 +23,8 @@ const Target_url=()=>{
         axios.post(`http://127.0.0.1:5000/crawl`,{project_name,authUser,url,description} )
         .then(res => {
             setLoad(false)
-            setCrawl(res.data)        
-      })
+            setCrawl(res.data.project_name_id_result)
+        })        
       .catch(error => {
         setEr("ไม่สามารถทำการได้")
         console.error("Error crawling:", error);
@@ -60,7 +63,7 @@ const Target_url=()=>{
                 loading url... </div>):(<div className="gotobtn">
                     {Er}
                 {crawl && (
-                <Link to={`/myproject/${project_name}`}> <Button type="primary"  icon={<RobotOutlined />}>Go to Project</Button></Link>)}
+                <Link to={`/myproject/${project_name}/${crawl}`}> <Button type="primary"  icon={<RobotOutlined />}>Go to Project{crawl}</Button></Link>)}
             </div>)
 
             }
