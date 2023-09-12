@@ -28,15 +28,32 @@
   margin-bottom: 50px;
 }
 
-.projcollaspehead{
+
+.projcollaspe-head{
 
   display: flex;
+  
   align-items: center;
   
 }
-.projcollaspehead > h2{
+.projcollaspe-content{
+  display: flex;
+  align-items: center; 
+}
+.projname {
+  font-weight: 500;
+  
+  margin-right: 800px;
+  margin-left: 20px;
 
-  margin-left: 50px;
   align-items: center;
-  
 }
+.projdes{
+  margin-right: 800px;
+  margin-left: 20px;
+
+  align-items: center;
+}
+
+
+  
