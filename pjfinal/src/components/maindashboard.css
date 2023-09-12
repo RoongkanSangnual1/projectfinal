@@ -24,3 +24,19 @@
     display: flex;
     align-items: center;
 }
+.projindash{
+  margin-bottom: 50px;
+}
+
+.projcollaspehead{
+
+  display: flex;
+  align-items: center;
+  
+}
+.projcollaspehead > h2{
+
+  margin-left: 50px;
+  align-items: center;
+  
+}

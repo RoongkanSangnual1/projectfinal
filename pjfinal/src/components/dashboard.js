@@ -1,6 +1,6 @@
 import React from "react";
 import './maindashboard.css';
-import { Card,Button} from 'antd';
+import { Card,Collapse,ConfigProvider,Button} from 'antd';
 import { PlusOutlined,FormOutlined,DeleteOutlined } from '@ant-design/icons';
 import { Link} from "react-router-dom";
 import axios from "axios";
@@ -44,20 +44,43 @@ const Dashboard = () => {
             <div className="mainDash">
               <Card title="My Project" extra={<Link to='/create'><Button type="primary" icon={<PlusOutlined />}>Add to create</Button></Link>}>
                 {projectdata.map((project, index) => (
-                  <Card key={index} type="inner" title={project[1]} extra={<Link to={`/myproject/${project[1]}/${project[2]}`}>details</Link>}>
-                    <div className="projcard-inner">
-                    <p>{project[0]}</p>
-                      <div className="projcard-inner-ico">
-                        <FormOutlined />
-                        <DeleteOutlined onClick={()=>Deleteprojuct(project[2])}/>
-                      </div>
-                    </div>
-                    
-                  </Card>
-                ))}
+
+                  //<Link to={`/myproject/${project[1]}/${project[2]}`}>details</Link>
+                  //onClick={()=>Deleteprojuct(project[2])}
+                  //
+                  <div className="projindash">
+                    <ConfigProvider
+                        theme={{
+                          token: {
+                            contentBg: '#AFDBDA' ,
+                          },
+                        }}
+                      >
+                    <Collapse className="projcollaspe"
+                      collapsible="header"
+                      size="small"
+                      defaultActiveKey={['1']}
+                      items={[
+                      {
+                        key: {index},
+                        label: <div className="projcollaspehead">
+                                  <h2>{project[1]}</h2>
+                                </div>,
+                        children: <p>{project[0]}</p>,
+                      },
+                      ]}
+                      
+                    >
+                      
+                    </Collapse>
+                    </ConfigProvider>
+                  </div>
+                  
+                  
+                ))},
               </Card>
             </div>
           );
-        }
+}
 
 export default Dashboard;
