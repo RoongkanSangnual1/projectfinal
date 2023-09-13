@@ -7,6 +7,7 @@ import csv
 import base64
 import urllib.parse
 from flask_mysqldb import MySQL
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -259,7 +260,7 @@ def onedata():
         project_name_id = request.args.get('project_name_id') 
         db = mysql.connection.cursor()
         
-        query = """
+        query = """ 
             SELECT tbl1.url, tbl1.method, tbl1.status
             FROM crawl_status tbl1
             JOIN project_name tbl2 ON tbl1.project_name_id = tbl2.project_name_id
@@ -298,6 +299,36 @@ def onedelete():
     except Exception as e:
         return jsonify({"error": str(e)})
 
+
+
+@app.route("/dashboard", methods=['GET'])
+def dashboard():
+    try:
+        user = request.args.get('user')
+        project_name_id = request.args.get('project_name_id')
+        db = mysql.connection.cursor()
+        query = "SELECT url FROM project_name WHERE username = %s AND project_name_id = %s"
+        db.execute(query, (user, project_name_id))
+        urls = db.fetchall()
+
+        json_payload = '''
+{
+  "payload": ["Breeze", "asdaasd"]
+}
+'''
+
+        data = json.loads(json_payload)
+        payload = data.get("payload")
+        url_item_all = []
+
+        for item in payload:
+            for url in urls:
+                url_item = url[0] + item
+                url_item_all.append(url_item)
+
+        return jsonify({"url": url_item_all})
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 if __name__ == "__main__":
     app.run(debug=True)

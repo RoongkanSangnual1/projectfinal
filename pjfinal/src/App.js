@@ -1,6 +1,6 @@
 
 import './App.css';
-import Dashboard from './components/dashboard';
+import Home from './components/home';
 import Navbar from './components/navbar'
 import Sidemenu from './components/sidemenu';
 
@@ -11,7 +11,7 @@ function App() {
      
         <div className='Applayout'>
           <Sidemenu />
-          <Dashboard />
+          <Home />
         </div>
     </div>
   );
