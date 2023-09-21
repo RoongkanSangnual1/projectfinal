@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
       }
       const salt = await bcrypt.genSalt(10);
       const hashpassword = await bcrypt.hash(password, salt);
-      const insertQuery = 'INSERT INTO user (username, email, password) VALUES (?, ?, ?)';
+      const insertQuery = 'INSERT INTO user (username, email, Password) VALUES (?, ?, ?)';
       dbConnection.query(insertQuery, [username, email, hashpassword], (inserterror, insertresults) => {
         if (insertresults) {
           return res.status(200).send('สมัครเสร็จสิ้น');
@@ -40,7 +40,7 @@ exports.login = async(req,res) =>{
         return res.status(401).send('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
       }
       const user = results[0];
-      const Cpassword = await bcrypt.compare(password,user.password)
+      const Cpassword = await bcrypt.compare(password,user.Password)
       if(Cpassword){
         const payload = {
           user:{

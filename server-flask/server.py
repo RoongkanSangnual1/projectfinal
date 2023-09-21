@@ -16,7 +16,7 @@ CORS(app)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'login'
+app.config['MYSQL_DB'] = 'robo'
 
 mysql = MySQL(app)
 
@@ -146,7 +146,7 @@ def crawl_endpoint():
         csv_name = f"{project_name}.csv"
         csv_show = f"{project_name}_data.csv"
         db = mysql.connection.cursor()
-        insert_query11 =('INSERT INTO project_name(project_name,url,description,username) VALUES(%s, %s, %s, %s)')
+        insert_query11 =('INSERT INTO project(PName,PTarget,PDes,username) VALUES(%s, %s, %s, %s)')
         values11=(project_name,scope_url,description_name,user)
         db.execute(insert_query11, values11)
         mysql.connection.commit()
@@ -190,12 +190,12 @@ def crawl_endpoint():
 
                 
                 db = mysql.connection.cursor()
-                select_project_name_id_query = "SELECT project_name_id FROM project_name WHERE project_name = %s AND  username = %s"
+                select_project_name_id_query = "SELECT PID	 FROM project WHERE PName = %s AND  username = %s"
                 db.execute(select_project_name_id_query,(project_name, user))             
                 project_name_id_result = db.fetchall()   
         
-                insert_query = ("INSERT INTO crawl_status (url, method, uri, host, httpver, requestheader, requestbody, status, reason, responseheader, responsebody, project_name_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                values = (url_str, method_str, URI_str, Host_str, HTTPVer_str, requestheader_str, requestbody_str, status_str, reason_str, responseheader_str, responsebody_str, project_name_id_result[0])
+                insert_query = ("INSERT INTO urllist (URL, METHOD, URI, Host, HTTPVer, statuscode, reason, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                values = (url_str, method_str, URI_str, Host_str, HTTPVer_str, status_str, reason_str, requestheader_str, requestbody_str, responseheader_str, responsebody_str, project_name_id_result[0])
                 db.execute(insert_query, values)
                 mysql.connection.commit()
                 db.close()
@@ -240,7 +240,7 @@ def home():
     try:
         user = request.args.get('user') 
         db = mysql.connection.cursor()
-        query = "SELECT description, project_name,project_name_id FROM project_name WHERE username = %s"
+        query = "SELECT PDes, PName ,PID FROM project WHERE username = %s"
         db.execute(query, (user,))
         project_data = db.fetchall()
         db.close()
@@ -261,10 +261,10 @@ def onedata():
         db = mysql.connection.cursor()
         
         query = """ 
-            SELECT tbl1.url, tbl1.method, tbl1.status
-            FROM crawl_status tbl1
-            JOIN project_name tbl2 ON tbl1.project_name_id = tbl2.project_name_id
-            WHERE tbl2.username = %s AND tbl2.project_name_id = %s"""
+            SELECT tbl1.URL, tbl1.METHOD, tbl1.statuscode
+            FROM urllist tbl1
+            JOIN project tbl2 ON tbl1.PID = tbl2.PID
+            WHERE tbl2.username = %s AND tbl2.PID = %s"""
         
         db.execute(query, (user, project_name_id))
         crawl_data = db.fetchall()
@@ -286,10 +286,10 @@ def onedelete():
         project_name_id = request.args.get('project_name_id')       
         db = mysql.connection.cursor()
     
-        delete_crawl_query = "DELETE FROM crawl_status WHERE project_name_id = %s"
+        delete_crawl_query = "DELETE FROM urllist WHERE PID = %s"
         db.execute(delete_crawl_query, (project_name_id,))
         
-        delete_project_query = "DELETE FROM project_name WHERE project_name_id = %s AND username = %s"
+        delete_project_query = "DELETE FROM project WHERE PID = %s AND username = %s"
         db.execute(delete_project_query, (project_name_id, user))
         
         mysql.connection.commit()
@@ -307,13 +307,13 @@ def dashboard():
         user = request.args.get('user')
         project_name_id = request.args.get('project_name_id')
         db = mysql.connection.cursor()
-        query = "SELECT url FROM project_name WHERE username = %s AND project_name_id = %s"
+        query = "SELECT url FROM project WHERE username = %s AND PID= %s"
         db.execute(query, (user, project_name_id))
         urls = db.fetchall()
 
         json_payload = '''
 {
-  "payload": ["Breeze", "asdaasd"]
+  "payload": ["\\\"%22--%3E%3C/style%3E%3C/script%3E%3Cscript%3Eshadowlabs(0x000045)%3C/script%3E", "asdaasd","v"]
 }
 '''
 

@@ -63,7 +63,7 @@ const Target_url=()=>{
                 loading url... </div>):(<div className="gotobtn">
                     {Er}
                 {crawl && (
-                <Link to={`/myproject/${project_name}/${crawl}`}> <Button type="primary"  icon={<RobotOutlined />}>Go to Project{crawl}</Button></Link>)}
+                <Link to={`/myproject/${project_name}/${crawl}`}> <Button type="primary"  icon={<RobotOutlined />}>Go to Project</Button></Link>)}
             </div>)
 
             }
