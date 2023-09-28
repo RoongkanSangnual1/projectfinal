@@ -307,7 +307,7 @@ def dashboard():
         user = request.args.get('user')
         project_name_id = request.args.get('project_name_id')
         db = mysql.connection.cursor()
-        query = "SELECT url FROM project WHERE username = %s AND PID= %s"
+        query = "SELECT PTarget FROM project WHERE username = %s AND PID= %s"
         db.execute(query, (user, project_name_id))
         urls = db.fetchall()
 

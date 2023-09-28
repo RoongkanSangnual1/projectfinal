@@ -11,6 +11,7 @@ const Dashboard = () => {
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/dashboard?user=${user}&project_name_id=${project_name_id}`)
             .then(response => { 
+                console.log(response);
                 if (response.data && response.data.url) {
                     // ตรวจสอบว่า response.data.url มีค่าและเป็น array
                     setProjectOneData(response.data.url.map((data, index) => ({ key: index, URL: data })));
@@ -23,8 +24,6 @@ const Dashboard = () => {
                 console.error(error);
             });
     }, []);
-    
-
     const columns = [
         {
             title: 'No.',
