@@ -283,15 +283,13 @@ def onedata():
 def onedelete():
     try :
         user = request.args.get('user')   
-        project_name_id = request.args.get('project_name_id')       
+        project_name_id = request.args.get('project_name_id')    
+           
         db = mysql.connection.cursor()
-    
         delete_crawl_query = "DELETE FROM urllist WHERE PID = %s"
         db.execute(delete_crawl_query, (project_name_id,))
-        
         delete_project_query = "DELETE FROM project WHERE PID = %s AND username = %s"
         db.execute(delete_project_query, (project_name_id, user))
-        
         mysql.connection.commit()
         db.close()
 
@@ -301,34 +299,64 @@ def onedelete():
 
 
 
+# @app.route("/dashboard", methods=['GET'])
+# def dashboard():
+#     try:
+#         user = request.args.get('user')
+#         project_name_id = request.args.get('project_name_id')
+#         db = mysql.connection.cursor()
+#         query = "SELECT PTarget FROM project WHERE username = %s AND PID= %s"
+#         db.execute(query, (user, project_name_id))
+#         urls = db.fetchall()
+
+#         json_payload = '''
+# {
+#   "payload": ["\\\"%22--%3E%3C/style%3E%3C/script%3E%3Cscript%3Eshadowlabs(0x000045)%3C/script%3E", "asdaasd","v"]
+# }
+# '''
+
+#         data = json.loads(json_payload)
+#         payload = data.get("payload")
+#         url_item_all = []
+
+
+#         for item in payload:
+#             for url in urls:
+#                 url_item = url[0] + item
+#                 url_item_all.append(url_item)
+
+#         return jsonify({"url": url_item_all})
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+
+
 @app.route("/dashboard", methods=['GET'])
 def dashboard():
     try:
         user = request.args.get('user')
         project_name_id = request.args.get('project_name_id')
         db = mysql.connection.cursor()
-        query = "SELECT PTarget FROM project WHERE username = %s AND PID= %s"
-        db.execute(query, (user, project_name_id))
-        urls = db.fetchall()
+        query = "SELECT res_header,URL FROM urllist WHERE  PID= %s"
+        db.execute(query, (project_name_id))
+        res_header_Server = db.fetchall()
+        Web_Server = 'Set-Cookie'
+        url_web_server = []
+        for res_header_list_Server,url in res_header_Server:
+            if res_header_list_Server.find(Web_Server) != -1:
+                web = res_header_list_Server.find(Web_Server)
+                url_web_server.append(url)
+                print(f'{web}')
+                print(f'พบ URL: {url}')
+            else:
+                print(f'ไม่พบ:{url}')
 
-        json_payload = '''
-{
-  "payload": ["\\\"%22--%3E%3C/style%3E%3C/script%3E%3Cscript%3Eshadowlabs(0x000045)%3C/script%3E", "asdaasd","v"]
-}
-'''
-
-        data = json.loads(json_payload)
-        payload = data.get("payload")
-        url_item_all = []
-
-        for item in payload:
-            for url in urls:
-                url_item = url[0] + item
-                url_item_all.append(url_item)
-
-        return jsonify({"url": url_item_all})
+        return jsonify({"url": url_web_server})
     except Exception as e:
         return jsonify({"error": str(e)})
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

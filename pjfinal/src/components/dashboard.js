@@ -14,7 +14,7 @@ const Dashboard = () => {
                 console.log(response);
                 if (response.data && response.data.url) {
                     // ตรวจสอบว่า response.data.url มีค่าและเป็น array
-                    setProjectOneData(response.data.url.map((data, index) => ({ key: index, URL: data })));
+                    setProjectOneData(response.data.url.map((data, index) => ({ key:index+1, URL:data})));
                     console.log(response.data.url);
                 } else {
                     console.error("Invalid data format received from the server.");
