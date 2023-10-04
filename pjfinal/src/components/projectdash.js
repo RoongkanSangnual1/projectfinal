@@ -4,6 +4,7 @@ import './projectdash.css';
 import Login from './Login';
 import Navbar from './navbar';
 import Dashboard from './Dashboard';
+import Issues from './Issues';
 import URLlist from './URLlists';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from "react-redux";
@@ -23,7 +24,7 @@ const tabList = [
   ];
 const contentList = {
 tab1: <p><Dashboard/></p>,
-tab2: <p>content2</p>,
+tab2: <p><Issues/></p>,
 tab3: <URLlist />
 };
   

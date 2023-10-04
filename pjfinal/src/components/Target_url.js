@@ -10,7 +10,7 @@ import { CloseOutlined,RobotOutlined} from '@ant-design/icons';
 const Target_url=()=>{
     const [project_name,setProjet_name] = useState("")
     const [url,setUrl] = useState("")
-    const [crawl,setCrawl] = useState()
+    const [project_name_id,setproject_name_id] = useState()
     const [load,setLoad] = useState(false)
     const [Er,setEr] = useState(false)
     const [description,setDescription] = useState("")
@@ -23,7 +23,7 @@ const Target_url=()=>{
         axios.post(`http://127.0.0.1:5000/crawl`,{project_name,authUser,url,description} )
         .then(res => {
             setLoad(false)
-            setCrawl(res.data.project_name_id_result)
+            setproject_name_id(res.data.project_name_id_result)
         })        
       .catch(error => {
         setEr("ไม่สามารถทำการได้")
@@ -62,8 +62,8 @@ const Target_url=()=>{
             { load?(<div>
                 loading url... </div>):(<div className="gotobtn">
                     {Er}
-                {crawl && (
-                <Link to={`/myproject/${project_name}/${crawl}`}> <Button type="primary"  icon={<RobotOutlined />}>Go to Project</Button></Link>)}
+                {project_name_id && (
+                <Link to={`/myproject/${project_name}/${project_name_id}`}> <Button type="primary"  icon={<RobotOutlined />}>Go to Project</Button></Link>)}
             </div>)
 
             }

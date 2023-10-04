@@ -339,7 +339,7 @@ def dashboard():
         query = "SELECT res_header,URL FROM urllist WHERE  PID= %s"
         db.execute(query, (project_name_id))
         res_header_Server = db.fetchall()
-        Web_Server = 'Set-Cookie'
+        Web_Server = 'Server:'
         url_web_server = []
         for res_header_list_Server,url in res_header_Server:
             if res_header_list_Server.find(Web_Server) != -1:
