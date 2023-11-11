@@ -234,7 +234,7 @@ def crawl_endpoint():
             csv_file.close()
         return ({"project_name_id_result": project_name_id_result})
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"server error": str(e)})
     
     
 
@@ -250,7 +250,7 @@ def home():
 
         return jsonify({"project_data": project_data})
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"server error": str(e)})
 
 
 
@@ -264,7 +264,7 @@ def onedata():
         db = mysql.connection.cursor()
         
         query = """ 
-            SELECT tbl1.URL, tbl1.METHOD, tbl1.statuscode
+            SELECT tbl1.URL, tbl1.method, tbl1.status_code
             FROM urllist tbl1
             JOIN project tbl2 ON tbl1.PID = tbl2.PID
             WHERE tbl2.username = %s AND tbl2.PID = %s"""
@@ -275,7 +275,7 @@ def onedata():
 
         return jsonify({"crawl_data": crawl_data})
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"server error": str(e)})
     
 
 
@@ -298,7 +298,7 @@ def onedelete():
 
         return jsonify({"delete_data": f"ลบ สำเร็จ"})
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"server error": str(e)})
 
 
 
@@ -370,8 +370,8 @@ def dashboard():
     try:
         project_name_id = request.args.get("project_name_id")
         db = mysql.connection.cursor()
-        query = "SELECT res_header,URL FROM urllist WHERE  PID= %s"
-        db.execute(query,(project_name_id))
+        query = "SELECT res_header,URL FROM urllist WHERE PID= %s"
+        db.execute(query,(project_name_id,))
         res_header_Cookies = db.fetchall()
         Set_Cookie = 'Set-Cookie'
         Secure_Header = 'Secure'
@@ -388,7 +388,6 @@ def dashboard():
                 print(f'พบ Set-Cookie ที่ URL: {url}')
                 if res_header_list_Secure.find(Secure_Header) != -1:
                     web = res_header_list_Secure.find(Secure_Header)
-                    print(f'พบ Secure URL: {url}')
                 else:
                     url_web_Secure.append(url)
                     print(f'ไม่พบ Secure:{url}')
@@ -396,7 +395,6 @@ def dashboard():
 
                 if res_header_list_Secure.find(HttpOnly_Header) != -1:
                     web = res_header_list_Secure.find(HttpOnly_Header)
-                    print(f'พบ HttpOnly URL: {url}')
                 else:
                     url_web_HttpOnly.append(url)
                     print(f'ไม่พบ HttpOnly:{url}')
@@ -404,7 +402,6 @@ def dashboard():
                 if res_header_list_Secure.find(Expires_Header) != -1:
                     web = res_header_list_Secure.find(Expires_Header)
                     print(f'{web}')
-                    print(f'พบ Expires URL: {url}')
                 else:
                    url_web_Expires.append(url)
                    print(f'ไม่พบ Expires:{url}')
@@ -413,16 +410,37 @@ def dashboard():
                 if res_header_list_Secure.find(SameSite_Header) != -1:
                     web = res_header_list_Secure.find(SameSite_Header)
                     print(f'{web}')
-                    print(f'พบ SameSite URL: {url}')
                 else:
                     url_web_SameSite.append(url)
                     print(f'ไม่พบ SameSite:{url}')
 
+        
+        
 
         return jsonify({"Secure":url_web_Secure},{"HttpOnly":url_web_HttpOnly},{"Expires":url_web_Expires},{"SameSite":url_web_SameSite})
     except:
-       return jsonify({"error": str(e)})
+       return jsonify({"server error": str(e)})
 
+
+# @app.route("/dashboard", methods=['GET'])
+# def jsonnn():
+#     try:
+#         db = mysql.connection.cursor()
+#         query = "SELECT payloadlist FROM owasp WHERE OID = 4"
+#         db.execute(query)
+#         res_payloadlist = db.fetchall()      
+#         if res_payloadlist:
+#             payload_list = []
+#             for row in res_payloadlist:            
+#                 escaped_json_str = row[0]      
+#                 unescaped_json = json.loads(escaped_json_str)
+#                 payload_items = unescaped_json.get("payload", [])
+#                 payload_list.extend(payload_items)
+#             return jsonify(payload_list)
+#         else:
+#             return jsonify({"message": "ไม่พบข้อมูล"})
+#     except Exception as e:
+#         return jsonify({"server error": str(e)})
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -35,7 +35,6 @@ tab3: <URLlist />
 const ProjectDash = () => {
     const [activeTabKey1, setActiveTabKey1] = useState('tab1');
     const project_name_id = useParams()
-    console.log(project_name_id)
     const dispatch = useDispatch()
     dispatch({
       type:'id',
