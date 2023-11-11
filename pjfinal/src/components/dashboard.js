@@ -12,45 +12,36 @@ const Dashboard = () => {
         axios.get(`http://127.0.0.1:5000/dashboard?user=${user}&project_name_id=${project_name_id}`)
             .then(response => { 
                 console.log(response);
-                if (response.data && response.data.url) {
-                    // ตรวจสอบว่า response.data.url มีค่าและเป็น array
-                    setProjectOneData(response.data.url.map((data, index) => ({ key:index+1, URL:data})));
-                    console.log(response.data.url);
-                } else {
-                    console.error("Invalid data format received from the server.");
-                }
+                setProjectOneData(response.data); 
             })
             .catch(error => {
                 console.error(error);
             });
-    }, []);
-    const columns = [
-        {
-            title: 'No.',
-            dataIndex: 'key',
-            key: 'index'
-        },
-        {
-            title: 'URL',
-            dataIndex: 'URL',
-            key: 'URL',
-            render: (text, record) => (
-                <a href={text} target="_blank" rel="noopener noreferrer">
-                    {text}
-                </a>
-            ),
-        },
-        {
-            title: 'METHOD',
-            dataIndex: '2',
-            key: 'METHOD'
-        },
-        {
-            title: 'Status',
-            dataIndex: '3',
-            key: 'status',
-        },
-    ];
+    }, [user, project_name_id]); 
+    
+    const columns= ([{
+        title:'Secure',
+        dataIndex: 'Secure',
+        key:'Secure'
+      },
+      {
+        title:'HttpOnly',
+        dataIndex:'HttpOnly',
+        key:'HttpOnly'
+      },
+      {
+        title:'Expires',
+        dataIndex:'Expires',
+        key:'Expires'
+    
+      },
+    
+      {
+        title: 'SameSite',
+        dataIndex: 'SameSite',
+          key: 'SameSite',
+              },
+    ])
 
     return (
         <div>

@@ -1,8 +1,9 @@
+from cmath import e
 from flask import Flask, request, jsonify ,Response
 from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 import csv
 import base64
 import urllib.parse
@@ -24,124 +25,126 @@ mysql = MySQL(app)
 
 def crawl(url):
     global i
-    if len(visited_urls) > 100:
+    if len(visited_urls) >= 100:
         return
-    else:
-        if url not in visited_urls:
-            visited_urls.append(url)
-            response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'},cookies=cookiesdata)
-            if response.status_code != 200:
-                print('Cannot request:', response.url)
-                return
-            else:
-                setcookies(response)
-                print('Collect.. '+response.url)
-                savelog(response,i)
-                i = i+1
+    # if not url.startswith(SCOPE_URL):
+    #     url = SCOPE_URL + url
+    if url not in visited_urls:
+        visited_urls.append(url)
+        response = get_response(url)
+        if response is not None:
+            if urlparse(response.url).netloc == Host:
+                if response.status_code in (301,302):
+                    re_location = response.headers.get('Location')
+                    if re_location:
+                        ##bug :V
+                        if not re_location.startswith('http'):
+                            if re_location.startswith('/'):
+                                crawl(response.url[:-1]+re_location)
+                            else:
+                                crawl(response.url+re_location)
+                        else:
+                            crawl(re_location)
+                        # print(re_location)
+                    # crawl(re_location)
+                print(f'Collect.. {response.url} -> {response.status_code} ..is {response.is_redirect} from {response.history}')
+                save_log(response, i)
+                i += 1
                 soup = BeautifulSoup(response.text, 'lxml')
-                get_links(soup)
-                
-                
-
-def savelog(response,i):
-    
-    log_key = str(i)
-    httplogdata = {}
-    req = {}
-    res = {}
-    if response.raw.version == 10:
-        httpver = 'HTTP/1.0'
-    elif response.raw.version == 11:
-        httpver = 'HTTP/1.1'
-    
-    req['METHOD'] = response.request.method
-    req['URI'] = response.request.path_url
-    req['Host'] = urlparse(response.url).netloc
-    req['httpver'] = httpver
-    req['header'] = response.request.headers
-    req['body'] = response.request.body
-
-    # res['httpver'] = httpver
-    res['status'] = response.status_code
-    res['reason'] = response.reason
-    res['header'] = response.headers
-    res['body'] = response.text
-    httplogdata['URL'] = response.url
-    httplogdata['request'] = req
-    httplogdata['response'] = res
-    httplog[log_key] = httplogdata
-    print(str(i)+'-'+httplog[log_key]['URL'])
-    
-    
-    
-
-#logic not correct yet
-def setcookies(response):
-    for req_headers in response.request.headers:
-        if (req_headers=='Cookie'):
-            cookiesdata.update({str(response.request.headers[req_headers]).split('=')[0] : str(response.request.headers[req_headers]).split('=')[1]} )
-
-    for res_headers in response.headers:
-        if (res_headers=='Set-Cookie'):
-            cookiesdata.update({str(response.headers[res_headers]).split(';')[0].split('=')[0] : str(response.headers[res_headers]).split(';')[0].split('=')[1]} )
-
-
-#logic not correct yet
-def findform(url,soup):
-    parameters={}
-    form = soup.find('form')
-    if form:
-        for input_element in form.find_all('input'):
-            name = input_element.get('name')
-            value = input_element.get('value', '')
-            parameters[name] = value
-            print(parameters)
-        del parameters    
-        
-            
-            
+                get_links(response,soup)
     else:
-        print(url+'has no params')
         return
 
+def get_response(url):
+    try:
+        response = requests.get(url, headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'},
+                                cookies=cookies_data, allow_redirects=False)
+        response.raise_for_status()
+        # set_cookies(response)
+        return response
+    except requests.exceptions.RequestException as e:
+        print(f"HTTP error: {e}")
+        print(f'Cannot request: {url}')
+        return None
+  
+                
 
-def get_links(soup):
+def save_log(response, i):
+    log_key = str(i)
+    http_log_data = {}
+    if response.raw.version == 10:
+        http_ver = 'HTTP/1.0'
+    elif response.raw.version == 11:
+        http_ver = 'HTTP/1.1'
+    req = {
+        'METHOD': response.request.method,
+        'URI': response.request.path_url,
+        'Host': urlparse(response.url).netloc,
+        'httpver': http_ver,
+        'header': response.request.headers,
+        'body': response.request.body
+    }
+    res = {
+        'status': response.status_code,
+        'reason': response.reason,
+        'header': response.headers,
+        'body': response.text
+    }
+    http_log_data['URL'] = response.url
+    http_log_data['request'] = req
+    http_log_data['response'] = res
+    http_log[log_key] = http_log_data
+    print(f'{i}-{http_log[log_key]["URL"]}')
+
     
+    
+
+def set_cookies(response):
+    for req_headers in response.request.headers:
+        if req_headers == 'Cookie':
+            cookies_data.update(
+                {str(response.request.headers[req_headers]).split('=')[0]: str(response.request.headers[req_headers]).split('=')[1]})
+    for res_headers in response.headers:
+        if res_headers == 'Set-Cookie':
+            cookies_data.update(
+                {str(response.headers[res_headers]).split(';')[0].split('=')[0]: str(response.headers[res_headers]).split(';')[0].split('=')[1]})
+    # print(response.cookies)
+
+def get_links(response,soup):
     links = soup.find_all('a', href=True)
     for link in links:
         link = link.get('href')
-        if link in totalurl:
-            return
-        else:
-            if link != ('#' or '/'):
-                if not link.startswith('http'):
-                    if link.startswith('/'):
-                        link = scope_url[:-1] + link
-                    else:
-                        link =  scope_url + link
-                if not link.startswith(scope_url):
-                    continue
-                elif  (link not in totalurl )and not link.endswith('pdf') and not link.endswith('xls') and not link.endswith('docx'):
-                    # print(link)
-                    totalurl.append(link)
-                    crawl(link)
-
-
+        if link in visited_urls:
+            continue
+        if link != ('#' or '/'):
+            if not link.startswith('http'):
+                if link.startswith('/'):
+                    link = scope_url[:-1] + link
+                else:
+                    link = scope_url + link
+            if link.startswith(scope_url) and not link.endswith(('pdf', 'xls', 'docx')):
+                totalurl.append(link)
+                crawl(link)
 
 @app.route("/crawl", methods=['POST'])
 def crawl_endpoint():
-    global scope_url, totalurl, visited_urls, cookiesdata, httplog, i
+    global scope_url, totalurl, visited_urls, http_log, i,Host,cookies_data
     try:
         totalurl = []  
         visited_urls = [] 
-        cookiesdata = {} 
-        httplog = {} 
+        cookies_data = {}
+        http_log = {} 
         i = 1
+       
         project_name = request.json['project_name']
         user = request.json['authUser']  
         scope_url = request.json['url']  
+        Host = urlparse(scope_url).netloc
         description_name = request.json['description']
         crawl(scope_url)
+    
+      
 
         csv_name = f"{project_name}.csv"
         csv_show = f"{project_name}_data.csv"
@@ -158,17 +161,17 @@ def crawl_endpoint():
         
 
             for k in range(1,i):
-                url_str = (urllib.parse.unquote(httplog[str(k)]['URL']))
-                method_str = str(httplog[str(k)]['request']['METHOD'])
-                URI_str = urllib.parse.unquote(httplog[str(k)]['request']['URI'])
-                Host_str = str(httplog[str(k)]['request']['Host'])
-                HTTPVer_str = str(httplog[str(k)]['request']['httpver'])
-                requestheader_str = str(httplog[str(k)]['request']['header'])
-                requestbody_str = str(httplog[str(k)]['request']['body'])
-                status_str = str(httplog[str(k)]['response']['status'])
-                reason_str = str(httplog[str(k)]['response']['reason'])
-                responseheader_str = str(httplog[str(k)]['response']['header'])
-                responsebody_str =base64.b64encode((httplog[str(k)]['response']['body'].encode())).decode('utf-8')
+                url_str = unquote(http_log[str(k)]['URL'])
+                method_str = str(http_log[str(k)]['request']['METHOD'])
+                URI_str = unquote(http_log[str(k)]['request']['URI'])
+                Host_str = str(http_log[str(k)]['request']['Host'])
+                HTTPVer_str = str(http_log[str(k)]['request']['httpver'])
+                requestheader_str = str(http_log[str(k)]['request']['header'])
+                requestbody_str = str(http_log[str(k)]['request']['body'])
+                status_str = str(http_log[str(k)]['response']['status'])
+                reason_str = str(http_log[str(k)]['response']['reason'])
+                responseheader_str = str(http_log[str(k)]['response']['header'])
+                responsebody_str = base64.b64encode(http_log[str(k)]['response']['body'].encode()).decode('utf-8')
 
                 rowdata = {
                     'no.': k,
@@ -190,11 +193,11 @@ def crawl_endpoint():
 
                 
                 db = mysql.connection.cursor()
-                select_project_name_id_query = "SELECT PID	 FROM project WHERE PName = %s AND  username = %s"
+                select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
                 db.execute(select_project_name_id_query,(project_name, user))             
                 project_name_id_result = db.fetchall()   
         
-                insert_query = ("INSERT INTO urllist (URL, METHOD, URI, Host, HTTPVer, statuscode, reason, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                insert_query = ("INSERT INTO urllist (URL, method, URI, Host, HTTPVer, status_code, reason, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
                 values = (url_str, method_str, URI_str, Host_str, HTTPVer_str, status_str, reason_str, requestheader_str, requestbody_str, responseheader_str, responsebody_str, project_name_id_result[0])
                 db.execute(insert_query, values)
                 mysql.connection.commit()
@@ -212,9 +215,9 @@ def crawl_endpoint():
         
 
             for k in range(1, i):
-                url_str = (urllib.parse.unquote(httplog[str(k)]['URL']))
-                method_str = str(httplog[str(k)]['request']['METHOD'])
-                status_str = str(httplog[str(k)]['response']['status'])
+                url_str = (urllib.parse.unquote(http_log[str(k)]['URL']))
+                method_str = str(http_log[str(k)]['request']['METHOD'])
+                status_str = str(http_log[str(k)]['response']['status'])
                 rowdata2 = {
                     'no.': k,
                     'URL': url_str,
@@ -330,32 +333,95 @@ def onedelete():
 #         return jsonify({"error": str(e)})
 
 
+
+
+
+
+# @app.route("/dashboard", methods=['GET'])
+# def dashboard():
+#     try:
+#         user = request.args.get('user')
+#         project_name_id = request.args.get('project_name_id')
+#         db = mysql.connection.cursor()
+#         query = "SELECT res_header,URL FROM urllist WHERE  PID= %s"
+#         db.execute(query, (project_name_id))
+#         res_header_Server = db.fetchall()
+#         Web_Server = 'Server:'
+#         url_web_server = []
+#         for res_header_list_Server,url in res_header_Server:
+#             if res_header_list_Server.find(Web_Server) != -1:
+#                 web = res_header_list_Server.find(Web_Server)
+#                 url_web_server.append(url)
+#                 print(f'{web}')
+#                 print(f'พบ Server URL: {url}')
+#             else:
+#                 print(f'ไม่พบ:{url}')
+
+#         return jsonify({"url": url_web_server})
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
+
+
+
+
+
 @app.route("/dashboard", methods=['GET'])
 def dashboard():
     try:
-        user = request.args.get('user')
-        project_name_id = request.args.get('project_name_id')
+        project_name_id = request.args.get("project_name_id")
         db = mysql.connection.cursor()
         query = "SELECT res_header,URL FROM urllist WHERE  PID= %s"
-        db.execute(query, (project_name_id))
-        res_header_Server = db.fetchall()
-        Web_Server = 'Server:'
-        url_web_server = []
-        for res_header_list_Server,url in res_header_Server:
-            if res_header_list_Server.find(Web_Server) != -1:
-                web = res_header_list_Server.find(Web_Server)
-                url_web_server.append(url)
-                print(f'{web}')
-                print(f'พบ URL: {url}')
-            else:
-                print(f'ไม่พบ:{url}')
+        db.execute(query,(project_name_id))
+        res_header_Cookies = db.fetchall()
+        Set_Cookie = 'Set-Cookie'
+        Secure_Header = 'Secure'
+        HttpOnly_Header = 'HttpOnly'
+        Expires_Header = 'Expires'
+        SameSite_Header = 'SameSite'
+        url_web_Secure = []
+        url_web_HttpOnly = []
+        url_web_Expires = []
+        url_web_SameSite = []
+        for res_header_list_Secure,url in res_header_Cookies:
 
-        return jsonify({"url": url_web_server})
-    except Exception as e:
-        return jsonify({"error": str(e)})
+            if res_header_list_Secure.find(Set_Cookie) != -1:
+                print(f'พบ Set-Cookie ที่ URL: {url}')
+                if res_header_list_Secure.find(Secure_Header) != -1:
+                    web = res_header_list_Secure.find(Secure_Header)
+                    print(f'พบ Secure URL: {url}')
+                else:
+                    url_web_Secure.append(url)
+                    print(f'ไม่พบ Secure:{url}')
 
 
+                if res_header_list_Secure.find(HttpOnly_Header) != -1:
+                    web = res_header_list_Secure.find(HttpOnly_Header)
+                    print(f'พบ HttpOnly URL: {url}')
+                else:
+                    url_web_HttpOnly.append(url)
+                    print(f'ไม่พบ HttpOnly:{url}')
 
+                if res_header_list_Secure.find(Expires_Header) != -1:
+                    web = res_header_list_Secure.find(Expires_Header)
+                    print(f'{web}')
+                    print(f'พบ Expires URL: {url}')
+                else:
+                   url_web_Expires.append(url)
+                   print(f'ไม่พบ Expires:{url}')
+
+
+                if res_header_list_Secure.find(SameSite_Header) != -1:
+                    web = res_header_list_Secure.find(SameSite_Header)
+                    print(f'{web}')
+                    print(f'พบ SameSite URL: {url}')
+                else:
+                    url_web_SameSite.append(url)
+                    print(f'ไม่พบ SameSite:{url}')
+
+
+        return jsonify({"Secure":url_web_Secure},{"HttpOnly":url_web_HttpOnly},{"Expires":url_web_Expires},{"SameSite":url_web_SameSite})
+    except:
+       return jsonify({"error": str(e)})
 
 
 if __name__ == "__main__":
