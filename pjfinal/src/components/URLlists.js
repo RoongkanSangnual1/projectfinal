@@ -1,55 +1,64 @@
 import { useParams } from 'react-router-dom';
-import{ useState,useEffect }from "react";
-import axios from 'axios'
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import { Table } from 'antd';
 
-const URLlist=()=> {
+const URLlist = () => {
     const { project_name_id } = useParams();
     const [projectOneData, setProjectOneData] = useState([]);
-    const user = localStorage.user
+    const user = localStorage.user;
+
     useEffect(() => {
-      //ยิงtoken แทน user แบบheaders
-      axios.get(`http://127.0.0.1:5000/onedata?user=${user}&project_name_id=${project_name_id}`)
-          .then(response => {
-            const Index = response.data.crawl_data.map((data, index) => [index + 1, ...data])
-              setProjectOneData(Index);
-              console.log(response)
-    
-          })
-          .catch(error => {
-              console.error(error);
-          });
-  }, []);
-  const columns= ([{
-    title:'No.',
-    dataIndex: '0',
-    key:'index'
-  },
-  {
-    title:'URL',
-    dataIndex:'1',
-    key:'URL'
-  },
-  {
-    title:'METHOD',
-    dataIndex:'2',
-    key:'METHOD'
+        axios.get(`http://127.0.0.1:5000/onedata?user=${user}&project_name_id=${project_name_id}`)
+        .then(response => {
+            // console.log(response)
+            const Index = response.data.crawl_data.map((data, index) => {
+                try {
+                    let decodedURLBase64 = atob(data[0]);
+                    let decodedURL = decodeURIComponent(decodedURLBase64);
+                    return [index+1, decodedURL, ...data];
+                } catch (error) {
+                    console.error("Error decoding URL:", error);
+                    return null; 
+                }
+            }).filter(item => item !== null); 
+            console.log(Index); 
+            setProjectOneData(Index);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }, [user, project_name_id]);
 
-  },
+    const columns = [
+        {
+            title: 'No.',
+            dataIndex: '0',
+            key: 'index'
+        },
+        {
+            title: 'URL',
+            dataIndex: '1',
+            key: 'URL',
+            render: (text, record) => <a href={(record[2])}>{text}</a>
+        },
+        {
+            title: 'METHOD',
+            dataIndex: '3',
+            key: 'METHOD'
+        },
+        {
+            title: 'Status',
+            dataIndex: '4',
+            key: 'status',
+        }
+    ];
 
-  {
-    title: 'Status',
-    dataIndex: '3',
-      key: 'status',
-          },
-])
-  
-      return(
+    return (
         <div>
-        <Table dataSource={projectOneData} columns={columns} />;
+            <Table dataSource={projectOneData} columns={columns} />
         </div>
-      );
-      
+    );
 };
 
 export default URLlist;

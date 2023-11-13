@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, unquote
 import csv
 import base64
-import urllib.parse
 from flask_mysqldb import MySQL
 import json
 
@@ -161,9 +160,9 @@ def crawl_endpoint():
         
 
             for k in range(1,i):
-                url_str = unquote(http_log[str(k)]['URL'])
+                url_str = base64.b64encode(http_log[str(k)]['URL'].encode()).decode('utf-8')
                 method_str = str(http_log[str(k)]['request']['METHOD'])
-                URI_str = unquote(http_log[str(k)]['request']['URI'])
+                URI_str = base64.b64encode(http_log[str(k)]['request']['URI'].encode()).decode('utf-8')
                 Host_str = str(http_log[str(k)]['request']['Host'])
                 HTTPVer_str = str(http_log[str(k)]['request']['httpver'])
                 requestheader_str = str(http_log[str(k)]['request']['header'])
@@ -215,7 +214,7 @@ def crawl_endpoint():
         
 
             for k in range(1, i):
-                url_str = (urllib.parse.unquote(http_log[str(k)]['URL']))
+                url_str = base64.b64encode(http_log[str(k)]['URL'].encode()).decode('utf-8')
                 method_str = str(http_log[str(k)]['request']['METHOD'])
                 status_str = str(http_log[str(k)]['response']['status'])
                 rowdata2 = {
@@ -259,34 +258,48 @@ def home():
 @app.route("/onedata", methods=['GET'])
 def onedata():
     try:
-        user = request.args.get('user') 
-        project_name_id = request.args.get('project_name_id') 
+        user = request.args.get('user')
+        project_name_id = request.args.get('project_name_id')
         db = mysql.connection.cursor()
-        
-        query = """ 
+
+        query = """
             SELECT tbl1.URL, tbl1.method, tbl1.status_code
             FROM urllist tbl1
             JOIN project tbl2 ON tbl1.PID = tbl2.PID
-            WHERE tbl2.username = %s AND tbl2.PID = %s"""
-        
+            WHERE tbl2.username = %s AND tbl2.PID = %s
+        """
+
         db.execute(query, (user, project_name_id))
         crawl_data = db.fetchall()
-        db.close()
+        # print(crawl_data)
+
+        # query2 = "SELECT URL FROM urllist WHERE PID = %s "
+        # db.execute(query2, (project_name_id))
+        # crawl_data2 = db.fetchall()
+        # # print(crawl_data2)
+        # db.close()
+
+
+        # decoded_strings = []
+
+        # for row in crawl_data2:
+        #     encoded_string = row[0]
+        #     decoded_bytes = base64.urlsafe_b64decode(encoded_string)
+        #     decoded_string = decoded_bytes.decode('utf-8')
+        #     decoded_strings.append(decoded_string)
+        #     print(decoded_strings)
 
         return jsonify({"crawl_data": crawl_data})
     except Exception as e:
         return jsonify({"server error": str(e)})
+
     
-
-
-
-
 
 @app.route("/onedelete", methods=['DELETE'])
 def onedelete():
     try :
         user = request.args.get('user')   
-        project_name_id = request.args.get('project_name_id')    
+        project_name_id = request.args.geไt('project_name_id')    
            
         db = mysql.connection.cursor()
         delete_crawl_query = "DELETE FROM urllist WHERE PID = %s"
@@ -365,61 +378,61 @@ def onedelete():
 
 
 
-@app.route("/dashboard", methods=['GET'])
-def dashboard():
-    try:
-        project_name_id = request.args.get("project_name_id")
-        db = mysql.connection.cursor()
-        query = "SELECT res_header,URL FROM urllist WHERE PID= %s"
-        db.execute(query,(project_name_id,))
-        res_header_Cookies = db.fetchall()
-        Set_Cookie = 'Set-Cookie'
-        Secure_Header = 'Secure'
-        HttpOnly_Header = 'HttpOnly'
-        Expires_Header = 'Expires'
-        SameSite_Header = 'SameSite'
-        url_web_Secure = []
-        url_web_HttpOnly = []
-        url_web_Expires = []
-        url_web_SameSite = []
-        for res_header_list_Secure,url in res_header_Cookies:
+# @app.route("/dashboard", methods=['GET'])
+# def dashboard():
+#     try:
+#         project_name_id = request.args.get("project_name_id")
+#         db = mysql.connection.cursor()
+#         query = "SELECT res_header,URL FROM urllist WHERE PID= %s"
+#         db.execute(query,(project_name_id,))
+#         res_header_Cookies = db.fetchall()
+#         Set_Cookie = 'Set-Cookie'
+#         Secure_Header = 'Secure'
+#         HttpOnly_Header = 'HttpOnly'
+#         Expires_Header = 'Expires'
+#         SameSite_Header = 'SameSite'
+#         url_web_Secure = []
+#         url_web_HttpOnly = []
+#         url_web_Expires = []
+#         url_web_SameSite = []
+#         for res_header_list_Secure,url in res_header_Cookies:
 
-            if res_header_list_Secure.find(Set_Cookie) != -1:
-                print(f'พบ Set-Cookie ที่ URL: {url}')
-                if res_header_list_Secure.find(Secure_Header) != -1:
-                    web = res_header_list_Secure.find(Secure_Header)
-                else:
-                    url_web_Secure.append(url)
-                    print(f'ไม่พบ Secure:{url}')
-
-
-                if res_header_list_Secure.find(HttpOnly_Header) != -1:
-                    web = res_header_list_Secure.find(HttpOnly_Header)
-                else:
-                    url_web_HttpOnly.append(url)
-                    print(f'ไม่พบ HttpOnly:{url}')
-
-                if res_header_list_Secure.find(Expires_Header) != -1:
-                    web = res_header_list_Secure.find(Expires_Header)
-                    print(f'{web}')
-                else:
-                   url_web_Expires.append(url)
-                   print(f'ไม่พบ Expires:{url}')
+#             if res_header_list_Secure.find(Set_Cookie) != -1:
+#                 print(f'พบ Set-Cookie ที่ URL: {url}')
+#                 if res_header_list_Secure.find(Secure_Header) != -1:
+#                     web = res_header_list_Secure.find(Secure_Header)
+#                 else:
+#                     url_web_Secure.append(url)
+#                     print(f'ไม่พบ Secure:{url}')
 
 
-                if res_header_list_Secure.find(SameSite_Header) != -1:
-                    web = res_header_list_Secure.find(SameSite_Header)
-                    print(f'{web}')
-                else:
-                    url_web_SameSite.append(url)
-                    print(f'ไม่พบ SameSite:{url}')
+#                 if res_header_list_Secure.find(HttpOnly_Header) != -1:
+#                     web = res_header_list_Secure.find(HttpOnly_Header)
+#                 else:
+#                     url_web_HttpOnly.append(url)
+#                     print(f'ไม่พบ HttpOnly:{url}')
+
+#                 if res_header_list_Secure.find(Expires_Header) != -1:
+#                     web = res_header_list_Secure.find(Expires_Header)
+#                     print(f'{web}')
+#                 else:
+#                    url_web_Expires.append(url)
+#                    print(f'ไม่พบ Expires:{url}')
+
+
+#                 if res_header_list_Secure.find(SameSite_Header) != -1:
+#                     web = res_header_list_Secure.find(SameSite_Header)
+#                     print(f'{web}')
+#                 else:
+#                     url_web_SameSite.append(url)
+#                     print(f'ไม่พบ SameSite:{url}')
 
         
         
 
-        return jsonify({"Secure":url_web_Secure},{"HttpOnly":url_web_HttpOnly},{"Expires":url_web_Expires},{"SameSite":url_web_SameSite})
-    except:
-       return jsonify({"server error": str(e)})
+#         return jsonify({"Secure":url_web_Secure},{"HttpOnly":url_web_HttpOnly},{"Expires":url_web_Expires},{"SameSite":url_web_SameSite})
+#     except:
+#        return jsonify({"server error": str(e)})
 
 
 # @app.route("/dashboard", methods=['GET'])
