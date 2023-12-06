@@ -12,7 +12,7 @@ const Dashboard = () => {
         axios.get(`http://127.0.0.1:5000/dashboard?user=${user}&project_name_id=${project_name_id}`)
             .then(response => { 
                 console.log(response);
-                setProjectOneData(response.data); 
+                setProjectOneData(response); 
             })
             .catch(error => {
                 console.error(error);

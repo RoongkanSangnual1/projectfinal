@@ -9,7 +9,7 @@ const { json } = require('body-parser');
 
 exports.register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password,role } = req.body;
     const FindQuery = 'SELECT * FROM user WHERE username = ? OR email = ?';
     dbConnection.query(FindQuery, [username, email], async (resulfinderrorts, results) => {
       if (results.length > 0) {
@@ -17,9 +17,8 @@ exports.register = async (req, res) => {
       }
       const salt = await bcrypt.genSalt(10);
       const hashpassword = await bcrypt.hash(password, salt);
-      const insertQuery = 'INSERT INTO user (username, email, Password) VALUES (?, ?, ?)';
-      dbConnection.query(insertQuery, [username, email, hashpassword], (inserterror, insertresults) => {
-        console.log(insertresults)
+      const insertQuery = 'INSERT INTO user (username, email, Password,role) VALUES (?, ?, ?,?)';
+      dbConnection.query(insertQuery, [username, email, hashpassword,role], (inserterror, insertresults) => {
         if (insertresults) {
           return res.status(200).send('สมัครเสร็จสิ้น');
         }
@@ -46,7 +45,8 @@ exports.login = async(req,res) =>{
         console.log(results)
         const payload = {
           user:{
-            username: user.username
+            username: user.username,
+            role:user.role
           }
         }
         jwt.sign(payload,'jwtSecret',{expiresIn: 3600},(err,token)=>{

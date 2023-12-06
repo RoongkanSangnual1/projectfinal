@@ -20,6 +20,7 @@ const Login = () =>{
         .post(`http://localhost:8000/api/login`,{username,password})
         .then(response=>{
             if(response){
+                console.log(response.data.token)
                 alert(response.data.message)
                 dispatch({
                     type:'LOGIN',

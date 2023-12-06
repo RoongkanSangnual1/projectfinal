@@ -1,14 +1,15 @@
 import { useState } from "react";
 import axios from 'axios'
 import "./Register.css";
-import {  Form,Input } from 'antd';
+import {  Form,Input, Select } from 'antd';
 import { Link,useNavigate } from "react-router-dom";
 const Register = () =>{
     const [username ,setUsername] = useState("")
     const [password,setPassword] = useState("")
     const [cpassword,setCpassword] = useState("")
     const [email,setEmail] = useState("")
-    const [wrong,setWrong] = useState("")
+    const [role,setRole] = useState("")
+    const[wrong,setWrong] = useState("")
     const navigate = useNavigate()
 
     const Formsummit =()=>{
@@ -16,7 +17,7 @@ const Register = () =>{
             return setWrong("รหัสไม่ตรงกัน")
         }
         axios
-        .post(`http://localhost:8000/api/register`,{username,email,password})
+        .post(`http://localhost:8000/api/register`,{username,email,password,role})
         .then(response=>{
             alert(response.data)
             navigate('/login')
@@ -24,7 +25,7 @@ const Register = () =>{
         .catch(err=>{
             alert(err.response.data)
         })
-        
+        console.log(role)
     }
 
 
@@ -86,6 +87,17 @@ const Register = () =>{
                 ]}
                 >
                 <Input.Password type="password" className="from-control" value={cpassword} onChange={(e)=>setCpassword(e.target.value)}/>
+                </Form.Item>
+
+                <Form.Item
+                label="Role"
+                name="role">
+                
+                <Select  value={role} onChange={(value)=>setRole(value)} options={[
+                 { value: 'Standard', label: 'Standard' },
+                { value: 'Advance', label: 'Advance' },  ]}>
+                    
+                </Select>
                 </Form.Item>
 
 

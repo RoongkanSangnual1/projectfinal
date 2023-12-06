@@ -11,7 +11,7 @@ const URLlist = () => {
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/onedata?user=${user}&project_name_id=${project_name_id}`)
         .then(response => {
-            // console.log(response)
+            console.log(response)
             const Index = response.data.crawl_data.map((data, index) => {
                 try {
                     let decodedURLBase64 = atob(data[0]);
@@ -22,7 +22,7 @@ const URLlist = () => {
                     return null; 
                 }
             }).filter(item => item !== null); 
-            console.log(Index); 
+            // console.log(Index); 
             setProjectOneData(Index);
         })
         .catch(error => {
