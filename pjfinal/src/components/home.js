@@ -13,9 +13,16 @@ const Home = () => {
     
   
     useEffect(() => {
-        axios.get(`http://127.0.0.1:5000/home?user=${user}`)
+      const token = localStorage.getItem("token")
+      console.log(token)
+        axios.get(`http://127.0.0.1:5000/home`,{
+          headers:{
+            Authorization:`Bearer ${token}`,
+          },
+        })
             .then(response => {
                 setProjectData(response.data.project_data);
+                console.log(response)
 
             
             })
@@ -26,8 +33,13 @@ const Home = () => {
 
       const Deleteprojuct=(id)=>{
                 /// ส่ง token user แบบheaders
-        
-          axios.delete(`http://127.0.0.1:5000/onedelete?user=${user}&project_name_id=${id}`)
+          const token = localStorage.getItem("token")
+          axios.delete(`http://127.0.0.1:5000/onedelete?project_name_id=${id}`,{
+            headers:{
+              Authorization:`Bearer ${token}`,
+            },
+          })
+
 
 
         .then(response => {
@@ -44,7 +56,8 @@ const Home = () => {
         return (
             <div className="mainDash">
               <Card title="My Project" extra={<Link to='/create'><Button type="primary" icon={<PlusOutlined />}>Add to create</Button></Link>}>
-                {projectdata.map((project, index) => (
+              {projectdata &&
+                projectdata.map((project, index) => (
 
                   //<Link to={`/myproject/${project[1]}/${project[2]}`}>details</Link>
                   
@@ -81,6 +94,7 @@ const Home = () => {
                   
                   
                 ))}
+  
               </Card>
             </div>
           );

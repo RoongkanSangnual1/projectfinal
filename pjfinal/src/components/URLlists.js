@@ -9,13 +9,19 @@ const URLlist = () => {
     const user = localStorage.user;
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:5000/onedata?user=${user}&project_name_id=${project_name_id}`)
+        const token = localStorage.getItem('token')
+        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
+            headers:{
+                Authorization: `Bearer ${token}`,
+            },
+
+        })
         .then(response => {
             console.log(response)
             const Index = response.data.crawl_data.map((data, index) => {
                 try {
-                    let decodedURLBase64 = atob(data[0]);
-                    let decodedURL = decodeURIComponent(decodedURLBase64);
+                    // let decodedURLBase64 = atob(data[0]);
+                    let decodedURL = decodeURIComponent(data[0]);
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
                     console.error("Error decoding URL:", error);

@@ -9,6 +9,8 @@ import csv
 import base64
 from flask_mysqldb import MySQL
 import json
+import jwt
+
 
 app = Flask(__name__)
 CORS(app)
@@ -373,6 +375,10 @@ def checkAct(formlist,i):
 
     return i
 
+
+
+
+
 # k = 0
 @app.route("/crawl", methods=['POST'])
 def crawl_endpoint():
@@ -458,10 +464,10 @@ def crawl_endpoint():
 
 
                 
-        # db = mysql.connection.cursor()
-        # select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
-        # db.execute(select_project_name_id_query,(project_name, user))             
-        # project_name_id_result = db.fetchall()   
+        db = mysql.connection.cursor()
+        select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+        db.execute(select_project_name_id_query,(project_name, user))             
+        project_name_id_result = db.fetchall()   
         
         # insert_query = ("INSERT INTO urllist (URL, method, URI, Host, HTTPVer, status_code, reason, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         # values = (url_str, method_str, URI_str, Host_str, HTTPVer_str, status_str, reason_str, requestheader_str, requestbody_str, responseheader_str, responsebody_str, project_name_id_result[0])
@@ -498,21 +504,25 @@ def crawl_endpoint():
         #     s = Response(csv_read,content_type='text/csv')
         #     s.headers['Content-Disposition']=f'attrachment; filename="{csv_show}"'
         #     csv_file.close()
-        return ({"project_name_id_result": "server run"})
+        return ({"project_name_id_result":project_name_id_result})
     except Exception as e:
         return jsonify({"server error": str(e)})
     
     
-
 @app.route("/home", methods=['GET'])
 def home():
     try:
-        user = request.args.get('user') 
+        token = request.headers.get('Authorization').split(' ')[1]      
+        user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+
+
         db = mysql.connection.cursor()
-        query = "SELECT PDes, PName ,PID FROM project WHERE username = %s"
-        db.execute(query, (user,))
+        query = "SELECT PDes, PName, PID FROM project WHERE username = %s"
+        db.execute(query, (user_data,))
         project_data = db.fetchall()
         db.close()
+        print(project_data)
 
         return jsonify({"project_data": project_data})
     except Exception as e:
@@ -520,12 +530,12 @@ def home():
 
 
 
-
-
 @app.route("/onedata", methods=['GET'])
 def onedata():
     try:
-        user = request.args.get('user')
+        token = request.headers.get('Authorization').split(' ')[1]
+        user = jwt.decode(token,'jwtSecret',algorithms=["HS256"])['user']
+        user_data = user.get('username',None)
         project_name_id = request.args.get('project_name_id')
         db = mysql.connection.cursor()
 
@@ -536,9 +546,9 @@ def onedata():
             WHERE tbl2.username = %s AND tbl2.PID = %s
         """
 
-        db.execute(query, (user, project_name_id))
+        db.execute(query, (user_data, project_name_id))
         crawl_data = db.fetchall()
-        print(crawl_data)
+        # print(crawl_data)
 
         # query2 = "SELECT URL FROM urllist WHERE PID = %s "
         # db.execute(query2, (project_name_id))
@@ -565,14 +575,16 @@ def onedata():
 @app.route("/onedelete", methods=['DELETE'])
 def onedelete():
     try :
-        user = request.args.get('user')   
-        project_name_id = request.args.geไt('project_name_id')    
+        token = request.headers.get('Authorization').split(" ")[1]
+        user = jwt.decode(token,'jwtSecret',algorithms=['HS256'])['user']   
+        user_data=user.get('username',None)
+        project_name_id = request.args.get('project_name_id')    
            
         db = mysql.connection.cursor()
         delete_crawl_query = "DELETE FROM urllist WHERE PID = %s"
         db.execute(delete_crawl_query, (project_name_id,))
         delete_project_query = "DELETE FROM project WHERE PID = %s AND username = %s"
-        db.execute(delete_project_query, (project_name_id, user))
+        db.execute(delete_project_query, (project_name_id, user_data))
         mysql.connection.commit()
         db.close()
 
@@ -587,92 +599,96 @@ def onedelete():
 
 
 
-# @app.route("/dashboard", methods=['GET'])
-# def dashboard():
-#     try:
-#         project_name_id = request.args.get("project_name_id")
-#         db = mysql.connection.cursor()
-#         query = "SELECT res_header,URL FROM urllist WHERE PID= %s"
-#         db.execute(query,(project_name_id,))
-#         res_header_Cookies = db.fetchall()
-#         Set_Cookie = 'Set-Cookie'
-#         Secure_Header = 'Secure'
-#         HttpOnly_Header = 'HttpOnly'
-#         Expires_Header = 'Expires'
-#         SameSite_Header = 'SameSite'
-#         url_web_Secure = []
-#         url_web_HttpOnly = []
-#         url_web_Expires = []
-#         url_web_SameSite = []
-#         for res_header_list_Secure,url in res_header_Cookies:
-
-#             if res_header_list_Secure.find(Set_Cookie) != -1:
-#                 print(f'พบ Set-Cookie ที่ URL: {url}')
-#                 if res_header_list_Secure.find(Secure_Header) != -1:
-#                     web = res_header_list_Secure.find(Secure_Header)
-#                 else:
-#                     url_web_Secure.append(url)
-#                     print(f'ไม่พบ Secure:{url}')
-
-
-#                 if res_header_list_Secure.find(HttpOnly_Header) != -1:
-#                     web = res_header_list_Secure.find(HttpOnly_Header)
-#                 else:
-#                     url_web_HttpOnly.append(url)
-#                     print(f'ไม่พบ HttpOnly:{url}')
-
-#                 if res_header_list_Secure.find(Expires_Header) != -1:
-#                     web = res_header_list_Secure.find(Expires_Header)
-#                     print(f'{web}')
-#                 else:
-#                    url_web_Expires.append(url)
-#                    print(f'ไม่พบ Expires:{url}')
-
-
-#                 if res_header_list_Secure.find(SameSite_Header) != -1:
-#                     web = res_header_list_Secure.find(SameSite_Header)
-#                     print(f'{web}')
-#                 else:
-#                     url_web_SameSite.append(url)
-#                     print(f'ไม่พบ SameSite:{url}')
-
-        
-        
-
-#         return jsonify({"Secure":url_web_Secure},{"HttpOnly":url_web_HttpOnly},{"Expires":url_web_Expires},{"SameSite":url_web_SameSite})
-#     except:
-#        return jsonify({"server error": str(e)})
-
-
-
-
 @app.route("/dashboard", methods=['GET'])
-def jsonnn():
+def dashboard():
     try:
+        project_name_id = request.args.get("project_name_id")
         db = mysql.connection.cursor()
-        query = "SELECT payloadlist FROM owasp WHERE OID = 5"
-        db.execute(query)
-        res_payloadlist = db.fetchall()   
-        #print(res_payloadlist)
-        resssss=[] 
-        if res_payloadlist:
-            json_data_str = res_payloadlist[0][0]
+        query = "SELECT res_header,URL FROM urllist WHERE PID= %s"
+        db.execute(query,(project_name_id,))
+        res_header_Cookies = db.fetchall()
+        Set_Cookie = 'Set-Cookie'
+        Secure_Header = 'Secure'
+        HttpOnly_Header = 'HttpOnly'
+        Expires_Header = 'Expires'
+        SameSite_Header = 'SameSite'
+        url_web_Secure = []
+        url_web_HttpOnly = []
+        url_web_Expires = []
+        url_web_SameSite = []
+        for res_header_list_Secure,url in res_header_Cookies:
+
+            if res_header_list_Secure.find(Set_Cookie) != -1:
+                print(f'พบ Set-Cookie ที่ URL: {url}')
+                if res_header_list_Secure.find(Secure_Header) != -1:
+                    web = res_header_list_Secure.find(Secure_Header)
+                else:
+                    url_web_Secure.append(url)
+                    print(f'ไม่พบ Secure:{url}')
+
+
+                if res_header_list_Secure.find(HttpOnly_Header) != -1:
+                    web = res_header_list_Secure.find(HttpOnly_Header)
+                else:
+                    url_web_HttpOnly.append(url)
+                    print(f'ไม่พบ HttpOnly:{url}')
+
+                if res_header_list_Secure.find(Expires_Header) != -1:
+                    web = res_header_list_Secure.find(Expires_Header)
+                    print(f'{web}')
+                else:
+                   url_web_Expires.append(url)
+                   print(f'ไม่พบ Expires:{url}')
+
+
+                if res_header_list_Secure.find(SameSite_Header) != -1:
+                    web = res_header_list_Secure.find(SameSite_Header)
+                    print(f'{web}')
+                else:
+                    url_web_SameSite.append(url)
+                    print(f'ไม่พบ SameSite:{url}')
+                print(url_web_Secure)
+                print(url_web_HttpOnly)
+                print(url_web_Expires)
+                print(url_web_SameSite)
+
+        
+        
+
+        return jsonify({"Secure":url_web_Secure},{"HttpOnly":url_web_HttpOnly},{"Expires":url_web_Expires},{"SameSite":url_web_SameSite})
+    except:
+       return jsonify({"server error": str(e)})
+
+
+
+# ยิงjson
+# @app.route("/dashboard", methods=['GET'])
+# def jsonnn():
+#     try:
+#         db = mysql.connection.cursor()
+#         query = "SELECT payloadlist FROM owasp WHERE OID = 5"
+#         db.execute(query)
+#         res_payloadlist = db.fetchall()   
+#         #print(res_payloadlist)
+#         resssss=[] 
+#         if res_payloadlist:
+#             json_data_str = res_payloadlist[0][0]
       
             
-           #json_data_str = json_data_str.replace('"',"'")
-            json_data_str = json.loads(json_data_str)
-            res =[]
-            index = 0
-            for i in json_data_str['payload']:
-                resssss.append(i)
-                index +=1
+#            #json_data_str = json_data_str.replace('"',"'")
+#             json_data_str = json.loads(json_data_str)
+#             res =[]
+#             index = 0
+#             for i in json_data_str['payload']:
+#                 resssss.append(i)
+#                 index +=1
              
-            # res  = resssss
-            # print(*resssss, sep = ", ")
+#             # res  = resssss
+#             # print(*resssss, sep = ", ")
 
             
 
-            print(resssss[49])
+#             print(resssss[49])
                  
             
             
@@ -682,10 +698,10 @@ def jsonnn():
             
             
 
-        return jsonify("Error:")
-        # return jsonify(payload_list)
-    except Exception as e:
-        print(f"Error: {e}")
+#         return jsonify("Error:")
+#         # return jsonify(payload_list)
+#     except Exception as e:
+#         print(f"Error: {e}")
  
  
 if __name__ == "__main__":
