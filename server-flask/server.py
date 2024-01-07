@@ -10,6 +10,8 @@ import base64
 from flask_mysqldb import MySQL
 import json
 import jwt
+import subprocess
+import os
 
 
 app = Flask(__name__)
@@ -377,6 +379,46 @@ def checkAct(formlist,i):
 
 
 
+def run_gobuster(url):
+    try:
+        command = [
+            'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            'dir',
+            '-u', url,
+            '-r',
+            '-t', '10',
+            '-w', 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\common.txt',
+            '-o', 'tempfuzz.txt'
+]
+
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running gobuster: {e}")
+
+
+
+def checkTempFuzz(i):
+    file_path = "tempfuzz.txt"
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r") as f:
+                j = 1
+                for x in f:
+                    print(str(j)+ x.split()[0], end='\n')
+                    j = j+1
+                    if (baseURL+x.split()[0]) not in visited_urls:
+                        response = get_response(baseURL+x.split()[0])
+                        if response is not None:
+                            save_log(response,i)
+                            i = i+1
+            
+        except IOError as e:
+            print(f"Error reading file: {e}")
+    else:
+        print(f"The file {file_path} does not exist.")
+    return i
+
+
 
 
 # k = 0
@@ -415,7 +457,8 @@ def crawl_endpoint():
         csv_name = f"{project_name}.csv"
         
         crawl(scope_url)
-
+        run_gobuster(baseURL)
+        i = checkTempFuzz(i)
 
         # with open(csv_name, "w", encoding='utf-8') as f:
         #     fieldnames = ['no.', 'URL', 'METHOD', 'URI', 'Host', 'HTTPVer', 'status', 'reason','length','isredirect','redirect_to','ActionFound'
@@ -530,6 +573,27 @@ def home():
 
 
 
+@app.route("/addurls",methods=['POST'])
+def addurls():
+    try:
+        url = request.json['urls']
+        method = request.json['method']
+        parameter = request.json['parameter']
+        project_name_id = request.json['project_name_id']
+        db = mysql.connection.cursor()
+        
+        query = ('INSERT INTO urllist(URL,method,PID) VALUES(%s,%s,%s)')
+        db.execute(query,(url,method,project_name_id),)
+        mysql.connection.commit()
+        print(url)
+        print(method)
+        print(parameter)
+        print(project_name_id)
+
+        return  jsonify("Add URLS สำเร็จ")
+    except Exception as e:
+        return jsonify({"server error": str(e)})
+
 @app.route("/onedata", methods=['GET'])
 def onedata():
     try:
@@ -540,7 +604,7 @@ def onedata():
         db = mysql.connection.cursor()
 
         query = """
-            SELECT tbl1.URL, tbl1.method, tbl1.status_code
+            SELECT tbl1.URL, tbl1.method, tbl1.status_code , tbl1.URL_ID
             FROM urllist tbl1
             JOIN project tbl2 ON tbl1.PID = tbl2.PID
             WHERE tbl2.username = %s AND tbl2.PID = %s
@@ -591,6 +655,25 @@ def onedelete():
         return jsonify({"delete_data": f"ลบ สำเร็จ"})
     except Exception as e:
         return jsonify({"server error": str(e)})
+
+@app.route("/oneurlsdelete", methods=['DELETE'])
+def oneurlsdelete():
+    try :
+        token = request.headers.get('Authorization').split(" ")[1]
+        user = jwt.decode(token,'jwtSecret',algorithms=['HS256'])['user']   
+        user_data=user.get('username',None)
+        project_name_id = request.args.get('project_name_id')
+        urls_id = request.args.get('record')  
+           
+        db = mysql.connection.cursor()
+        delete_crawl_query = "DELETE FROM urllist WHERE PID = %s AND URL_ID = %s"
+        db.execute(delete_crawl_query, (project_name_id,urls_id),)
+        mysql.connection.commit()
+        db.close()
+
+        return jsonify({"delete_data": f"ลบ สำเร็จ"})
+    except Exception as e:
+        return jsonify({"server error oneurlsdelete": str(e)})
 
 
 
@@ -660,6 +743,82 @@ def dashboard():
        return jsonify({"server error": str(e)})
 
 
+#payload
+@app.route("/payload", methods=['POST'])
+def payload():
+    try:
+        Owasp = request.json['Owasp']
+        db = mysql.connection.cursor()
+        query = "SELECT JSON_KEYS(payloadlist) AS json_keys FROM owasp WHERE OID = %s "
+        db.execute(query,(Owasp,))
+        json_keys = db.fetchall()
+  
+
+        return jsonify({"value": json_keys})
+        # return jsonify(payload_list)
+    except Exception as e:
+        print(f"Error: {e}")
+ 
+
+ #payload
+@app.route("/payload2", methods=['POST'])
+def payload2():
+    try:
+        payload_= request.json['payloadone']
+        value_payload = request.json['valuepayload']
+        Owasp = request.json['Owasp']
+        print(payload_)
+        print(f'\"{value_payload}\"')
+        print(Owasp)
+        print(f'\"$.{payload_}\"')
+
+        db = mysql.connection.cursor()
+        query = "UPDATE owasp SET payloadlist = JSON_ARRAY_APPEND(payloadlist, %s, %s) WHERE OID = %s"
+        db.execute(query, (f'$.{payload_}',value_payload, Owasp),)
+        mysql.connection.commit()
+        
+
+  
+
+        return jsonify({"value": "value"})
+        # return jsonify(payload_list)
+    except Exception as e:
+        print(f"Error: {e}")
+ 
+
+
+
+@app.route("/payload3", methods=['POST'])
+def payload3():
+    try:
+        payload_ = request.json['payloadall']
+        Owasp = request.json['Owasp']
+        print(payload_)
+
+        data_dict = json.loads(payload_)
+        with mysql.connection.cursor() as db:
+            for key_, values_ in data_dict.items():
+                print(f'Key: {key_}')
+                print(f'Values: {json.dumps(values_),}')
+                query = "UPDATE owasp SET payloadlist = JSON_SET(payloadlist, %s, JSON_ARRAY(%s)) WHERE OID = %s"
+                db.execute(query, (f'$.{key_}', json.dumps(values_), Owasp))
+
+        mysql.connection.commit()
+        
+        # รีเทิร์น JSON response ที่ถูกต้อง
+        return jsonify(data_dict)
+    except Exception as e:
+        print(f"Error: {e}")
+        # รีเทิร์น JSON response ที่ถูกต้องพร้อมข้อความผิดพลาด
+        return jsonify({"error": str(e)})
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+
+
+
 
 # ยิงjson
 # @app.route("/dashboard", methods=['GET'])
@@ -689,14 +848,7 @@ def dashboard():
             
 
 #             print(resssss[49])
-                 
-            
-            
-                
-            
-            
-            
-            
+                   
 
 #         return jsonify("Error:")
 #         # return jsonify(payload_list)

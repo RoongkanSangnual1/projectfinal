@@ -1,0 +1,10 @@
+.button-container {
+    display: flex;
+    justify-content: flex-end; 
+  }
+
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+  }

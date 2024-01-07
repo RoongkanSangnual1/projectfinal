@@ -1,0 +1,26 @@
+
+.inputt-container {
+    justify-content: center;
+    align-items: center;
+    max-width: 700px;
+    width: 100%;
+    transform: translateX(-180px);
+    margin-top: 5px;
+    margin: 0 auto;
+  }
+
+.select-container {
+    margin-top: 20px;
+    width: 500px; 
+    transform: translateX(-5px);
+  }
+  
+
+  .btn {
+    font-size: 14px;
+    align-items: center;
+    max-width: 300px;
+    padding: 8px 12px; 
+    transform: translateX(200px);
+    margin: 0 auto;
+  }
