@@ -385,14 +385,20 @@ def run_gobuster(url):
         query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.common')) AS payload FROM owasp WHERE OID=20")
         db.execute(query,)             
         common = db.fetchall() 
-        print(common)  
+        # print(common)
+        word_list = json.loads(common[0][0])
+        print(word_list)
+        wordlist_path = 'wordlist.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_list:
+                file.write(item + '\n')
         command = [
             'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
             '-r',
             '-t', '10',
-            '-w', 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\common.txt',
+            '-w', wordlist_path,
             '-o', 'tempfuzz.txt'
 ]
 
@@ -563,7 +569,6 @@ def home():
         token = request.headers.get('Authorization').split(' ')[1]      
         user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
         user_data = user.get('username', None)
-
         db = mysql.connection.cursor()
         query = "SELECT PDes, PName, PID FROM project WHERE username = %s"
         db.execute(query, (user_data,))
