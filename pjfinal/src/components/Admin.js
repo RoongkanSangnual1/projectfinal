@@ -137,7 +137,8 @@ const Formsummit2 = () => {
                 { value: '11', label: 'SQL Injection' },
                 { value: '12', label: 'Command Injection' }, 
                 { value: '13', label: 'Missing HTTP Strict Transport Security Header' }, 
-                { value: '14', label: 'Sensitive File Disclosure' },  ]}>                             
+                { value: '14', label: 'Sensitive File Disclosure' },
+                { value: '20', label: 'Common' },  ]}>                             
                 </Select>
                 </Form.Item>
                 <Form.Item>                
@@ -181,7 +182,8 @@ const Formsummit2 = () => {
                 { value: '11', label: 'SQL Injection' },
                 { value: '12', label: 'Command Injection' }, 
                 { value: '13', label: 'Missing HTTP Strict Transport Security Header' }, 
-                { value: '14', label: 'Sensitive File Disclosure' },  ]}>                             
+                { value: '14', label: 'Sensitive File Disclosure' },
+                { value: '20', label: 'Common' },   ]}>                             
                 </Select>
                 </Form.Item>
                 <Form.Item>                

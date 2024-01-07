@@ -381,6 +381,11 @@ def checkAct(formlist,i):
 
 def run_gobuster(url):
     try:
+        db = mysql.connection.cursor()
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.common')) AS payload FROM owasp WHERE OID=20")
+        db.execute(query,)             
+        common = db.fetchall() 
+        print(common)  
         command = [
             'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
@@ -558,7 +563,6 @@ def home():
         token = request.headers.get('Authorization').split(' ')[1]      
         user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
         user_data = user.get('username', None)
-
 
         db = mysql.connection.cursor()
         query = "SELECT PDes, PName, PID FROM project WHERE username = %s"
@@ -743,7 +747,7 @@ def dashboard():
        return jsonify({"server error": str(e)})
 
 
-#payload
+#payloadทั้งหมด
 @app.route("/payload", methods=['POST'])
 def payload():
     try:
@@ -760,7 +764,7 @@ def payload():
         print(f"Error: {e}")
  
 
- #payload
+ #payloadเพิ่มที่ละตัว
 @app.route("/payload2", methods=['POST'])
 def payload2():
     try:
@@ -787,7 +791,7 @@ def payload2():
  
 
 
-
+ #payloadเพิ่มทั้งเพลโลด
 @app.route("/payload3", methods=['POST'])
 def payload3():
     try:
@@ -805,12 +809,19 @@ def payload3():
 
         mysql.connection.commit()
         
-        # รีเทิร์น JSON response ที่ถูกต้อง
+      
         return jsonify(data_dict)
     except Exception as e:
         print(f"Error: {e}")
-        # รีเทิร์น JSON response ที่ถูกต้องพร้อมข้อความผิดพลาด
         return jsonify({"error": str(e)})
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
