@@ -15,6 +15,7 @@ const Admin = () => {
     const [payloadone, setPayloadone] = useState(null);
     const [payloadall, setPayloadall] = useState([]);
     const [pay, setPay] = useState(null);
+    const[show,setShow] = useState([]);
     const [valuepayload, setvaluepayload] = useState(null);
   
     useEffect(() => {
@@ -67,7 +68,6 @@ const Admin = () => {
                     label: value,
                 }));
                 setOptions(options);
-                
             });
     };
 
@@ -80,6 +80,7 @@ const Formsummit2 = () => {
             .then(response => {
                 console.log(response)
                 setOptions(options);
+                alert("บันทึกสำเร็จ")
                 
             });
     };
@@ -107,17 +108,78 @@ const Formsummit2 = () => {
         axios
             .post(`http://127.0.0.1:5000/payload3`, { Owasp,payloadall })
             .then(response => {
+            alert("บันทึกสำเร็จ")
                 
             });
     };
 
 
+    const ShowFormsummit = () => {
+        console.log(`4${Owasp}`);
+        setPay(Owasp)
+        axios
+            .post(`http://127.0.0.1:5000/payload4`, {Owasp})
+            .then(response => {
+                console.log(response.data.Owasp_payloadlist)
+                setShow(response.data.Owasp_payloadlist)                
+            }).catch(error=>{
+                console.log(error)
+            });
+    };
+
+
+    const showFormsummit2 = () => {
+        console.log(`3${Owasp}`);
+        setPay(Owasp)
+        axios
+            .post(`http://127.0.0.1:5000/payload3`, { Owasp })
+            .then(response => {
+            alert("บันทึกสำเร็จ")
+                
+            });
+    };
 
         return (
             <div>
                 <Navbar/>
 
-                <div className="inputt-container">                   
+                <div className="inputt-container">
+                <div className="form-container">     
+                <h3>Show Payload</h3>      
+            <Form onFinish={ShowFormsummit} labelCol={{span: 10,}} >
+                 <Form.Item className="select-container"
+                label="Show Payload"
+                name="Owasp-Show">
+    
+                <Select    value={Owasp} onChange={(value)=>setOwasp(value)} placeholder="โปรดเลือกรายการ" options={[
+                 { value: '1', label: 'Web Server Infomation Leakage through Server header' },
+                { value: '2', label: 'Information Leakage through robots.txt' },
+                { value: '3', label: 'Web Application Framework Infomation Leakage' },
+                { value: '4', label: 'Directory Traversal File Include' },
+                { value: '5', label: 'Missing Secure Attribute in Cookie Header' },
+                { value: '6', label: 'Missing HttpOnly Attribute in Cookie Header' },
+                { value: '7', label: 'Missing Expires Attribute in Cookie Header' },
+                { value: '8', label: 'Missing SameSite Attribute in Cookie Header' },
+                { value: '9', label: 'Reflected Cross Site Scripting' },
+                { value: '10', label: 'Stored Cross Site Scriptng' },
+                { value: '11', label: 'SQL Injection' },
+                { value: '12', label: 'Command Injection' }, 
+                { value: '13', label: 'Missing HTTP Strict Transport Security Header' }, 
+                { value: '14', label: 'Sensitive File Disclosure' },
+                { value: '20', label: 'Common' },  ]}>                             
+                </Select>
+                </Form.Item>
+                <Form.Item>                
+                <button  className='btn'type="submit" value="บันทึก">OK</button>
+                </Form.Item>
+            </Form>
+            
+            {pay&& (show)
+            }
+                </div>
+      
+                <div className="form-container">     
+                <h3>เพิ่ม Value ใน Payload</h3>      
             <Form onFinish={Formsummit} labelCol={{span: 10,}} >
                  <Form.Item className="select-container"
                 label="Owasp"
@@ -160,9 +222,11 @@ const Formsummit2 = () => {
                 </Form.Item>
           </Form>)
             }
+              </div>
 
 
-
+              <div className="form-container">
+              <h3>เพิ่ม Payload</h3>    
             <Form onFinish={FormsummitAll} labelCol={{span: 10,}} >
                  <Form.Item className="select-container"
                 label="Owasp-payload"
@@ -202,8 +266,16 @@ const Formsummit2 = () => {
           </Form>)
             }
                 </div>
-            </div>
 
+    
+
+                
+            
+           
+              </div>
+
+            </div>
+           
           );
 }
 

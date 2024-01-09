@@ -12,7 +12,7 @@ import json
 import jwt
 import subprocess
 import os
-
+import math
 
 app = Flask(__name__)
 CORS(app)
@@ -378,6 +378,70 @@ def checkAct(formlist,i):
     return i
 
 
+def contentlenpercent(response,baseper):
+    
+    per = len(response.content)
+    diffper = ((per-baseper)/baseper) * 100
+    return diffper
+
+
+def checkerr(response):
+    errors = {
+        # MySQL
+        "you have an error in your sql syntax;",
+        "warning: mysql",
+        # SQL Server
+        "unclosed quotation mark after the character string",
+        # Oracle
+        "quoted string not properly terminated",
+    }
+    for error in errors:
+        if error in response.content.decode().lower():
+            return True
+    # no error detected
+    return False
+
+
+att_params={}
+
+def brutesql(att_url, att_params, baseper):
+    f = open("eiei.txt", "r") 
+    results = [] 
+    for payload in f:
+        for i in att_params:
+            try:
+                new_att_params = att_params.copy()
+                new_att_params[i] = new_att_params[i] + payload.strip()
+                response = get_response(att_url, new_att_params)
+                print(unquote(response.url))  
+                print(len(response.content))
+                print(contentlenpercent(response, baseper))
+                vres = False
+                if response.status_code == 500:
+                    print('SQL found with :' + payload.strip() + 'in ' + i)
+                    vres = True
+                    vparams = i
+                    results.append((vres, vparams))
+                elif checkerr(response) == True:
+                    print('SQL found with :' + payload.strip() + 'in ' + i)
+                    vres = True
+                    vparams = i
+                    results.append((vres, vparams))
+                elif int(contentlenpercent(response, baseper)) > 70:
+                    print('SQL found with :' + payload.strip() + ' in ' + i)
+                    print(int(contentlenpercent(response, baseper)))
+                    vres = True
+                    vparams = i
+                    results.append((vres, vparams))
+                else:
+                    print('sqli not found')
+            except Exception as e:
+                print(f"An error occurred: {str(e)}")
+
+    return results
+
+
+
 
 def run_gobuster(url):
     try:
@@ -435,7 +499,7 @@ def checkTempFuzz(i):
 # k = 0
 @app.route("/crawl", methods=['POST'])
 def crawl_endpoint():
-    global scope_url, csv_name, project_name, user, MAX_VISITED_URLS, visited_post, visited_urls, http_log_data, i, Host, cookies_data, baseURL, k
+    global scope_url, csv_name, project_name, user, MAX_VISITED_URLS, visited_post, visited_urls, http_log_data, i, Host, cookies_data, baseURL, k,project_name_id_result
     try:
         MAX_VISITED_URLS = 100
         visited_urls = []
@@ -522,6 +586,9 @@ def crawl_endpoint():
         select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
         db.execute(select_project_name_id_query,(project_name, user))             
         project_name_id_result = db.fetchall()   
+
+
+
         
         # insert_query = ("INSERT INTO urllist (URL, method, URI, Host, HTTPVer, status_code, reason, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         # values = (url_str, method_str, URI_str, Host_str, HTTPVer_str, status_str, reason_str, requestheader_str, requestbody_str, responseheader_str, responsebody_str, project_name_id_result[0])
@@ -532,8 +599,41 @@ def crawl_endpoint():
 
 
 
-
-
+        db = mysql.connection.cursor()
+        query = "SELECT URL FROM urllist WHERE PID = %s"
+        db.execute(query, (project_name_id_result))
+        URL_data = db.fetchall()
+        for url_data in URL_data:
+            baseatt_URL = url_data[0]
+            Host = urlparse(baseatt_URL).netloc
+            cookies_data = {}
+            http_log = {}
+            sqlithreshold = 70
+            baseper = len(get_response(baseatt_URL).content)
+            print('b:'+str(baseper))
+            print(baseatt_URL)
+            print(urlparse(baseatt_URL))
+            att_url = urlparse(baseatt_URL).scheme+'://'+urlparse(baseatt_URL).netloc+urlparse(baseatt_URL).path
+            att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+            #parse full query to dictionary
+            if urlparse(baseatt_URL).query != '' :
+                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                att_params={}
+                #parse full query to dictionary
+                for i in urlparse(baseatt_URL).query.split('&'):
+                    #params=value
+                    # print(i)
+                    att_params.update({i.split('=')[0]: i.split('=')[1]})
+                print(att_url)
+                brutesql(att_url, att_params, baseper)
+            # print(vresults)
+            # all_results.extend(vresults)
+            # for vres, vparams in vresults:
+            #     print(vres)
+            #     print(vparams)
+            
+            else:
+                print('we cannot find sql injection')
         # with open(csv_show, "w", encoding='utf-8') as f:
         #     fieldnames = ['no.', 'URL', 'METHOD',   'status']
         #     data = csv.DictWriter(f, fieldnames=fieldnames)
@@ -819,17 +919,27 @@ def payload3():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": str(e)})
+    
 
 
 
+ #payloadShow
+@app.route("/payload4", methods=['POST'])
+def payload4():
+    try:
+        Owasp = request.json['Owasp']
+        db = mysql.connection.cursor()
+        query = "SELECT payloadlist  FROM owasp WHERE OID = %s "
+        db.execute(query,(Owasp,))
+        Owasp_payloadlist = db.fetchall()
+  
 
+        return jsonify({"Owasp_payloadlist": Owasp_payloadlist})
+        # return jsonify(payload_list)
+    except Exception as e:
+        print(f"Error: {e}")
+ 
 
-
-
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
 
 
 
