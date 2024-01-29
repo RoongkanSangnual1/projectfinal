@@ -6,7 +6,7 @@ import './URLlist.css'
 import {PlusOutlined,ReloadOutlined,CloseOutlined} from '@ant-design/icons';
 import './maindashboard.css';
 import PDF from './PDF';
-const URLlist = (props) => {
+const SQlinject = (props) => {
   // console.log(props.name);
   const project_name =props.id
   const project_name_n = props.name
@@ -30,19 +30,22 @@ const URLlist = (props) => {
 
         })
         .then(response => {
-            seturl_target(response.data[1].url_target[0][0])
-            setDetails(response.data[1].url_target[0][1])
-            const Index = response.data[0].crawl_data.map((data, index) => {
+            console.log(response.data[0].select_att_sql_DATA);
+            seturl_target(response.data[1].url_target[0][0]);
+            setDetails(response.data[1].url_target[0][1]);
+            
+            const Index = response.data[2].select_att_sql_DATA
+              .map((data, index) => {
                 try {
-                    // let decodedURLBase64 = atob(data[0]);
                     let decodedURL = decodeURIComponent(data[0]);
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
-                    console.error("Error decoding URL:", error);
-                    return null; 
+                  console.error("Error decoding URL:", error);
+                  return null;
                 }
-            })
-            // console.log(Index); 
+              })
+              .filter(item => item !== null);
+            
             setProjectOneData(Index);
         })
         .catch(error => {
@@ -63,40 +66,35 @@ const URLlist = (props) => {
             render: (text, record) => <a href={(record[2])}>{text}</a>
         },
         {
-            title: 'METHOD',
+            title: 'PAYLOAD',
             dataIndex: '3',
             key: 'METHOD'
-        },
-        {
-            title: 'Status',
-            dataIndex: '4',
-            key: 'status',
         }
         ,
-        {
-            title: 'Delete',
-            dataIndex: '5',
-            key: 'delete',
-            render: (text, record) => (
-              <Space size="middle">
-                <Button type="danger" icon={<CloseOutlined   className="close-button"  style={{color:'red'}}/>} onClick={() => handleDelete(record[5])}> </Button>
-              </Space>
-            ),
-          }
+        // {
+        //     title: 'Delete',
+        //     dataIndex: '5',
+        //     key: 'delete',
+        //     render: (text, record) => (
+        //       <Space size="middle">
+        //         <Button type="danger" icon={<CloseOutlined   className="close-button"  style={{color:'red'}}/>} onClick={() => handleDelete(record[5])}> </Button>
+        //       </Space>
+        //     ),
+        //   }
     ];
 
-    const handleDelete = (iddelete) => {  
-        /// ส่ง token user แบบheaders
-      const token = localStorage.getItem("token")
-      axios.delete(`http://127.0.0.1:5000/oneurlsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
-        headers:{
-          Authorization:`Bearer ${token}`,
-        },
-      }).then(response => {
-        setProjectOneData(projectOneData.filter((project=>project[5] !==iddelete )))
+    // const handleDelete = (iddelete) => {  
+    //     /// ส่ง token user แบบheaders
+    //   const token = localStorage.getItem("token")
+    //   axios.delete(`http://127.0.0.1:5000/oneurlsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
+    //     headers:{
+    //       Authorization:`Bearer ${token}`,
+    //     },
+    //   }).then(response => {
+    //     setProjectOneData(projectOneData.filter((project=>project[5] !==iddelete )))
 
-      })
-      };
+    //   })
+    //   };
 
 
     const showModal = () => {
@@ -113,20 +111,20 @@ const URLlist = (props) => {
 
 
 
-      const Formsummit =()=>{
+    //   const Formsummit =()=>{
 
 
-        axios
-        .post(`http://127.0.0.1:5000/addurls`,{urls,method,parameter,project_name_id})
-        .then(response=>{
-            console.log(response)
+    //     axios
+    //     .post(`http://127.0.0.1:5000/addurls`,{urls,method,parameter,project_name_id})
+    //     .then(response=>{
+    //         console.log(response)
             
-        })
-        .catch(err=>{
-            alert(err.response.data)
-        })   
-        setIsModalOpen(false);   
-    }
+    //     })
+    //     .catch(err=>{
+    //         alert(err.response.data)
+    //     })   
+    //     setIsModalOpen(false);   
+    // }
     const refreshData = () => {
        window.location.reload();
       };
@@ -138,7 +136,7 @@ const URLlist = (props) => {
             <Button onClick={refreshData} icon={<ReloadOutlined />}>restart</Button>
             <Button  onClick={showModal} type="primary" icon={<PlusOutlined />}>Add to URLs</Button>
             </div>
-            <Modal title="Add URL" open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
+            {/* <Modal title="Add URL" open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
             onFinish={Formsummit}
             labelCol={{
@@ -150,7 +148,8 @@ const URLlist = (props) => {
               Parameter:<Input type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/>
                  </Form>
 
-      </Modal>
+      </Modal> */}
+
             </div>
             <Table dataSource={projectOneData} columns={columns} />
             <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} ></PDF>
@@ -158,4 +157,4 @@ const URLlist = (props) => {
     );
 };
 
-export default URLlist;
+export default SQlinject;

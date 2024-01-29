@@ -9,3 +9,8 @@
 
     margin: 20px auto;
 }
+.ProjectDashLayout p {
+    padding: 10px; 
+    border-radius: 5px; 
+    word-break: break-all;
+}

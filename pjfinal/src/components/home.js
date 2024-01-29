@@ -7,7 +7,6 @@ import axios from "axios";
 import { useState,useEffect } from "react";
 
 const Home = () => {
-    const user = localStorage.user
     const [projectdata, setProjectData] = useState([]);
     const [deletee,setDelete] = useState([]);
     
@@ -72,10 +71,10 @@ const Home = () => {
                       items={[
                       {
                         key: {index},
-                        label: <div className="projcollaspe-head">
+                        label: <div className="projcollaspe-head" >
                                   
                                   <h3 className="projname">{project[1]}</h3>
-                                  <Button type="link" icon={<CloseOutlined  style={{ fontSize: '15px',color:'red'}} onClick={()=>Deleteprojuct(project[2])}/>} />
+                                  <Button type="link" icon={<CloseOutlined   className="close-button"  style={{ fontSize: '15px',color:'red'}} onClick={()=>Deleteprojuct(project[2])}/>} />
                                   
                                 </div>,
                         children: <div className="projcollaspe-content">

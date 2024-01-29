@@ -61,7 +61,10 @@ const Admin = () => {
         console.log(`1${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload`, { Owasp })
+            .post(`http://127.0.0.1:5000/payload`, { Owasp },{
+                headers: {
+                  "Content-Type": "application/json",
+                },})
             .then(response => {
                 const options =JSON.parse(response.data.value[0][0]).map(value => ({
                     value,
@@ -76,7 +79,10 @@ const Formsummit2 = () => {
     console.log(`2${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload2`, { payloadone,Owasp,valuepayload })
+            .post(`http://127.0.0.1:5000/payload2`, { payloadone,Owasp,valuepayload },{
+                headers: {
+                  "Content-Type": "application/json",
+                },})
             .then(response => {
                 console.log(response)
                 setOptions(options);
@@ -106,7 +112,10 @@ const Formsummit2 = () => {
         console.log(`3${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload3`, { Owasp,payloadall })
+            .post(`http://127.0.0.1:5000/payload3`, { Owasp,payloadall },{
+                headers: {
+                  "Content-Type": "application/json",
+                },})
             .then(response => {
             alert("บันทึกสำเร็จ")
                 
@@ -118,7 +127,10 @@ const Formsummit2 = () => {
         console.log(`4${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload4`, {Owasp})
+            .post(`http://127.0.0.1:5000/payload4`, {Owasp},{
+                headers: {
+                  "Content-Type": "application/json",
+                },})
             .then(response => {
                 console.log(response.data.Owasp_payloadlist)
                 setShow(response.data.Owasp_payloadlist)                

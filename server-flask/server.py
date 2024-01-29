@@ -102,7 +102,7 @@ def get_response(url,payload=None):
         return None 
                 
 k = 0              
-def save_log(response, i,formlist=None):
+def save_log(response, i,formlist=None, state='c'):
     global req,res,user,project_name,http_log_data,k
     k += 1
     log_key = str(i)
@@ -154,7 +154,7 @@ def save_log(response, i,formlist=None):
     project_name_id_result = db.fetchall()
 
     insert_query = (
-        "INSERT INTO urllist (URL, method, URI, Host, HTTPVer, status_code, reason,length, isredirect,redirect_to, ActionFound, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s)"
+        "INSERT INTO urllist (URL, method, URI, Host, HTTPVer, status_code, reason,state,length, isredirect,redirect_to, ActionFound, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s)"
     )
     values = (
         str(http_log_data['URL']),
@@ -164,11 +164,12 @@ def save_log(response, i,formlist=None):
         str(req['httpver']),
         str(res['status']),
         str(res['reason']),
+        state,
         str(res['clength']),
         str(res['isredirect']),
         str(res['redirect_to']),
         str(res['ActionFound']),
-        str(res['header']),
+        str(req['header']),
         str(req['body']),
         str(res['header']),
         base64.b64encode(res['body'].encode()).decode('utf-8'),
@@ -234,7 +235,7 @@ def save_log(response, i,formlist=None):
         
 
 
-    
+
     
 
 def set_cookies(response):
@@ -357,7 +358,6 @@ def checkAct(formlist,i):
         elif formlist[str(tempAct)]['method'] == 'POST':
             try:
                 response = post_response(acturl, data)
-                
                 if response is not None:
                     if acturl not in visited_post:
                         visited_post[acturl] = set()
@@ -404,16 +404,46 @@ def checkerr(response):
 
 att_params={}
 
-def brutesql(att_url, att_params, baseper):
-    f = open("eiei.txt", "r") 
+def brutesql(att_url, att_params, baseper,select_url_id_data):
+    db = mysql.connection.cursor()
+    query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.sql')) AS payload FROM owasp WHERE OID=11")
+    db.execute(query,)             
+    sql_ = db.fetchall() 
+    # print(common)
+    word_list = json.loads(sql_[0][0])
+    # print(word_list)
+    wordlist_path = 'wordlistsql.txt'
+    with open(wordlist_path, 'w') as file:
+        for item in word_list:
+            file.write(item + '\n')   
     results = [] 
+    f = open(wordlist_path, "r") 
     for payload in f:
         for i in att_params:
             try:
                 new_att_params = att_params.copy()
                 new_att_params[i] = new_att_params[i] + payload.strip()
                 response = get_response(att_url, new_att_params)
-                print(unquote(response.url))  
+                select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+                db.execute(select_project_name_id_query, (project_name, user))
+                project_name_id_result = db.fetchall()
+                print(f'select_url_id_data',select_url_id_data[0])
+                print(f'project_name_id_result',project_name_id_result[0][0])
+                select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
+                db.execute(select_url_id_query, (project_name_id_result[0][0],select_url_id_data[0]))
+                select_url_id = db.fetchall()
+                select_URL_data = select_url_id[0][0]
+                # insert_query = (
+                #     "INSERT INTO att_ps (URL_ID, PID, OID, URL) VALUES (%s, %s, %s,%s)"
+                # )
+                # values = (select_url_id_data[0],project_name_id_result[0][0],'11',select_URL_data)
+                # db.execute(insert_query, values)
+                # mysql.connection.commit()
+                # db.close()
+                print('uresponse' ,response) 
+                print('response.response' ,response.response)
+                print('response.response' ,response.reason)  
+                print('unquote(response.url)' ,unquote(response.url))  
                 print(len(response.content))
                 print(contentlenpercent(response, baseper))
                 vres = False
@@ -422,19 +452,43 @@ def brutesql(att_url, att_params, baseper):
                     vres = True
                     vparams = i
                     results.append((vres, vparams))
+                    insert_query = (
+                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason) VALUES (%s, %s, %s,%s,%s,%s,%s,%s)"
+                    )
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason)
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()
                 elif checkerr(response) == True:
                     print('SQL found with :' + payload.strip() + 'in ' + i)
                     vres = True
                     vparams = i
                     results.append((vres, vparams))
+                    insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason) VALUES (%s, %s, %s,%s,%s,%s,%s,%s)"
+                    )
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason)
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()
                 elif int(contentlenpercent(response, baseper)) > 70:
                     print('SQL found with :' + payload.strip() + ' in ' + i)
                     print(int(contentlenpercent(response, baseper)))
                     vres = True
                     vparams = i
                     results.append((vres, vparams))
+                    insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason) VALUES (%s, %s, %s,%s,%s,%s,%s,%s)"
+                    )
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason)
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()
                 else:
                     print('sqli not found')
+                    # insert_query = (
+                    #     "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,status_code) VALUES (%s, %s, %s,%s,%s,%s)"
+                    # )
+                    # values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'F',response.status_code)
+                    # db.execute(insert_query, values)
+                    # mysql.connection.commit()
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
 
@@ -451,7 +505,7 @@ def run_gobuster(url):
         common = db.fetchall() 
         # print(common)
         word_list = json.loads(common[0][0])
-        print(word_list)
+        # print(word_list)
         wordlist_path = 'wordlist.txt'
         with open(wordlist_path, 'w') as file:
             for item in word_list:
@@ -472,14 +526,24 @@ def run_gobuster(url):
 
 
 
-def checkTempFuzz(i):
+def checkTempFuzz(i, state='T'):
+    global user,project_name
+    db = mysql.connection.cursor()
+    select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+    db.execute(select_project_name_id_query, (project_name, user))
+    project_name_id_result = db.fetchall()
     file_path = "tempfuzz.txt"
     if os.path.exists(file_path):
         try:
             with open(file_path, "r") as f:
                 j = 1
+
                 for x in f:
-                    print(str(j)+ x.split()[0], end='\n')
+                    print(str(j))
+                    url = baseURL + x.split()[0] 
+                    query = ('INSERT INTO urllist(URL,state,PID)  VALUES(%s, %s, %s)')
+                    db.execute(query,(url,state,project_name_id_result),)
+                    # print(baseURL+ x.split()[0], end='\n')
                     j = j+1
                     if (baseURL+x.split()[0]) not in visited_urls:
                         response = get_response(baseURL+x.split()[0])
@@ -533,7 +597,7 @@ def crawl_endpoint():
         
         crawl(scope_url)
         run_gobuster(baseURL)
-        i = checkTempFuzz(i)
+        i = checkTempFuzz(i, state='T') 
 
         # with open(csv_name, "w", encoding='utf-8') as f:
         #     fieldnames = ['no.', 'URL', 'METHOD', 'URI', 'Host', 'HTTPVer', 'status', 'reason','length','isredirect','redirect_to','ActionFound'
@@ -586,7 +650,8 @@ def crawl_endpoint():
         select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
         db.execute(select_project_name_id_query,(project_name, user))             
         project_name_id_result = db.fetchall()   
-
+        # run_gobuster(baseURL)
+        # i = checkTempFuzz(i)
 
 
         
@@ -605,6 +670,12 @@ def crawl_endpoint():
         URL_data = db.fetchall()
         for url_data in URL_data:
             baseatt_URL = url_data[0]
+            print(f'baseatt_URL',baseatt_URL)
+            select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s "
+            db.execute(select_url_id_query, (project_name_id_result,baseatt_URL))
+            select_url_id = db.fetchall()
+            select_url_id_data = select_url_id[0]
+            print(f'select_url_id crawl',select_url_id)
             Host = urlparse(baseatt_URL).netloc
             cookies_data = {}
             http_log = {}
@@ -625,7 +696,7 @@ def crawl_endpoint():
                     # print(i)
                     att_params.update({i.split('=')[0]: i.split('=')[1]})
                 print(att_url)
-                brutesql(att_url, att_params, baseper)
+                brutesql(att_url, att_params, baseper,select_url_id_data)
             # print(vresults)
             # all_results.extend(vresults)
             # for vres, vparams in vresults:
@@ -634,6 +705,12 @@ def crawl_endpoint():
             
             else:
                 print('we cannot find sql injection')
+
+
+
+
+
+
         # with open(csv_show, "w", encoding='utf-8') as f:
         #     fieldnames = ['no.', 'URL', 'METHOD',   'status']
         #     data = csv.DictWriter(f, fieldnames=fieldnames)
@@ -674,7 +751,7 @@ def home():
         db.execute(query, (user_data,))
         project_data = db.fetchall()
         db.close()
-        print(project_data)
+        # print(project_data)
 
         return jsonify({"project_data": project_data})
     except Exception as e:
@@ -698,10 +775,46 @@ def addurls():
         print(method)
         print(parameter)
         print(project_name_id)
-
         return  jsonify("Add URLS สำเร็จ")
     except Exception as e:
         return jsonify({"server error": str(e)})
+    
+
+
+
+@app.route("/addurlsedit",methods=['POST'])
+def addurlsedit():
+    try:
+        url = request.json['urls']
+        method = request.json['method']
+        parameter = request.json['parameter']
+        token = request.json['token']
+        token_user = request.headers.get('Authorization').split(" ")[1]
+        user = jwt.decode(token_user, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+        print(f'user_data = {user_data}')
+        decoded_token = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])
+        user_id = decoded_token.get('user_id', '')
+        project_id = decoded_token.get('project_id', '')
+        print(f'user_id = {user_id}')
+        if user_id is None or project_id is None:
+            return jsonify({'error': 'Invalid token'}), 401
+# เชคสิทธิ์
+        if user_id not in user_data:
+            return jsonify({'error': 'User not allowed to edit project'}), 403
+        db = mysql.connection.cursor()
+        
+        query = ('INSERT INTO urllist(URL,method,PID) VALUES(%s,%s,%s)')
+        db.execute(query,(url,method,project_id),)
+        mysql.connection.commit()
+        print(url)
+        print(method)
+        print(parameter)
+        print(project_id)
+        return  jsonify("Add URLS สำเร็จ")
+    except Exception as e:
+        return jsonify({"server error": str(e)})
+
 
 @app.route("/onedata", methods=['GET'])
 def onedata():
@@ -716,11 +829,28 @@ def onedata():
             SELECT tbl1.URL, tbl1.method, tbl1.status_code , tbl1.URL_ID
             FROM urllist tbl1
             JOIN project tbl2 ON tbl1.PID = tbl2.PID
-            WHERE tbl2.username = %s AND tbl2.PID = %s
+            WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s
         """
-
-        db.execute(query, (user_data, project_name_id))
+        db.execute(query, (user_data, project_name_id,'c'))
         crawl_data = db.fetchall()
+
+        db = mysql.connection.cursor()
+        targets_url = "SELECT PTarget , PDes FROM project WHERE username = %s AND PID = %s"
+        db.execute(targets_url, (user_data, project_name_id))
+        url_target = db.fetchall()
+
+        # print(url_target)        
+        select_att_ID_sql = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_sql, (project_name_id,'11'))
+        select_att_ID_sql_DATA = db.fetchall()
+        # print(select_att_ID_sql_DATA)
+
+
+
+        # wordlist_path = 'wordlistsql.txt'
+        # with open(wordlist_path, 'w') as file:
+        #     for item in word_list:
+        #         file.write(item + '\n')   
         # print(crawl_data)
 
         # query2 = "SELECT URL FROM urllist WHERE PID = %s "
@@ -739,8 +869,10 @@ def onedata():
         #     decoded_strings.append(decoded_string)
         #     print(decoded_strings)
 
-        return jsonify({"crawl_data": crawl_data})
+
+        return jsonify({"crawl_data":crawl_data},{"url_target":url_target},{"select_att_sql_DATA":select_att_ID_sql_DATA})
     except Exception as e:
+        app.logger.error(str(e))
         return jsonify({"server error": str(e)})
 
     
@@ -764,19 +896,39 @@ def onedelete():
         return jsonify({"delete_data": f"ลบ สำเร็จ"})
     except Exception as e:
         return jsonify({"server error": str(e)})
+    
+
 
 @app.route("/oneurlsdelete", methods=['DELETE'])
 def oneurlsdelete():
     try :
-        token = request.headers.get('Authorization').split(" ")[1]
-        user = jwt.decode(token,'jwtSecret',algorithms=['HS256'])['user']   
-        user_data=user.get('username',None)
         project_name_id = request.args.get('project_name_id')
+        print(project_name_id)
         urls_id = request.args.get('record')  
-           
         db = mysql.connection.cursor()
         delete_crawl_query = "DELETE FROM urllist WHERE PID = %s AND URL_ID = %s"
-        db.execute(delete_crawl_query, (project_name_id,urls_id),)
+        db.execute(delete_crawl_query, (project_name_id, urls_id),)
+        mysql.connection.commit()
+        db.close()
+
+
+        token = request.args.get('token')
+        token_user = request.headers.get('Authorization').split(" ")[1]
+        user = jwt.decode(token_user, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+        print(f'user_data = {user_data}')
+        decoded_token = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])
+        user_id = decoded_token.get('user_id', '')
+        print(f'user_id = {user_id}')
+        project_id = decoded_token.get('project_id', '')
+        if user_id is None or project_id is None:
+            return jsonify({'error': 'Invalid token'}), 401
+# เชคสิทธิ์
+        if user_id not in user_data:
+            return jsonify({'error': 'User not allowed to edit project'}), 403
+        db = mysql.connection.cursor()
+        delete_crawl_query = "DELETE FROM urllist WHERE PID = %s AND URL_ID = %s"
+        db.execute(delete_crawl_query, (project_id, urls_id),)
         mysql.connection.commit()
         db.close()
 
@@ -982,5 +1134,86 @@ def payload4():
 #         print(f"Error: {e}")
  
  
+
+
+
+@app.route('/generate-link',methods=['POST'])
+def generate_link():
+    try:
+        token = request.headers.get('Authorization').split('Bearer ')[1]    
+        user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+        project_name_id = request.json['project_name']
+        usershare = request.json['usershare']
+        allowed_users = [usershare,user_data ]
+        if usershare not in allowed_users:
+            return jsonify({'error': 'User not allowed to share project'}), 403
+        db = mysql.connection.cursor()
+        query2 = "SELECT PName FROM project WHERE PID = %s "
+        db.execute(query2, (project_name_id,))
+        project_name = db.fetchall()
+        query3 = "SELECT username FROM project WHERE PID = %s "
+        db.execute(query3, (project_name_id,))
+        username = db.fetchall()
+        payload = {'user_id': usershare, 'project_id': project_name_id,'project_name':project_name,'username':username}
+        token = jwt.encode(payload, 'jwtSecret', algorithm='HS256')
+        link = f'http://localhost:3000/edit-project?token={token}'
+        return jsonify({'link': link})
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+
+@app.route('/edit-project', methods=['GET'])
+def edit_project():
+    token = request.args.get('token')
+    token_user = request.headers.get('Authorization').split(" ")[1]
+    user = jwt.decode(token_user, 'jwtSecret', algorithms=["HS256"])['user']
+    user_data = user.get('username', None)
+    print(token)
+    decoded_token = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])
+    user_id = decoded_token.get('user_id', '')
+    project_id = decoded_token.get('project_id', '')
+    print(user_id, project_id)
+    print(user_data)
+
+
+    if user_id  is None or project_id is None:
+        return jsonify({'error': 'Invalid token'}), 401
+# เชคสิทธิ์
+    if user_id not in user_data:
+        return jsonify({'error': 'User not allowed to edit project'}), 403
+    
+    
+    db = mysql.connection.cursor()
+    query = "SELECT URL,method, status_code , URL_ID FROM urllist WHERE PID = %sAND (state = %s OR state IS NULL)"
+    db.execute(query, (project_id,'c'))
+    crawl_data = db.fetchall()
+    # print(crawl_data)
+    
+
+    
+    return jsonify({"crawl_data":crawl_data})
+
+
+
+
+# @app.route('/generate_pdf', methods=['GET'])
+# def generate_pdf():
+#     try:
+     
+#         project_name_id = request.json['name_id']
+#         db = mysql.connection.cursor()
+#         targets_url = "SELECT PTarget FROM project WHERE PID = %s"
+#         db.execute(targets_url, (project_name_id))
+#         url_data = db.fetchall()
+#         print(url_data)
+#         db.close()
+#         return jsonify({'url_data': "url_data"})
+#     except Exception as e:
+#         print(f"Error: {e}")
+#         return jsonify({'error': str(e)}), 500
+  
+
 if __name__ == "__main__":
     app.run(debug=True) 

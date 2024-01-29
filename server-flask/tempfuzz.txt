@@ -1,2 +1,2 @@
-/admin               [32m (Status: 200)[0m [Size: 80572]
-/main                [32m (Status: 200)[0m [Size: 80572]
+/admin               [32m (Status: 200)[0m [Size: 80457]
+/main                [32m (Status: 200)[0m [Size: 80457]

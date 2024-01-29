@@ -1,1 +1,1 @@
-            baseper = len(get_response(baseatt_URL).content)
+select_att_sql_DATA
