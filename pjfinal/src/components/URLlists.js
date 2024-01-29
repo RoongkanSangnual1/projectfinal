@@ -30,6 +30,7 @@ const URLlist = (props) => {
 
         })
         .then(response => {
+
             seturl_target(response.data[1].url_target[0][0])
             setDetails(response.data[1].url_target[0][1])
             const Index = response.data[0].crawl_data.map((data, index) => {
@@ -42,8 +43,9 @@ const URLlist = (props) => {
                     return null; 
                 }
             })
-            // console.log(Index); 
+            console.log(Index); 
             setProjectOneData(Index);
+
         })
         .catch(error => {
             console.error(error);

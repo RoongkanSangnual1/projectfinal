@@ -103,7 +103,7 @@ def get_response(url,payload=None):
                 
 k = 0              
 def save_log(response, i,formlist=None, state='c'):
-    global req,res,user,project_name,http_log_data,k
+    global req,res,user,project_name,http_log_data,k,http_ver
     k += 1
     log_key = str(i)
     http_log_data = {}
@@ -441,8 +441,9 @@ def brutesql(att_url, att_params, baseper,select_url_id_data):
                 # mysql.connection.commit()
                 # db.close()
                 print('uresponse' ,response) 
-                print('response.response' ,response.response)
-                print('response.response' ,response.reason)  
+                print('response-response' ,response.headers)
+                print('response-response' ,response.headers)
+                print('response-response' ,response.reason)  
                 print('unquote(response.url)' ,unquote(response.url))  
                 print(len(response.content))
                 print(contentlenpercent(response, baseper))
@@ -453,9 +454,9 @@ def brutesql(att_url, att_params, baseper,select_url_id_data):
                     vparams = i
                     results.append((vres, vparams))
                     insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason) VALUES (%s, %s, %s,%s,%s,%s,%s,%s)"
+                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,httpver,host,length) VALUES (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                     )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason)
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path,http_ver, Host, len(response.text))
                     db.execute(insert_query, values)
                     mysql.connection.commit()
                 elif checkerr(response) == True:
@@ -464,11 +465,11 @@ def brutesql(att_url, att_params, baseper,select_url_id_data):
                     vparams = i
                     results.append((vres, vparams))
                     insert_query = (
-                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason) VALUES (%s, %s, %s,%s,%s,%s,%s,%s)"
+                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,httpver,host,length) VALUES (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                     )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason)
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path,http_ver, Host, len(response.text))
                     db.execute(insert_query, values)
-                    mysql.connection.commit()
+                    # ,response.text,response.request.headers,response.request.body,response.request.method
                 elif int(contentlenpercent(response, baseper)) > 70:
                     print('SQL found with :' + payload.strip() + ' in ' + i)
                     print(int(contentlenpercent(response, baseper)))
@@ -476,9 +477,9 @@ def brutesql(att_url, att_params, baseper,select_url_id_data):
                     vparams = i
                     results.append((vres, vparams))
                     insert_query = (
-                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason) VALUES (%s, %s, %s,%s,%s,%s,%s,%s)"
+                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,httpver,host,length) VALUES (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                     )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason)
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path,http_ver, Host, len(response.text))
                     db.execute(insert_query, values)
                     mysql.connection.commit()
                 else:
@@ -768,8 +769,8 @@ def addurls():
         project_name_id = request.json['project_name_id']
         db = mysql.connection.cursor()
         
-        query = ('INSERT INTO urllist(URL,method,PID) VALUES(%s,%s,%s)')
-        db.execute(query,(url,method,project_name_id),)
+        query = ('INSERT INTO urllist(URL,method,PID,state) VALUES(%s,%s,%s,%s)')
+        db.execute(query,(url,method,project_name_id,'c'),)
         mysql.connection.commit()
         print(url)
         print(method)
@@ -804,8 +805,8 @@ def addurlsedit():
             return jsonify({'error': 'User not allowed to edit project'}), 403
         db = mysql.connection.cursor()
         
-        query = ('INSERT INTO urllist(URL,method,PID) VALUES(%s,%s,%s)')
-        db.execute(query,(url,method,project_id),)
+        query = ('INSERT INTO urllist(URL,method,PID) VALUES(%s,%s,%s,%s)')
+        db.execute(query,(url,method,project_id,'c'),)
         mysql.connection.commit()
         print(url)
         print(method)
@@ -834,7 +835,6 @@ def onedata():
         db.execute(query, (user_data, project_name_id,'c'))
         crawl_data = db.fetchall()
 
-        db = mysql.connection.cursor()
         targets_url = "SELECT PTarget , PDes FROM project WHERE username = %s AND PID = %s"
         db.execute(targets_url, (user_data, project_name_id))
         url_target = db.fetchall()
