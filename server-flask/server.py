@@ -91,9 +91,10 @@ def post_response(url,postbody=None):
 
 def get_response(url,payload=None):
     try:
+
+        print(f"get_response",payload)
         response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'},
                                 cookies=cookies_data,allow_redirects=False,params=payload)
-        response.raise_for_status()
         set_cookies(response)
         return response
     except requests.exceptions.RequestException as e:
@@ -423,6 +424,8 @@ def brutesql(att_url, att_params, baseper,select_url_id_data):
             try:
                 new_att_params = att_params.copy()
                 new_att_params[i] = new_att_params[i] + payload.strip()
+                print(f'att_url',new_att_params[i])
+                print(f'new_att_params',new_att_params[i])
                 response = get_response(att_url, new_att_params)
                 select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
                 db.execute(select_project_name_id_query, (project_name, user))
@@ -439,12 +442,8 @@ def brutesql(att_url, att_params, baseper,select_url_id_data):
                 # values = (select_url_id_data[0],project_name_id_result[0][0],'11',select_URL_data)
                 # db.execute(insert_query, values)
                 # mysql.connection.commit()
-                # db.close()
-                print('uresponse' ,response) 
-                print('response-response' ,response.headers)
-                print('response-response' ,response.headers)
-                print('response-response' ,response.reason)  
-                print('unquote(response.url)' ,unquote(response.url))  
+
+                print(unquote(response.url))  
                 print(len(response.content))
                 print(contentlenpercent(response, baseper))
                 vres = False
@@ -561,7 +560,7 @@ def checkTempFuzz(i, state='T'):
 
 
 
-# k = 0
+k = 0
 @app.route("/crawl", methods=['POST'])
 def crawl_endpoint():
     global scope_url, csv_name, project_name, user, MAX_VISITED_URLS, visited_post, visited_urls, http_log_data, i, Host, cookies_data, baseURL, k,project_name_id_result
@@ -597,8 +596,8 @@ def crawl_endpoint():
         csv_name = f"{project_name}.csv"
         
         crawl(scope_url)
-        run_gobuster(baseURL)
-        i = checkTempFuzz(i, state='T') 
+        # run_gobuster(baseURL)
+        # i = checkTempFuzz(i, state='T') 
 
         # with open(csv_name, "w", encoding='utf-8') as f:
         #     fieldnames = ['no.', 'URL', 'METHOD', 'URI', 'Host', 'HTTPVer', 'status', 'reason','length','isredirect','redirect_to','ActionFound'
@@ -651,8 +650,8 @@ def crawl_endpoint():
         select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
         db.execute(select_project_name_id_query,(project_name, user))             
         project_name_id_result = db.fetchall()   
-        # run_gobuster(baseURL)
-        # i = checkTempFuzz(i)
+        run_gobuster(baseURL)
+        i = checkTempFuzz(i)
 
 
         
@@ -886,6 +885,8 @@ def onedelete():
         project_name_id = request.args.get('project_name_id')    
            
         db = mysql.connection.cursor()
+        delete_crawl_query = "DELETE FROM att_ps WHERE PID = %s"
+        db.execute(delete_crawl_query, (project_name_id,))
         delete_crawl_query = "DELETE FROM urllist WHERE PID = %s"
         db.execute(delete_crawl_query, (project_name_id,))
         delete_project_query = "DELETE FROM project WHERE PID = %s AND username = %s"
