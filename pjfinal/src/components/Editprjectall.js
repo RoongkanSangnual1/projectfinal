@@ -5,11 +5,12 @@ import { ShareAltOutlined } from '@ant-design/icons';
 import './projectdash.css';
 import Login from './Login';
 import Navbar from './navbar';
-import Dashboard from './Dashboard';
+import EditDashboard from './EditDashboard';
 import Issues from './Issues';
 import EditProject from './EditProject';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch } from "react-redux";
+import Editsql from './Editsql';
 
 
 const tabList = [
@@ -19,18 +20,18 @@ const tabList = [
   },
   {
     key: 'tab2',
-    tab: 'Issues',
+    tab: 'Scan URLs',
   },
   {
     key: 'tab3',
-    tab: 'Scan URLs',
+    tab: 'Issues',
   },
 ];
 
 const contentList = {
-  tab1: <p><Dashboard /></p>,
-  tab2: <p><Issues /></p>,
-  tab3: <EditProject />,
+  tab1: <p><EditDashboard /></p>,
+  tab2: <p><EditProject /></p>,
+  tab3: <p><Editsql /></p>,
 };
 
 const EditPrjectDash = () => {

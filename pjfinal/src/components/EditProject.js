@@ -78,12 +78,13 @@ const EditProject = () => {
   ];
 
   const handleDelete = (iddelete) => {
-    axios.delete(`http://127.0.0.1:5000/oneurlsdelete?token=${token}&record=${iddelete}`, {
+    axios.delete(`http://127.0.0.1:5000/edit-oneurlsdelete?token=${token}&record=${iddelete}`, {
       headers: {
         Authorization: `Bearer ${tokenuser}`,
       },
     })
     .then(response => {
+      console.log(response.data)
       setProjectOneData(projectOneData.filter((project => project[5] !== iddelete)))
     });
   };

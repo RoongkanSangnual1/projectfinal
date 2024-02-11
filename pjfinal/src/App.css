@@ -1,11 +1,16 @@
 .App {
   text-align: center;
-  display: block;
 }
 
 .Applayout {
-  
-  
   display: flex;
 }
 
+.Sidemenu {
+  margin-right: 20px;
+  order: 1; 
+}
+
+.Home {
+  order: 2; 
+}

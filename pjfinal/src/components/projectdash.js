@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 import { Card,Button,Modal,Form,Input} from 'antd';
 import { ShareAltOutlined } from '@ant-design/icons';
@@ -24,30 +24,47 @@ const ProjectDash = () => {
     const project_name_id = useParams()
     const dispatch = useDispatch()
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [url,setUrl] = useState("")
     const [link_, setLink_] = useState("");
     const project_name = project_name_id.project_name_id
     const project_name_n = project_name_id.project_name
+    // const user = localStorage.user;
+
+
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`,{
+            headers:{
+                Authorization: `Bearer ${token}`,
+            },
+
+        })
+        .then(response => {
+          console.log("response",response)
+          setUrl(response.data[1].url_target[0][0])
+        })
+      },[]);
     const tabList = [
       {
         key: 'tab1',
         tab: 'Dashboard',
       },
-      {
-        key: 'tab2',
-        tab: 'Issues',
-      },
+      // {
+      //   key: 'tab2',
+      //   tab: 'Issues',
+      // },
       {
           key: 'tab3',
           tab: 'Scan URLs',
       },
       {
         key: 'tab4',
-        tab: 'SQL injection',
+        tab: 'Issues',
     },
     ];
   const contentList = {
   tab1: <p><Dashboard/></p>,
-  tab2: <p><Issues/></p>,
+  // tab2: <p><Issues/></p>,
   tab3: <URLlist id={project_name} name={project_name_n} />,
   tab4: <SQlinject id={project_name} name={project_name_n} />
   };
@@ -111,7 +128,7 @@ const handleCopy = () => {
           style={{
             width: '100%',
           }}
-          title={`${project_name_id.project_name}`}
+          title={`${project_name_id.project_name}-(${url})`}
           tabList={tabList}
           activeTabKey={activeTabKey1}
           onTabChange={onTab1Change}

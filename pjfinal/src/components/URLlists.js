@@ -17,6 +17,7 @@ const URLlist = (props) => {
     const [parameter,setparameter] = useState([])
     const [url_target,seturl_target] = useState([])
     const [Details,setDetails] = useState([])
+    const [Delete,setDelete] = useState("")
         const [isModalOpen, setIsModalOpen] = useState(false);
     const user = localStorage.user;
 
@@ -30,7 +31,8 @@ const URLlist = (props) => {
 
         })
         .then(response => {
-
+    
+          setDelete(response.data[5].Role)
             seturl_target(response.data[1].url_target[0][0])
             setDetails(response.data[1].url_target[0][1])
             const Index = response.data[0].crawl_data.map((data, index) => {
@@ -40,9 +42,9 @@ const URLlist = (props) => {
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
                     console.error("Error decoding URL:", error);
-                    return null; 
+                    return null;
                 }
-            })
+            }).filter(item => item !== null);
             console.log(Index); 
             setProjectOneData(Index);
 
@@ -75,17 +77,20 @@ const URLlist = (props) => {
             key: 'status',
         }
         ,
-        {
-            title: 'Delete',
-            dataIndex: '5',
-            key: 'delete',
-            render: (text, record) => (
-              <Space size="middle">
-                <Button type="danger" icon={<CloseOutlined   className="close-button"  style={{color:'red'}}/>} onClick={() => handleDelete(record[5])}> </Button>
-              </Space>
-            ),
-          }
+       
     ];
+if(Delete==='Advance'){
+  columns.push({
+    title: 'Delete',
+    dataIndex: '5',
+    key: 'delete',
+    render: (text, record) => (
+        <Space size="middle">
+            <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red'}}/>} onClick={() => handleDelete(record[5])}> </Button>
+        </Space>
+    )
+});
+}
 
     const handleDelete = (iddelete) => {  
         /// ส่ง token user แบบheaders
@@ -138,7 +143,10 @@ const URLlist = (props) => {
             <div>
               <div className='button-container'>
             <Button onClick={refreshData} icon={<ReloadOutlined />}>restart</Button>
-            <Button  onClick={showModal} type="primary" icon={<PlusOutlined />}>Add to URLs</Button>
+            {Delete ==='Advance'&&(
+               <Button  onClick={showModal} type="primary" icon={<PlusOutlined />}>Add to URLs</Button>
+            )}
+      
             </div>
             <Modal title="Add URL" open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'

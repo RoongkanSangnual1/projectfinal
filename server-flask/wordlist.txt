@@ -4,6 +4,8 @@
 .cache
 .config
 .cvs
+catalog?category=Accessories
+catalog?searchTerm=&category=Accessories
 .cvsignore
 .forward
 .git/HEAD
@@ -4613,6 +4615,3 @@ zope
 zorum
 zt
 
-.ssssssssssssssss
-......asdasdadadasdasdasd
-.asdasdasd

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {  MenuUnfoldOutlined,MenuFoldOutlined,FundOutlined,SignalFilled  } from '@ant-design/icons';
 import { Menu,Button } from 'antd';
 import { useState } from 'react';
@@ -16,7 +15,7 @@ function getItem(label, key, icon, children, type) {
 }
 const items = [
   
-  getItem('Dashboard', '/home', <FundOutlined />),
+  getItem('Dashboard', '/Dashboard', <FundOutlined />),
   getItem('Report', '/create', <SignalFilled />),
   
 ];
@@ -52,7 +51,7 @@ const Sidemenu = () => {
       className="sidemenu" 
       style={{
         width: 200,
-        height: 1000,
+        height: 980,
       }}
       
       items={items}

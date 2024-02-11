@@ -26,16 +26,16 @@ const handleMenuClick = (e) => {
     
   };
   const items = [
-    {
-      label: 'My plan',
-      key: '1',
-      icon: <UserOutlined />,
-    },
-    {
-      label: 'Settings',
-      key: '2',
-      icon: <SettingOutlined />,
-    },
+    // {
+    //   label: 'My plan',
+    //   key: '1',
+    //   icon: <UserOutlined />,
+    // },
+    // {
+    //   label: 'Settings',
+    //   key: '2',
+    //   icon: <SettingOutlined />,
+    // },
     {
       label: 'Logout',
       key: '3',

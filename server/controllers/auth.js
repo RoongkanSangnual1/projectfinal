@@ -49,7 +49,7 @@ exports.login = async(req,res) =>{
             role:user.role
           }
         }
-        jwt.sign(payload,'jwtSecret',{expiresIn: 3600},(err,token)=>{
+        jwt.sign(payload,'jwtSecret',{expiresIn: '1d'},(err,token)=>{
           if(err) throw err;
           res.status(201).json({ token, payload,username,message: "เข้าสู่ระบบเรียบร้อยแล้ว" });
 
@@ -65,6 +65,3 @@ exports.login = async(req,res) =>{
 
   }
 }
-
-
-

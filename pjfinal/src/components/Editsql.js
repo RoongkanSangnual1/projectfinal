@@ -7,10 +7,12 @@ import {PlusOutlined,ReloadOutlined,CloseOutlined,FormOutlined,RightOutlined} fr
 import { Link} from "react-router-dom";
 import { CgDanger } from "react-icons/cg";
 import Highlighter from 'react-highlight-words';
-
 import './maindashboard.css';
+import { useLocation } from 'react-router-dom';
 import PDF from './PDF';
-const SQlinject = (props) => {
+
+const Editsql = (props) => {
+    const location = useLocation();
   // console.log(props.name);
   const project_name =props.id
   const project_name_n = props.name
@@ -28,40 +30,38 @@ const SQlinject = (props) => {
     const [Issue,setIssue] = useState([])
     const [url_target,seturl_target] = useState([])
     const [Details,setDetails] = useState([])
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [Delete,setDelete] = useState("")
-    const user = localStorage.user;
+        const [isModalOpen, setIsModalOpen] = useState(false);
+        const tokenuser= localStorage.getItem('token');
+        const token = new URLSearchParams(location.search).get('token');
 
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
-            headers:{
-                Authorization: `Bearer ${token}`,
-            },
-
+        axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+          headers: {
+            'Authorization': `Bearer ${tokenuser}`
+          }
         })
         .then(response => {
           console.log(response)
-          setDelete(response.data[5].Role)
-            seturl_target(response.data[1].url_target[0][0]);
-            setDetails(response.data[1].url_target[0][1]);
+   
+            seturl_target(response.data[0].url_target[0][0]);
+            setDetails(response.data[0].url_target[0][1]);
 
             
-            const Index = response.data[2].select_att_sql_DATA
+            const Index = response.data[1].select_att_sql_DATA
               .map((data, index) => {
                 try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    let decodedURL1 = decodeURIComponent(data[1]);
-                    let decodedURL2 = decodeURIComponent(data[2]);
-                    return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
+                  let decodedURL = decodeURIComponent(data[0]);
+                  let decodedURL1 = decodeURIComponent(data[1]);
+                  let decodedURL2 = decodeURIComponent(data[2]);
+                  return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
                   return [index+1, data[0],data[2], ...data];
                 }
               })
               .filter(item => item !== null);
-            const IndexXss = response.data[3].select_att_ID_xsssql_DATA
+            const IndexXss = response.data[2].select_att_ID_xsssql_DATA
               .map((data, index) => {
                 try {
                   let decodedURL = decodeURIComponent(data[0]);
@@ -70,12 +70,11 @@ const SQlinject = (props) => {
                   return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                 return null;
+                  return [index+1, data[0],data[2], ...data];
                 }
               })
               .filter(item => item !== null);
-              console.log(IndexXss)
-            const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA
+            const Indextraversal = response.data[3].select_att_ID_select_att_traversal_DATA
               .map((data, index) => {
                 try {
                   let decodedURL = decodeURIComponent(data[0]);
@@ -84,63 +83,63 @@ const SQlinject = (props) => {
                   return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                  return [index+1, data[0],data[2], ...data];;
+                  return [index+1, data[0],data[2], ...data];
                 }
               })
               .filter(item => item !== null);
-              const IndexSecure= response.data[6].select_att_ID_select_att_secure_DATA
+              const IndexSecure= response.data[4].select_att_ID_select_att_secure_DATA
               .map((data, index) => {
                 try {
                     let decodedURL = decodeURIComponent(data[0]);
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
+                  return [index+1, data[0] , ...data];
                 }
               })
               .filter(item => item !== null);
-              const httponly = response.data[7].select_att_ID_select_att_httponly_DATA
+              const httponly = response.data[5].select_att_ID_select_att_httponly_DATA
               .map((data, index) => {
                 try {
                     let decodedURL = decodeURIComponent(data[0]);
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
+                  return [index+1, data[0], ...data];
                 }
               })
               .filter(item => item !== null);
-              const expire = response.data[8].select_att_ID_select_att_expire_DATA
+              const expire = response.data[6].select_att_ID_select_att_expire_DATA
               .map((data, index) => {
                 try {
                     let decodedURL = decodeURIComponent(data[0]);
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
+                  return [index+1, data[0], ...data];
                 }
               })
               .filter(item => item !== null);
-              const samsite = response.data[9].select_att_ID_select_att_samsite_DATA
+              const samsite = response.data[7].select_att_ID_select_att_samsite_DATA
               .map((data, index) => {
                 try {
                     let decodedURL = decodeURIComponent(data[0]);
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
+                  return [index+1, data[0], ...data];
                 }
               })
               .filter(item => item !== null);
 
-              const server = response.data[10].select_att_ID_select_att_server_DATA
+              const server = response.data[8].select_att_ID_select_att_server_DATA
               .map((data, index) => {
                 try {
                     let decodedURL = decodeURIComponent(data[0]);
                     return [index+1, decodedURL, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
+                  return [index+1, data[0], ...data];
                 }
               })
               .filter(item => item !== null);
@@ -149,7 +148,6 @@ const SQlinject = (props) => {
 
               setsamsite(samsite)
               setserver(server)
-              console.log(server)
               setexpire(expire)
               sethttponly(httponly)
               setsecure(IndexSecure)
@@ -160,7 +158,7 @@ const SQlinject = (props) => {
         .catch(error => {
             console.error(error);
         });
-    }, [user, project_name_id]);
+    }, []);
 
     // const columns = [
     //     {
@@ -243,9 +241,9 @@ const SQlinject = (props) => {
             <div>
               <div className='button-container'>
             <Button onClick={refreshData} icon={<ReloadOutlined />}>restart</Button>
-            {Delete==='Advance'&&(
+           
               <Button  onClick={showModal} type="primary" style={{background:'red'} }icon={<PlusOutlined />}>Add to Issue</Button>
-            )}
+    
             <Modal title="Add Isuues " open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
             onFinish={Formsummit}
@@ -281,7 +279,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">SQL-injection <per style={{color:"red"}}>  ({projectOneDataSQL.length})</per></h3>
+          <h3 className="projname">SQL-injection</h3>
         </div>
       ),
       children: (
@@ -296,7 +294,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
     </>
   )}
@@ -304,9 +302,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-       <a  style={{color:"red"}} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                  {OneData[3]}
-            </a>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[3]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -325,7 +321,7 @@ const SQlinject = (props) => {
                   {OneData[1]}
                 </a>
               </td>
-              <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+              <td style={{textAlign:"center"}}>{OneData[2]}</td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -401,7 +397,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">Stored Cross Site Scriptng<per style={{color:"red"}}>  ({projectOneDataXSSSQL.length})</per></h3>
+          <h3 className="projname">Stored Cross Site Scriptng</h3>
         </div>
       ),
       children: (
@@ -416,7 +412,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
     </>
   )}
@@ -424,9 +420,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-                <a  style={{color:"red"}}   href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                  {OneData[3]}
-            </a>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[3]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -445,7 +439,7 @@ const SQlinject = (props) => {
                   {OneData[1]}
                 </a>
               </td>
-              <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+              <td style={{textAlign:"center"}}>{OneData[2]}</td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -522,7 +516,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">Directory Traversal File Include<per style={{color:"red"}}> ({traversal.length})</per></h3>
+          <h3 className="projname">Directory Traversal File Include</h3>
         </div>
       ),
       children: (
@@ -537,7 +531,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
     </>
   )}
@@ -545,9 +539,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-               <a  style={{color:"red"}}  href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                  {OneData[3]}
-            </a>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[2]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -566,7 +558,7 @@ const SQlinject = (props) => {
                   {OneData[1]}
                 </a>
               </td>
-              <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+              <td style={{textAlign:"center"}}>{OneData[4]}</td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -634,7 +626,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px',marginTop: '40px' }} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} />
     </>
   )}
@@ -642,7 +634,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">Web Server Infomation Leakage through 'Server' header<per style={{color:"red"}}>  ({server.length})</per></h3>
+          <h3 className="projname">Web Server Infomation Leakage through 'Server' header</h3>
         </div>
       ),
       children: (
@@ -665,7 +657,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname"  style={{color:"red"}}>{OneData[1]}</h3>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[2]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -680,20 +672,18 @@ const SQlinject = (props) => {
     <tbody>
       <tr>
       <td style={{textAlign:"center"}}>
-                <a  style={{color:"red"}} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]} 
+                <a href={OneData[2]} target="_blank" rel="noopener noreferrer">
+                  {OneData[2]}
                 </a>
               </td>
+              <td style={{ textAlign: "center" }}>
 
-<td style={{ textAlign: "center" }}>
-
-    <Highlighter
-     style={{color:"red"}}
-      highlightClassName="YourHighlightClass"
-      searchWords={['Server']} 
-      autoEscape={true}
-      textToHighlight={OneData[3]}
-    />
+<Highlighter
+  highlightClassName="YourHighlightClass"
+  searchWords={['Server']} 
+  autoEscape={true}
+  textToHighlight={OneData[3]}
+/>
 
 </td>
       </tr>
@@ -770,7 +760,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">Missing Secure Attribute in Cookie Header <per style={{color:"red"}}> ({secure.length})</per></h3>
+          <h3 className="projname">Missing Secure Attribute in Cookie Header</h3>
         </div>
       ),
       children: (
@@ -785,7 +775,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px',marginTop: '5px'}} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
     </>
   )}
@@ -793,9 +783,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-           <a  style={{color:"red"}}  href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[2]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -810,11 +798,11 @@ const SQlinject = (props) => {
     <tbody>
       <tr>
       <td style={{textAlign:"center"}}>
-                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
+                <a href={OneData[2]} target="_blank" rel="noopener noreferrer">
+                  {OneData[2]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{textAlign:"center"}}>{OneData[3]}</td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -890,7 +878,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">Missing HttpOnly Attribute in Cookie Header <per style={{color:"red"}}> ({httponly.length})</per></h3>
+          <h3 className="projname">Missing HttpOnly Attribute in Cookie Header</h3>
         </div>
       ),
       children: (
@@ -913,9 +901,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-         <a  style={{color:"red"}} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[2]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -930,11 +916,11 @@ const SQlinject = (props) => {
     <tbody>
       <tr>
       <td style={{textAlign:"center"}}>
-                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
+                <a href={OneData[2]} target="_blank" rel="noopener noreferrer">
+                  {OneData[2]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{textAlign:"center"}}>{OneData[3]}</td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -1003,7 +989,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px',marginTop: '40px' }} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} />
     </>
   )}
@@ -1011,7 +997,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-           <h3 className="projname">Missing Expires Attribute in Cookie Header <per style={{color:"red"}}> ({expire.length})</per></h3>
+          <h3 className="projname">Missing Expires Attribute in Cookie Header</h3>
         </div>
       ),
       children: (
@@ -1026,7 +1012,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
     </>
   )}
@@ -1034,9 +1020,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-        <a  style={{color:"red"}} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[2]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -1051,11 +1035,11 @@ const SQlinject = (props) => {
     <tbody>
       <tr>
       <td style={{textAlign:"center"}}>
-                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
+                <a href={OneData[2]} target="_blank" rel="noopener noreferrer">
+                  {OneData[2]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{textAlign:"center"}}>{OneData[3]}</td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -1123,7 +1107,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px'}} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} />
     </>
   )}
@@ -1131,7 +1115,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">Missing SameSite Attribute in Cookie Header<per style={{color:"red"}}> ({expire.length})</per></h3>
+          <h3 className="projname">Missing SameSite Attribute in Cookie Header</h3>
         </div>
       ),
       children: (
@@ -1146,7 +1130,7 @@ const SQlinject = (props) => {
   style={{ marginTop: '5px' }}
   expandIcon={({ isActive }) => (
     <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
     </>
   )}
@@ -1154,9 +1138,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-        <a  style={{color:"red"}}  href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
+          <h3 className="projname"  style={{color:"red"}}>{OneData[2]}</h3>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -1171,11 +1153,11 @@ const SQlinject = (props) => {
     <tbody>
       <tr>
       <td style={{textAlign:"center"}}>
-                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
+                <a href={OneData[2]} target="_blank" rel="noopener noreferrer">
+                  {OneData[2]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{textAlign:"center"}}>{OneData[3]}</td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -1234,4 +1216,4 @@ const SQlinject = (props) => {
     );
 };
 
-export default SQlinject;
+export default Editsql;

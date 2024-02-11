@@ -1,44 +1,69 @@
-import { useState } from "react";
-import './createproject.css'
+import React from "react";
+import './maindashboard.css';
+import { PlusOutlined,RightOutlined,CloseOutlined,FormOutlined } from '@ant-design/icons';
 import axios from "axios";
+import { useState,useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import Navbar from "./navbar";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
-import { CloseOutlined, RobotOutlined } from '@ant-design/icons';
 import ClipLoader  from "react-spinners/ClipLoader";
 
-const Target_url = () => {
+
+const Edithome = () => {
+    const { project_name_id } = useParams();
     const [project_name, setProject_name] = useState("");
     const [url, setUrl] = useState("");
-    const [project_name_id, setProject_name_id] = useState();
+    const [project_name_idd, setProject_name_idd] = useState();
     const [load, setLoad] = useState(false);
     const [error, setError] = useState(false);
     const [description, setDescription] = useState("");
     const authUser = localStorage.user;
     const [loadingButton, setLoadingButton] = useState(false);
+    const token = localStorage.getItem('token')
+    useEffect(() => {
+        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
+            headers:{
+                Authorization: `Bearer ${token}`,
+            },
+
+        })
+        .then(response => {
+            setProject_name(...project_name,response.data[1].url_target[0][2]);
+            setDescription(response.data[1].url_target[0][1]);
+            setUrl(response.data[1].url_target[0][0]);
+      
+
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }, []);
 
     const Formsummit = () => {
         setLoad(true);
         setLoadingButton(true);
 
-        axios.post(`http://127.0.0.1:5000/crawl`, { project_name, authUser, url, description })
+        axios.put(`http://127.0.0.1:5000/update`, { project_name, authUser, url, description,project_name_id },{
+            headers:{
+              Authorization:`Bearer ${token}`,
+            },
+          })
             .then(res => {
                 setLoad(false);
                 setLoadingButton(false);
-                setProject_name_id(res.data.project_name_id_result);
             })
             .catch(error => {
                 setError("ไม่สามารถทำการได้");
                 console.error("Error crawling:", error);
             });
     };
-
-    return (
-        <div>
+        return (
+            <div className="App">
             <Navbar />
             <div className="container2">
-                <Link to='/home' className="exit"><CloseOutlined /></Link>
-                <h2>Create Project</h2>
+            <Link to='/home' className="exit" style={{color:"red"}}><CloseOutlined  style={{color:"red"}}/></Link>
+            <h2 >Edit Project</h2>
                 <div className="createproject-form">
                     <Form
                         onFinish={Formsummit}
@@ -47,14 +72,14 @@ const Target_url = () => {
                         <Form.Item label="Project Name">
                             <Input type="text" className="form-input" value={project_name} onChange={(e) => setProject_name(e.target.value)} />
                         </Form.Item>
-                        <Form.Item label="Scope url">
-                            <Input type="url" className="form-input" value={url} onChange={(e) => setUrl(e.target.value)} />
+                        <Form.Item label=" URL (read only)">
+                        <Input type="url" className="form-input" value={url} readOnly />
                         </Form.Item>
                         <Form.Item label="Project details">
                             <Input.TextArea rows={5} className="form-input" value={description} onChange={(e) => setDescription(e.target.value)} />
                         </Form.Item>
                         <Form.Item>
-                        <button className="btn" type="submit" disabled={loadingButton}>
+                        <button className="btn" type="submit"  style={{backgroundColor:"#304DA5"}}disabled={loadingButton}>
                             {loadingButton ?(
                             <>
                                 <ClipLoader 
@@ -63,25 +88,15 @@ const Target_url = () => {
                                 size={30}
                                 aria-label="Loading Spinner"
                                data-testid="loader"
-                                />  <br/>  Crawling...
-                            </>)  : "Crawl"}
+                                />  <br/>  update...
+                            </>)  : "update"}
                         </button>
 </Form.Item>
                     </Form>
                 </div>
-                {load ? null : (
-                    <div className="gotobtn">
-                        {/* {error} */}
-                        {project_name_id && (
-                            <Link to={`/myproject/${project_name}/${project_name_id}`}>
-                                <Button type="primary" icon={<RobotOutlined />}>Go to Project</Button>
-                            </Link>
-                        )}
-                    </div>
-                )}
             </div>
-        </div>
-    )
+          </div>
+          );
 }
 
-export default Target_url;
+export default Edithome;
