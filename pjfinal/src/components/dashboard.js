@@ -5,14 +5,15 @@ import { PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
 import './Dashboard.css'
 const Dashboard = () => {
   const { project_name_id } = useParams();
-  const [projectOneDataSQL, setProjectOneDataSQL] = useState([]);
-  const [projectOneDataXSS, setProjectOneDataXSS] = useState([]);
-  const [projectOneDataTravel, setProjectOneDataTravel] = useState([]);
+  const [projectOneDataSQL, setProjectOneDataSQL] = useState(0);
+  const [projectOneDataXSS, setProjectOneDataXSS] = useState(0);
+  const [projectOneDataTravel, setProjectOneDataTravel] = useState(0);
   const [httponly,sethttponly] = useState(0)
   const [expire,setexpire] = useState(0)
   const [samsite,setsamsite] = useState(0)
   const [secure,setsecure] = useState(0)
   const [server,setserver] = useState(0)
+  const [HSTS,setHSTS] = useState(0)
   const user = localStorage.user;
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const Dashboard = () => {
       setsamsite(response.data[8].select_att_ID_select_att_samsite_DATA.filter(item=> item !== null));
       setsecure(response.data[5].select_att_ID_select_att_secure_DATA.filter(item=> item !== null));
       setserver(response.data[9].select_att_ID_select_att_server_DATA.filter(item=> item !== null));
+      setHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA.filter(item=> item !== null))
       console.log(server)
       
     })
@@ -44,7 +46,7 @@ const Dashboard = () => {
     const counts = {
       high: projectOneDataSQL.length + projectOneDataXSS.length,
       medium: projectOneDataTravel.length,
-      low:httponly.length+server.length+secure.length+samsite.length+expire.length,
+      low:httponly.length+server.length+secure.length+samsite.length+expire.length+HSTS.length,
     };
   
     return counts;
@@ -97,7 +99,7 @@ const Dashboard = () => {
         <div className='circle-yellow'></div>
         <p>medium ({projectOneDataTravel.length})</p>
         <div className='circle-blue'></div>
-        <p>low({httponly.length+server.length+secure.length+samsite.length+expire.length})</p>
+        <p>low({httponly.length+server.length+secure.length+samsite.length+expire.length+HSTS.length})</p>
       </div>
       </div>
       <h1>Summary</h1>
@@ -165,6 +167,14 @@ const Dashboard = () => {
               </td>
             </tr>)}
             {server.length>0 &&(<tr>
+              <td >
+              Web Server Infomation Leakage through 'Server' header
+              </td>
+              <td style={{color:" #6F77B1"}}>
+                Low
+              </td>
+            </tr>)}
+            {HSTS.length>0 &&(<tr>
               <td >
               Web Server Infomation Leakage through 'Server' header
               </td>

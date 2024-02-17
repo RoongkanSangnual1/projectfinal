@@ -163,7 +163,7 @@ if(Delete==='Advance'){
       </Modal>
             </div>
             <Table dataSource={projectOneData} columns={columns} />
-            <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} ></PDF>
+            {/* <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} ></PDF> */}
         </div>
     );
 };

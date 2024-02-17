@@ -17,12 +17,14 @@ const SQlinject = (props) => {
     const { project_name_id } = useParams();
     const [projectOneDataSQL, setprojectOneDataSQL] = useState([]);
     const [projectOneDataXSSSQL, setprojectOneDataXSSSQL] = useState([]);
+    const [responsedata, setresponsedata] = useState([]);
     const [traversal,settraversal] = useState([])
     const [httponly,sethttponly] = useState([])
     const [expire,setexpire] = useState([])
     const [samsite,setsamsite] = useState([])
     const [secure,setsecure] = useState([])
     const [server,setserver] = useState([])
+    const [HSTS,setHSTS] = useState([])
     const [urls,setUrls] = useState([])
     const [Payload,setPayload] = useState([])
     const [Issue,setIssue] = useState([])
@@ -42,7 +44,8 @@ const SQlinject = (props) => {
 
         })
         .then(response => {
-          console.log(response)
+          // console.log(response.data)
+          // setresponsedata(response)
           setDelete(response.data[5].Role)
             seturl_target(response.data[1].url_target[0][0]);
             setDetails(response.data[1].url_target[0][1]);
@@ -61,6 +64,7 @@ const SQlinject = (props) => {
                 }
               })
               .filter(item => item !== null);
+            
             const IndexXss = response.data[3].select_att_ID_xsssql_DATA
               .map((data, index) => {
                 try {
@@ -74,6 +78,7 @@ const SQlinject = (props) => {
                 }
               })
               .filter(item => item !== null);
+             
               console.log(IndexXss)
             const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA
               .map((data, index) => {
@@ -84,7 +89,8 @@ const SQlinject = (props) => {
                   return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
                 } catch (error) {
                   console.error("Error decoding URL:", error);
-                  return [index+1, data[0],data[2], ...data];;
+                  return [index+1, data[0],data[2], ...data];
+                ;
                 }
               })
               .filter(item => item !== null);
@@ -144,9 +150,19 @@ const SQlinject = (props) => {
                 }
               })
               .filter(item => item !== null);
-
-
-
+              const HSTS = response.data[11].select_att_ID_select_att_HSTS_DATA
+              .map((data, index) => {
+                try {
+                    let decodedURL = decodeURIComponent(data[0]);
+                    return [index+1, decodedURL, ...data];
+                } catch (error) {
+                  console.error("Error decoding URL:", error);
+                  return [index+1,data[0], ...data];
+                }
+              })
+              .filter(item => item !== null);
+              setresponsedata([{"SQL Injection":Index},{"Stored Cross Site Scriptng":IndexXss},{"Directory Traversal File Include":Indextraversal},{"Missing Secure Attribute in Cookie Header":IndexSecure},{"Missing HttpOnly Attribute in Cookie Header":httponly},{"Missing Expires Attribute in Cookie Header":expire},{"Missing SameSite Attribute in Cookie Header":samsite},{"Web Server Infomation Leakage through Server header":server},{"Missing HTTP Strict Transport Security Header":HSTS}])
+              setHSTS(HSTS)     
               setsamsite(samsite)
               setserver(server)
               console.log(server)
@@ -330,11 +346,15 @@ const SQlinject = (props) => {
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left'}}>
           <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[7]}</p>
         </td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[8]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -448,13 +468,17 @@ const SQlinject = (props) => {
               <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
       </tr>
       <tr>
-        <td colSpan="2"  style={{ textAlign: 'left'}}>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
           <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[7]}</p>
         </td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[8]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -561,16 +585,17 @@ const SQlinject = (props) => {
     </thead>
     <tbody>
       <tr>
-      <td style={{textAlign:"center"}}>
-                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
-              </td>
-              <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
+          <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[7]}</p>
+        </td>
       </tr>
       <tr>
-        <td colSpan="2"  style={{ textAlign: 'left'}}>
-          <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[8]}
+          </p>
         </td>
       </tr>
       <tr>
@@ -698,13 +723,17 @@ const SQlinject = (props) => {
 </td>
       </tr>
       <tr>
-        <td colSpan="2"  style={{ textAlign: 'left'}}>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
           <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[4]}</p>
         </td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[5]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -814,16 +843,28 @@ const SQlinject = (props) => {
                   {OneData[1]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{ textAlign: "center", color: "red" }}>
+    <Highlighter
+     style={{color:"red"}}
+      highlightClassName="YourHighlightClass"
+      searchWords={['Set-Cookie']} 
+      autoEscape={true}
+      textToHighlight={OneData[3]}
+    />
+</td>
       </tr>
       <tr>
-        <td colSpan="2"  style={{ textAlign: 'left'}}>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
           <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[4]}</p>
         </td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[5]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -934,16 +975,28 @@ const SQlinject = (props) => {
                   {OneData[1]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{ textAlign: "center", color: "red" }}>
+    <Highlighter
+     style={{color:"red"}}
+      highlightClassName="YourHighlightClass"
+      searchWords={['Set-Cookie']} 
+      autoEscape={true}
+      textToHighlight={OneData[3]}
+    />
+</td>
       </tr>
       <tr>
-        <td colSpan="2"  style={{ textAlign: 'left'}}>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
           <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[4]}</p>
         </td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[5]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -1055,16 +1108,28 @@ const SQlinject = (props) => {
                   {OneData[1]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{ textAlign: "center", color: "red" }}>
+    <Highlighter
+     style={{color:"red"}}
+      highlightClassName="YourHighlightClass"
+      searchWords={['Set-Cookie']} 
+      autoEscape={true}
+      textToHighlight={OneData[3]}
+    />
+</td>
       </tr>
       <tr>
-        <td colSpan="2"  style={{ textAlign: 'left'}}>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
           <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[4]}</p>
         </td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[5]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -1131,7 +1196,7 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">Missing SameSite Attribute in Cookie Header<per style={{color:"red"}}> ({expire.length})</per></h3>
+          <h3 className="projname">Missing SameSite Attribute in Cookie Header<per style={{color:"red"}}> ({samsite.length})</per></h3>
         </div>
       ),
       children: (
@@ -1175,16 +1240,28 @@ const SQlinject = (props) => {
                   {OneData[1]}
                 </a>
               </td>
-              <td style={{ textAlign: "center", color: "red" }}>{OneData[3]}</td>
+              <td style={{ textAlign: "center", color: "red" }}>
+    <Highlighter
+     style={{color:"red"}}
+      highlightClassName="YourHighlightClass"
+      searchWords={['Set-Cookie']} 
+      autoEscape={true}
+      textToHighlight={OneData[3]}
+    />
+</td>
       </tr>
       <tr>
-        <td colSpan="2"  style={{ textAlign: 'left'}}>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
           <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[4]}</p>
         </td>
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[5]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -1229,7 +1306,150 @@ const SQlinject = (props) => {
 )
 }
 </>
-            <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} ></PDF>
+
+
+
+<>
+{
+              HSTS && HSTS.length> 0 ? (
+            
+            <Collapse
+  className="projcollaspe"
+  collapsible="header"
+  size="small"
+  defaultActiveKey={['1']}
+  style={{ marginTop: '5px' }}
+  expandIcon={({ isActive }) => (
+    <>
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px'}} />
+      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} />
+    </>
+  )}
+  items={[
+    {
+      label: (
+        <div className="projcollaspe-head">
+          <h3 className="projname">Missing HTTP Strict Transport Security Header<per style={{color:"red"}}> ({HSTS.length})</per></h3>
+        </div>
+      ),
+      children: (
+        <>
+        {
+        HSTS.map((OneData, index) => (
+                  <Collapse
+  className="projcollaspe"
+  collapsible="header"
+  size="small"
+  defaultActiveKey={['10']}
+  style={{ marginTop: '5px' }}
+  expandIcon={({ isActive }) => (
+    <>
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+      {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
+    </>
+  )}
+  items={[
+    {
+      label: (
+        <div className="projcollaspe-head">
+        <a  style={{color:"red"}}  href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                  {OneData[1]}
+                </a>
+        </div>
+      ),
+      children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
+<div className="collapse-content" style={{ overflow: 'auto' }}>
+  <table>
+    <thead>
+      <tr>
+        <th>URL</th>
+        <th>EVIDENCE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      <td style={{textAlign:"center"}}>
+                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                  {OneData[1]}
+                </a>
+              </td>
+              <td style={{ textAlign: "center", color: "red" }}>
+    <Highlighter
+     style={{color:"red"}}
+      highlightClassName="YourHighlightClass"
+      searchWords={['Set-Cookie']} 
+      autoEscape={true}
+      textToHighlight={OneData[3]}
+    />
+</td>
+      </tr>
+      <tr>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
+          <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[4]}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[5]}
+          </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  
+
+        </div>
+      ),
+    },
+  ]}
+/>
+               )) } </>
+),
+    },
+  ]}
+/>
+): (
+  <Collapse
+  className="projcollaspe"
+  collapsible="header"
+  size="small"
+  defaultActiveKey={['1']}
+  style={{ marginTop: '5px' }}
+  expandIcon={({ isActive }) => (
+    <>
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
+      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: '#47F777' }} />
+    </>
+  )}
+  items={[
+    {
+      label: (
+        <div className="projcollaspe-head">
+          <h3 className="projname"> Missing HTTP Strict Transport Security Header</h3>
+        </div>
+      ),
+    },
+  ]}
+/>
+)
+}
+</>
+
+
+
+
+
+
+
+
+
+
+            <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata}></PDF>
         </div>
     );
 };

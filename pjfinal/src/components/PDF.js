@@ -3,243 +3,182 @@ import autoTable from 'jspdf-autotable'
 import {Button} from 'antd';
 import axios from 'axios'
 import { FaRegFilePdf } from "react-icons/fa6";
+import {font} from "./THSarabunNew-normal"
 const PDF = (props) => {
-    // console.log(`pdf${props.id}`);
-    // console.log(`pdf${props.url_target}`);
-    const token = localStorage.getItem('token')
-    const name_id =props.id
-    const doc = new jsPDF();
-    const showModal = () => {
-        // axios.post(`http://127.0.0.1:5000/generate_pdf`,{name_id})
-        // .then(response=>{
-        //     if(response){
-        //         console.log(response);
-        //     }
-        //     })
-        // .catch(err=>{
-        //     alert(err.response.data)
-        // }) 
+  const token = localStorage.getItem('token');
+  const name_id = props.id;
 
+  console.log("responsedata", props.responsedata);
 
-      doc.setFontSize(16)
-      doc.text(`Penetration Testing - ${props.name}`, 14, 10);
-      doc.setFontSize(12)
-      doc.text(`Vulnerability Targets`, 14, 17);
-      
+  const data = props.responsedata.filter(item => Object.values(item)[0]?.length !== 0);
+  console.log("data", data);
 
-      let content = {startY: 20,
-        head: [['ID', 'Targets', 'Details']],
-        body: [
-          ['1', ` ${props.url_target}`, ` ${props.Details}`],
-        
-          // ...
-        ]}
-        let content2 = {startY: 45,
-            head: [['ID', 'Vulnerability Details', 'Severity']],
-            body: [
-              ['1', `Web Server Infomation Leakage through 'Server' header`,],
-              ['2', `Web Application Framework Infomation Leakage`,],
-              ['3', `Directory Traversal File Include`,],
-              ['4', `Missing Secure Attribute in Cookie Header`,],
-              ['5', `Missing HttpOnly Attribute in Cookie Header`,],
-              ['6', `Missing Expires Attribute in Cookie Header`,],
-              ['7', `Missing SameSite Attribute in Cookie Header`,],
-              ['8', `Reflected Cross Site Scripting`,],
-              ['9', `Stored Cross Site Scriptng`,],
-              ['10', `SQL Injection`,],
-              ['11', `Command Injection`,],
-              ['12', `Missing HTTP Strict Transport Security Header`, ],
-              ['13', `Sensitive File Disclosure`, ],
-            //   ['14', `Penetration Testing ${props.name}`, 'Sweden'],
+  let body2 = [];
+  function getSeverityByKey(key) {
+    const severityMapping = {
+      "Web Server Infomation Leakage through Server header": "Low",
+      "Web Application Framework Infomation Leakage": "Medium",
+      "Directory Traversal File Include": "Medium",
+      "Missing Secure Attribute in Cookie Header": "Low",
+      "Missing HttpOnly Attribute in Cookie Header": "Low",
+      "Missing Expires Attribute in Cookie Header": "Low",
+      "Missing SameSite Attribute in Cookie Header": "Low",
+      "Reflected Cross Site Scripting": "High",
+      "Stored Cross Site Scriptng": "High",
+      "SQL Injection": "High",
+      "Command Injection": "High",
+      "Missing HTTP Strict Transport Security Header": "Low",
+      "Sensitive File Disclosure": "High",
+    
+    };
+  
+    return severityMapping[key] || "High"; 
+  }
+  
+  data.forEach((item, index) => {
+    const key = Object.keys(item)[0];
+    const severity = getSeverityByKey(key); 
+    body2.push([`${index + 1}`, key, severity, ...Object.values(item)[0]]);
+  });
+  
+console.log(body2)
+  const doc = new jsPDF();
+  doc.addFileToVFS("MyFont.ttf", font);
+  doc.addFont("MyFont.ttf", "MyFont", "normal");
+  doc.setFont("MyFont");
 
-            
-              // ...
-            ]}
-      // Create the table with didDrawCell callback
-      doc.autoTable(content);
+  const showModal = () => {
+    doc.setFontSize(16);
+    doc.text(`Penetration Testing  ${props.name}`, 14, 10);
+    doc.setFontSize(12);
+    doc.text(`vulnerability Targets`, 14, 17);
 
-      doc.setFontSize(12)
-      doc.text(`Vulnerability Issues`, 14, 42);
-      doc.autoTable(content2);
-      
-      doc.addPage(); //new page
-      doc.setFontSize(16)
-      doc.text(`1. Web Server Infomation Leakage through 'Server' header`, 14, 15);
-      let vulcontent = {startY: 20,
-        head: [['ID', 'URL', 'Severity']],
-        body: [
-          ['1',`\/*`,'Low'],
-        ]}
-
-      doc.autoTable(vulcontent)
-      doc.setFontSize(14)
-      doc.text(`Vulnerability details`, 14, 45)
-      let vuldetailtext = `Web server fingerprinting is the task of identifying the type and version of web server that a target is running on. While web server fingerprinting is often encapsulated in automated testing tools, it is important for researchers to understand the fundamentals of how these tools attempt to identify software, and why this is useful.`
-      let fontSize = 12;
-      var x = 20;
-      var y = 55;
-      //var maxWidth = doc.internal.pageSize.width * 2 ; // Adjust as needed
-      let maxWidth = 450; // Adjust as needed
-      console.log(maxWidth)
-      var lineHeight = 7; // Adjust as needed
-      doc.setFontSize(12)
-      y = addWrappedText(doc, vuldetailtext, fontSize, x, y, maxWidth, lineHeight);
-      y += 10
-      
-      let vulevidence = `{'Server': 'Apache-Coyote/1.1', 'Set-Cookie': 'JSESSIONID=71EDF125B3D572CDA3F6D8D3CA13C36C; Path=/; Secure; HttpOnly', 'Content-Type': 'text/html;charset=ISO-8859-1', 'Transfer-Encoding': 'chunked', 'Date': 'Mon, 25 Dec 2023 10:47:30 GMT'}`
-      doc.setFontSize(14)
-      doc.text(`Evidence`, 14, y)
-      doc.setFontSize(10)
-      y += 10
-      fontSize = 5
-      y = addWrappedTextResponseHeader(doc, vulevidence, fontSize, x, y, maxWidth, lineHeight);
-      y += 10
-      doc.setFontSize(14)
-      doc.text(`Solutions`, 14, y)
-      y += 10
-      doc.setFontSize(12)
-      maxWidth = doc.internal.pageSize.width ;
-      console.log(maxWidth)
-      let vulsol =`While exposed server information is not necessarily in itself a vulnerability, it is information that can assist attackers in exploiting other vulnerabilities that may exist. Exposed server information can also lead attackers to find version-specific server vulnerabilities that can be used to exploit unpatched servers. For this reason it is recommended that some precautions be taken. These actions include:
-      - Obscuring web server information in headers, such as with Apaches mod_headers module.
-      - Using a hardened reverse proxy server to create an additional layer of security between the
-        web server and the Internet.
-      - Ensuring that web servers are kept up-to-date with the latest software and security patches.`;
-      y = addWrappedTextBullet(doc, vulsol, fontSize, x, y, maxWidth, lineHeight);
-      y += 10
-      doc.setFontSize(14)
-      doc.text(`Reference`, 14, y)
-      y += 10
-      doc.setFontSize(10)
-      maxWidth = 160;
-      let vulref = `https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/01-Information_Gathering/02-Fingerprint_Web_Server`
-      y = addWrappedTextNormal(doc, vulref, fontSize, x, y, maxWidth, lineHeight);
-      
-      
-      
-      doc.save(`Penetration_Testing_Report-${props.name}`);
-      
+    let content = {
+      startY: 20,
+      head: [['ID', 'Targets', 'Details']],
+      body: [['1', ` ${props.url_target}`, ` ${props.Details}`]],
     };
 
-    return(
-        <div>
-<Button  icon={<FaRegFilePdf/>} onClick={showModal} type="primary"style={{ transform: 'translateX(850px) scale(1.5)', marginTop: '20px',background:'red' }} > PDF
- </Button>
+    let content2 = {
+      startY: 45,
+      head: [['ID', 'vulnerability Details', 'Severity']],
+      body: body2,
+    };
 
-        </div>
-    )
-}
+    doc.autoTable(content);
+
+    doc.setFontSize(12);
+    doc.text(`vulnerability ISSUE`, 14, 42);
+    doc.autoTable(content2);
+
+    // doc.save(`Penetration Testing ${props.name}`);
+
+
+  
+data.forEach((item, index) => {
+  const key = Object.keys(item)[0];
+  const vulnerabilities = Object.values(item)[0];
+  console.log("vulnerabilities", vulnerabilities);
+
+  doc.addPage();
+
+  doc.setFontSize(16);
+  doc.text(`${key}`, 14, 15);
+
+  let vulcontent = {
+    startY: 20,
+    head: [['ID', 'URL', 'EVidence']],
+    body: vulnerabilities.map((vulnerability, innerIndex) => {
+      let url, evidence;
+
+      if (key === "SQL Injection" || key === "Directory Traversal File Include" || key === "Stored Cross Site Scriptng") {
+        url = vulnerability[4];
+        evidence = vulnerability[5];
+      } else {
+        url = vulnerability[2];
+        evidence = vulnerability[3];
+      }
+
+      return [`${innerIndex + 1}`, url, evidence];
+    }),
+    columnStyles: {
+      0: {
+        cellWidth: 20,
+      },
+      1: {
+        cellWidth: 100,
+      },
+      2: {
+        cellWidth: 60,
+      },
+    },
+  };
+
+  doc.autoTable(vulcontent);
+    doc.setFontSize(12);
+    let details, Evidence,Solutions,owasp;
+
+      if (key === "SQL Injection" || key === "Directory Traversal File Include" || key === "Stored Cross Site Scriptng") {
+        details = vulnerabilities[0][7];
+        Evidence = vulnerabilities[0][6];
+        Solutions= vulnerabilities[0][8];
+        owasp= vulnerabilities[0][9];
+      
+      } 
+      else {
+        details = vulnerabilities[0][4];
+        Evidence = vulnerabilities[0][3];
+        Solutions= vulnerabilities[0][5];
+        owasp= vulnerabilities[0][6];
+      
+      }
+    doc.setFontSize(12);
+
+    // แยกข้อความและเก็บไว้ในอาร์เรย์
+    const detailsLines = doc.splitTextToSize(`Vulnerability details \n ${details}`, 180);
+    const evidenceLines = doc.splitTextToSize(`Vulnerability Evidence \n ${Evidence}`, 180);
+    const solutionsLines = doc.splitTextToSize(`Vulnerability Solutions \n ${Solutions}`, 180);
+    const owaspLines = doc.splitTextToSize(`Vulnerability Owasp \n ${owasp}`, 180);
+    console.log("detailsLines",detailsLines)
+    
+    // แสดงแต่ละบรรทัด
+    detailsLines.forEach((line, index) => {
+      doc.text(line, 14, doc.autoTable.previous.finalY + 10 + index * 10);
+    });
+    
+    evidenceLines.forEach((line, index) => {
+      doc.text(line, 14, doc.autoTable.previous.finalY + 60 + index * 10);
+    });
+    
+    solutionsLines.forEach((line, index) => {
+      doc.text(line, 14, doc.autoTable.previous.finalY + 100 + index * 10);
+    });
+    
+    owaspLines.forEach((line, index) => {
+      doc.text(line, 14, doc.autoTable.previous.finalY + 130 + index * 10);
+    });
+
+
+
+
+
+});
+
+      doc.save(`Penetration Testing ${props.name}`);
+  };
+
+  return (
+    <div>
+      <Button
+        icon={<FaRegFilePdf />}
+        onClick={showModal}
+        type="primary"
+        style={{ transform: 'translateX(850px) scale(1.5)', marginTop: '20px', background: 'red' }}
+      >
+        PDF
+      </Button>
+    </div>
+  );
+};
 
 export default PDF;
-
-function addWrappedTextNormal(doc, text, fontSize, x, y, maxWidth, lineHeight) {
-  var lines = doc.splitTextToSize(text, maxWidth);
-
-  lines.forEach(function(line) {
-      doc.text(x, y, line);
-      y += lineHeight;
-  });
-
-  return y;
-}
-
-
-function addWrappedText(doc, text,fontSize, x, y, maxWidth, lineHeight) {
-    var words = text.split(' ');
-    var currentLine = '';
-
-    for (var i = 0; i < words.length; i++) {
-        var word = words[i];
-        var currentWidth = doc.getStringUnitWidth(currentLine + word) * fontSize;
-
-        if (currentWidth < (maxWidth)) {
-            // Add the word to the current line
-            currentLine += (currentLine === '' ? '' : ' ') + word;
-        } else {
-            // Start a new line
-            console.log(currentLine)
-            doc.text(x, y, currentLine);
-            y += lineHeight;
-            currentLine = word;
-        }
-    }
-
-    // Add the last line
-    doc.text(x, y, currentLine);
-    return y;
-}
-
-
-
-function addWrappedTextBullet(doc, text, fontSize, x, y, maxWidth, lineHeight) {
-  var paragraphs = text.split('\n'); // Split by newline character
-
-  paragraphs.forEach(function(paragraph) {
-      var lines = paragraph.split('\n');
-
-      lines.forEach(function(line) {
-          // Check if the line starts with a bullet point
-          var isBulletPoint = /^\s*-\s*/.test(line);
-
-          // Set initial indentation for bullet points
-          var indentation = isBulletPoint ? '  - ' : '';
-
-          // Remove bullet point characters for further processing
-          var textWithoutBullet = line.replace(/^\s*-\s*/, '');
-
-          var words = textWithoutBullet.trim().split(' ');
-
-          var currentLine = indentation;
-
-          for (var i = 0; i < words.length; i++) {
-              var word = words[i];
-              var currentWidth = doc.getStringUnitWidth(currentLine + word) * fontSize;
-
-              if (i > 0 && currentWidth > maxWidth) {
-                  // Start a new line with proper indentation
-                  doc.text(x + doc.getStringUnitWidth(indentation), y, currentLine);
-                  y += lineHeight;
-                  currentLine = indentation + word;
-              } else {
-                  currentLine += (currentLine === indentation ? '' : ' ') + word;
-              }
-          }
-
-          // Add the last line
-          doc.text(x + doc.getStringUnitWidth(indentation), y, currentLine);
-          y += lineHeight;
-      });
-  });
-
-  // Return the final y value
-  return y;
-}
-
-function addWrappedTextResponseHeader(doc, text, fontSize, x, y, maxWidth, lineHeight) {
-  var lines = text.split(', ');
-
-  lines.forEach(function(line) {
-    var words = line.split(' ');
-
-    var currentLine = '';
-    for (var i = 0; i < words.length; i++) {
-      var word = words[i];
-      var currentWidth = doc.getStringUnitWidth(currentLine + word) * fontSize;
-
-      if (i > 0 && currentWidth > maxWidth) {
-        // Start a new line
-        doc.text(x, y, currentLine);
-        y += lineHeight;
-        currentLine = word;
-      } else {
-        currentLine += (currentLine === '' ? '' : ' ') + word;
-      }
-    }
-
-    // Add the last line
-    doc.text(x, y, currentLine);
-    y += lineHeight;
-    
-  });
-  return y;
-}

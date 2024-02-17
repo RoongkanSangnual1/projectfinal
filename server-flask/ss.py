@@ -29,7 +29,7 @@ mysql = MySQL(app)
 
 
 
-def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
+def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls):
     if len(visited_urls) >= MAX_VISITED_URLS:
         return
     
@@ -48,7 +48,7 @@ def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_
                         i = 1
                         save_log(response, i,project_name,user,Host,http_log_data,formlist)
                         i += 1
-                        i =  checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls,visited_post)
+                        i =  checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls)
                         
                     else:
                         save_log(response, i,project_name,user,Host,http_log_data)
@@ -58,24 +58,24 @@ def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_
                         
                     
                     print(f'Collect.. {response.url} -> {response.status_code} ..is {response.is_redirect} to {re_location}')
-                    checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
-                    get_links(soup,project_name,user,baseURL,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                    checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls)
+                    get_links(soup,project_name,user,baseURL,Host,baseURL,cookies_data,http_log_data,visited_urls)
                     
         else:
             return
 
 
-def checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
+def checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls):
     if response.status_code in (301,302):
         re_location = response.headers.get('Location')
         if re_location:
             if not re_location.startswith('http'):
                 if re_location.startswith('/'):
-                    crawl(baseURL+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                    crawl(baseURL+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls)
                 else:
-                    crawl(baseURL+'/'+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                    crawl(baseURL+'/'+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls)
             else:
-                crawl(re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                crawl(re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls)
 
 
 
@@ -84,7 +84,7 @@ def post_response(url,cookies_data,postbody=None):
         response = requests.post(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'},
                                 cookies=cookies_data,allow_redirects=False,data=postbody)
         response.raise_for_status()
-        set_cookies(response,cookies_data)
+        set_cookies(response)
         return response
     except requests.exceptions.RequestException as e:
         print(f"HTTP error: {e}")
@@ -243,7 +243,7 @@ def set_cookies(response,cookies_data):
 
 
 
-def get_links(soup,project_name,user,scope_url,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
+def get_links(soup,project_name,user,scope_url,Host,baseURL,cookies_data,http_log_data,visited_urls):
     links = soup.find_all('a', href=True)
     for link in links:
         link = link.get('href')
@@ -256,7 +256,7 @@ def get_links(soup,project_name,user,scope_url,Host,baseURL,cookies_data,http_lo
                 else:
                     link = baseURL+'/' + link
             if link.startswith(scope_url) and not link.endswith(('pdf', 'xls', 'docx')):
-                crawl(link,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                crawl(link,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls)
 
 
 
@@ -301,7 +301,8 @@ def findActForm(soup):
     return formlist
 
 
-def checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls,visited_post):
+def checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls):
+    visited_post = {}
     temppost = ''
     data = {}
     posttemp = set()
@@ -374,6 +375,7 @@ def checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_dat
         
 
     return i
+
 
 def contentlenpercent(response,baseper):
     
@@ -889,8 +891,6 @@ def crawl_endpoint():
         res = {}
         req = {}
         i = 1
-        visited_post = {}
-
 
         project_name = request.json['project_name']
      
@@ -910,7 +910,7 @@ def crawl_endpoint():
         mysql.connection.commit()
         csv_name = f"{project_name}.csv"
         
-        crawl(scope_url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+        crawl(scope_url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls)
 
         db = mysql.connection.cursor()
         select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
