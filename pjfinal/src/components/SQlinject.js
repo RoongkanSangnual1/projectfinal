@@ -79,7 +79,7 @@ const SQlinject = (props) => {
               })
               .filter(item => item !== null);
              
-              console.log(IndexXss)
+              console.log("IndexXss",IndexXss)
             const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA
               .map((data, index) => {
                 try {
@@ -165,7 +165,7 @@ const SQlinject = (props) => {
               setHSTS(HSTS)     
               setsamsite(samsite)
               setserver(server)
-              console.log(server)
+              console.log("server,",server)
               setexpire(expire)
               sethttponly(httponly)
               setsecure(IndexSecure)
@@ -253,6 +253,21 @@ const SQlinject = (props) => {
     const refreshData = () => {
        window.location.reload();
       };
+
+
+      const handleDelete = (iddelete) => {  
+        /// ส่ง token user แบบheaders
+      const token = localStorage.getItem("token")
+      axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
+        headers:{
+          Authorization:`Bearer ${token}`,
+        },
+      }).then(response => {
+        setserver(server.filter((project=>project[7] !==iddelete )))
+        setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
+
+      })
+      };
     
     return (
         <div>
@@ -323,6 +338,9 @@ const SQlinject = (props) => {
        <a  style={{color:"red"}} href={OneData[3]} target="_blank" rel="noopener noreferrer">
                   {OneData[3]}
             </a>
+            <Space size="middle">
+            <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[10])}> </Button>
+        </Space>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -684,6 +702,7 @@ const SQlinject = (props) => {
     <>
       <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
       {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
+     
     </>
   )}
   items={[
@@ -691,6 +710,9 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname"  style={{color:"red"}}>{OneData[1]}</h3>
+          <Space size="middle">
+            <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
+        </Space>
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -702,7 +724,10 @@ const SQlinject = (props) => {
         <th>EVIDENCE</th>
       </tr>
     </thead>
+    <>
+    </>
     <tbody>
+      
       <tr>
       <td style={{textAlign:"center"}}>
                 <a  style={{color:"red"}} href={OneData[1]} target="_blank" rel="noopener noreferrer">
