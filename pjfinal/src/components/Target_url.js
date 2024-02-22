@@ -2,7 +2,7 @@ import { useState } from "react";
 import './createproject.css'
 import axios from "axios";
 import Navbar from "./navbar";
-import { Button, Form, Input } from "antd";
+import { Alert, Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
 import { CloseOutlined, RobotOutlined } from '@ant-design/icons';
 import ClipLoader  from "react-spinners/ClipLoader";
@@ -11,6 +11,7 @@ const Target_url = () => {
     const [project_name, setProject_name] = useState("");
     const [url, setUrl] = useState("");
     const [project_name_id, setProject_name_id] = useState();
+    const [ProjectChange, setProjectChange] = useState();
     const [load, setLoad] = useState(false);
     const [error, setError] = useState(false);
     const [description, setDescription] = useState("");
@@ -26,6 +27,11 @@ const Target_url = () => {
                 setLoad(false);
                 setLoadingButton(false);
                 setProject_name_id(res.data.project_name_id_result);
+                console.log(res.data.Change.length)
+                if (res.data.Change.length>0){
+                    alert(res.data.Change)
+                }
+
             })
             .catch(error => {
                 setError("ไม่สามารถทำการได้");

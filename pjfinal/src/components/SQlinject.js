@@ -10,6 +10,7 @@ import Highlighter from 'react-highlight-words';
 
 import './maindashboard.css';
 import PDF from './PDF';
+import TextArea from 'antd/es/input/TextArea';
 const SQlinject = (props) => {
   // console.log(props.name);
   const project_name =props.id
@@ -25,13 +26,35 @@ const SQlinject = (props) => {
     const [secure,setsecure] = useState([])
     const [server,setserver] = useState([])
     const [HSTS,setHSTS] = useState([])
-    const [urls,setUrls] = useState([])
     const [Payload,setPayload] = useState([])
     const [Issue,setIssue] = useState([])
     const [url_target,seturl_target] = useState([])
     const [Details,setDetails] = useState([])
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen1, setIsModalOpen1] = useState(false);
+    const [isModalOpen2, setIsModalOpen2] = useState(false);
+    const [isModalOpen3, setIsModalOpen3] = useState(false);
+    const [isModalOpen4, setIsModalOpen4] = useState(false);
+    const [isModalOpen5, setIsModalOpen5] = useState(false);
+    const [isModalOpen6, setIsModalOpen6] = useState(false);
+    const [isModalOpen8, setIsModalOpen8] = useState(false);
+    const [isModalOpen10, setIsModalOpen10] = useState(false);
+    const [isModalOpen11, setIsModalOpen11] = useState(false);
     const [Delete,setDelete] = useState("")
+    const [urls,setUrls] = useState([])
+    const [EVIDENCE,setEVIDENCE] = useState([])
+    const [parameter,setparameter]= useState([])
+    const [Risk,setRisk] = useState([])
+    const [OID10, setOID10] = useState(10);
+    const [OID1, setOID1] = useState(1);
+    const [OID2, setOID2] = useState(2);
+    const [OID3, setOID3] = useState(3);
+    const [OID4, setOID4] = useState(4);
+    const [OID5, setOID5] = useState(5);
+    const [OID6, setOID6] = useState(6);
+    const [OID8, setOID8] = useState(8);
+    const [OID11, setOID11] = useState(11);
+    const [OID, setOID] = useState('');
+    const [Recommendation,setRecommendation]= useState([])
     const user = localStorage.user;
 
 
@@ -44,9 +67,10 @@ const SQlinject = (props) => {
 
         })
         .then(response => {
-          // console.log(response.data)
+          console.log("responseapi",response)
           // setresponsedata(response)
           setDelete(response.data[5].Role)
+          console.log(Delete)
             seturl_target(response.data[1].url_target[0][0]);
             setDetails(response.data[1].url_target[0][1]);
 
@@ -94,6 +118,8 @@ const SQlinject = (props) => {
                 }
               })
               .filter(item => item !== null);
+
+
               const IndexSecure= response.data[6].select_att_ID_select_att_secure_DATA
               .map((data, index) => {
                 try {
@@ -178,69 +204,71 @@ const SQlinject = (props) => {
         });
     }, [user, project_name_id]);
 
-    // const columns = [
-    //     {
-    //         title: 'No.',
-    //         dataIndex: '0',
-    //         key: 'index'
-    //     },
-    //     {
-    //         title: 'URL',
-    //         dataIndex: '1',
-    //         key: 'URL',
-    //         render: (text, record) => <a href={(record[2])}>{text}</a>
-    //     },
-    //     {
-    //         title: 'PAYLOAD',
-    //         dataIndex: '3',
-    //         key: 'METHOD'
-    //     }
-    //     ,
-    //     // {
-    //     //     title: 'Delete',
-    //     //     dataIndex: '5',
-    //     //     key: 'delete',
-    //     //     render: (text, record) => (
-    //     //       <Space size="middle">
-    //     //         <Button type="danger" icon={<CloseOutlined   className="close-button"  style={{color:'red'}}/>} onClick={() => handleDelete(record[5])}> </Button>
-    //     //       </Space>
-    //     //     ),
-    //     //   }
-    // ];
-
-    // const handleDelete = (iddelete) => {  
-    //     /// ส่ง token user แบบheaders
-    //   const token = localStorage.getItem("token")
-    //   axios.delete(`http://127.0.0.1:5000/oneurlsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
-    //     headers:{
-    //       Authorization:`Bearer ${token}`,
-    //     },
-    //   }).then(response => {
-    //     setProjectOneData(projectOneData.filter((project=>project[5] !==iddelete )))
-
-    //   })
-    //   };
 
 
-    const showModal = () => {
-        setIsModalOpen(true);
-      };
+    const showModal = (OID) => {
+      setOID(OID);
+      if (OID === 1) {
+        setIsModalOpen1(true);
+      } else if (OID === 2) {
+        setIsModalOpen2(true);
+      }
+      else if (OID === 3) {
+        setIsModalOpen3(true);
+      }
+      else if (OID === 4) {
+        setIsModalOpen4(true);
+      }
+      else if (OID === 5) {
+        setIsModalOpen5(true);
+      }
+      else if (OID === 6) {
+        setIsModalOpen6(true);
+      }
+      else if (OID === 8) {
+        setIsModalOpen8(true);
+      }
+      else if (OID === 10) {
+        setIsModalOpen10(true);
+      }
+      else if (OID ===11) {
+        setIsModalOpen11(true);
+      }
+
+
+    };
     //   const handleOk = () => {
     //     setIsModalOpen(false);
     //   };
 
 
       const handleCancel = () => {
-        setIsModalOpen(false);
+        setIsModalOpen1(false);
+        setIsModalOpen2(false);
+        setIsModalOpen3(false);
+        setIsModalOpen4(false);
+        setIsModalOpen5(false);
+        setIsModalOpen6(false);
+        setIsModalOpen8(false);
+        setIsModalOpen10(false);
+        setIsModalOpen11(false);
       };
 
 
 
       const Formsummit =()=>{
+        const token = localStorage.getItem('token')
 
-
+        console.log("OID", OID);
+      
         axios
-        .post(`http://127.0.0.1:5000/addIssue`,{urls,Payload,Issue,project_name_id})
+        .post(`http://127.0.0.1:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
+        {
+          headers:{
+              Authorization: `Bearer ${token}`,
+          },
+
+      })
         .then(response=>{
             console.log(response)
             
@@ -248,8 +276,22 @@ const SQlinject = (props) => {
         .catch(err=>{
             alert(err.response.data)
         })   
-        setIsModalOpen(false);   
+        setIsModalOpen1(false);
+        setIsModalOpen2(false);
+        setIsModalOpen3(false);
+        setIsModalOpen4(false);
+        setIsModalOpen5(false);
+        setIsModalOpen6(false);
+        setIsModalOpen8(false);
+        setIsModalOpen10(false);
+        setIsModalOpen11(false);
     }
+
+
+
+
+
+    
     const refreshData = () => {
        window.location.reload();
       };
@@ -265,6 +307,14 @@ const SQlinject = (props) => {
       }).then(response => {
         setserver(server.filter((project=>project[7] !==iddelete )))
         setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
+        setprojectOneDataXSSSQL(projectOneDataXSSSQL.filter((project=>project[10] !==iddelete)));
+        settraversal(traversal.filter((project=> project[10]!==iddelete)))
+        setHSTS(HSTS.filter((project=>project[7] !==iddelete )))     
+        setsamsite(samsite.filter((project=>project[7] !==iddelete )))
+        setserver(server.filter((project=>project[7] !==iddelete )))
+        setexpire(expire.filter((project=>project[7] !==iddelete )))
+        sethttponly(httponly.filter((project=>project[7] !==iddelete )))
+        setsecure(secure.filter((project=>project[7] !==iddelete )))
 
       })
       };
@@ -273,7 +323,7 @@ const SQlinject = (props) => {
         <div>
             <div>
               <div className='button-container'>
-            <Button onClick={refreshData} icon={<ReloadOutlined />}>restart</Button>
+            {/* <Button onClick={refreshData} icon={<ReloadOutlined />}>restart</Button>
             {Delete==='Advance'&&(
               <Button  onClick={showModal} type="primary" style={{background:'red'} }icon={<PlusOutlined />}>Add to Issue</Button>
             )}
@@ -289,7 +339,7 @@ const SQlinject = (props) => {
               Payload:<Input type="text" className="forminput-control" value={Payload} onChange={(e)=>setPayload(e.target.value)}/><br/>
                  </Form>
 
-      </Modal>
+      </Modal> */}
             </div>
             </div>
             {/* <Table dataSource={projectOneData} columns={columns} /> */}
@@ -312,7 +362,29 @@ const SQlinject = (props) => {
     {
       label: (
         <div className="projcollaspe-head">
-          <h3 className="projname">SQL-injection <per style={{color:"red"}}>  ({projectOneDataSQL.length})</per></h3>
+
+
+          <h3 className="projname">SQL-injection <per style={{color:"red"}}>  ({projectOneDataSQL.length})</per></h3> {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(11)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Add URL SQL-injection" open={isModalOpen11} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
         </div>
       ),
       children: (
@@ -338,9 +410,12 @@ const SQlinject = (props) => {
        <a  style={{color:"red"}} href={OneData[3]} target="_blank" rel="noopener noreferrer">
                   {OneData[3]}
             </a>
+            {Delete === 'Advance'&& ( 
             <Space size="middle">
-            <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[10])}> </Button>
-        </Space>
+              
+              <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[10])}> </Button>
+          </Space>)}
+           
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -409,6 +484,26 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname"> SQL-injection</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(11)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Add URL SQL-injection-" open={isModalOpen11} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
     },
@@ -440,6 +535,28 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Stored Cross Site Scriptng<per style={{color:"red"}}>  ({projectOneDataXSSSQL.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(0)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Add URL Stored Cross Site Scriptng" open={isModalOpen10} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+            
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
         </div>
       ),
       children: (
@@ -465,6 +582,11 @@ const SQlinject = (props) => {
                 <a  style={{color:"red"}}   href={OneData[3]} target="_blank" rel="noopener noreferrer">
                   {OneData[3]}
             </a>
+            {Delete === 'Advance'&& ( 
+            <Space size="middle">
+              
+              <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[10])}> </Button>
+          </Space>)}
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -533,6 +655,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Stored Cross Site Scriptng</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(11)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Add URL Stored Cross Site Scriptng-" open={isModalOpen10} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+          
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
     },
@@ -565,6 +708,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Directory Traversal File Include<per style={{color:"red"}}> ({traversal.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(4)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Directory Traversal File Include" open={isModalOpen4} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
       children: (
@@ -590,6 +754,11 @@ const SQlinject = (props) => {
                <a  style={{color:"red"}}  href={OneData[3]} target="_blank" rel="noopener noreferrer">
                   {OneData[3]}
             </a>
+            {Delete === 'Advance'&& ( 
+            <Space size="middle">
+              
+              <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[10])}> </Button>
+          </Space>)}
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -655,6 +824,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname"> Directory Traversal File Include</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(4)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Directory Traversal File Include-" open={isModalOpen4} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+       
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
     },
@@ -686,6 +876,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Web Server Infomation Leakage through 'Server' header<per style={{color:"red"}}>  ({server.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(1)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Web Server Infomation Leakage through 'Server' header" open={isModalOpen1} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
       children: (
@@ -710,9 +921,12 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname"  style={{color:"red"}}>{OneData[1]}</h3>
-          <Space size="middle">
-            <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
-        </Space>
+          {Delete === 'Advance' && (
+  <Space size="middle">
+  <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
+</Space>
+          )}
+        
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -742,7 +956,7 @@ const SQlinject = (props) => {
       highlightClassName="YourHighlightClass"
       searchWords={['Server']} 
       autoEscape={true}
-      textToHighlight={OneData[3]}
+      textToHighlight={OneData[3]||OneData[8]}
     />
 
 </td>
@@ -795,6 +1009,26 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Web Server Infomation Leakage through 'Server' header</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}}onClick={() => showModal(1)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Web Server Infomation Leakage through 'Server' header-" open={isModalOpen1} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
     },
@@ -825,6 +1059,26 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Missing Secure Attribute in Cookie Header <per style={{color:"red"}}> ({secure.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(2)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title=">Missing Secure Attribute in Cookie Header" open={isModalOpen1} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
       children: (
@@ -850,6 +1104,11 @@ const SQlinject = (props) => {
            <a  style={{color:"red"}}  href={OneData[1]} target="_blank" rel="noopener noreferrer">
                   {OneData[1]}
                 </a>
+                {Delete === 'Advance' && (
+  <Space size="middle">
+  <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
+</Space>
+          )}
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -874,7 +1133,7 @@ const SQlinject = (props) => {
       highlightClassName="YourHighlightClass"
       searchWords={['Set-Cookie']} 
       autoEscape={true}
-      textToHighlight={OneData[3]}
+      textToHighlight={OneData[3]||OneData[8]}
     />
 </td>
       </tr>
@@ -926,6 +1185,26 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Missing Secure Attribute in Cookie Header</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}}onClick={() => showModal(2)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title=">Missing Secure Attribute in Cookie Header-" open={isModalOpen2} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
     },
@@ -957,6 +1236,26 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Missing HttpOnly Attribute in Cookie Header <per style={{color:"red"}}> ({httponly.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(3)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing HttpOnly Attribute in Cookie Header" open={isModalOpen3} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
       children: (
@@ -982,6 +1281,11 @@ const SQlinject = (props) => {
          <a  style={{color:"red"}} href={OneData[1]} target="_blank" rel="noopener noreferrer">
                   {OneData[1]}
                 </a>
+                {Delete === 'Advance' && (
+  <Space size="middle">
+  <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
+</Space>
+          )}
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -1006,7 +1310,8 @@ const SQlinject = (props) => {
       highlightClassName="YourHighlightClass"
       searchWords={['Set-Cookie']} 
       autoEscape={true}
-      textToHighlight={OneData[3]}
+      textToHighlight={OneData[3]||OneData[8]}
+
     />
 </td>
       </tr>
@@ -1058,6 +1363,26 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Missing HttpOnly Attribute in Cookie Header</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(3)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing HttpOnly Attribute in Cookie Header-" open={isModalOpen3} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
     },
@@ -1090,6 +1415,26 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
            <h3 className="projname">Missing Expires Attribute in Cookie Header <per style={{color:"red"}}> ({expire.length})</per></h3>
+           {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(5)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing Expires Attribute in Cookie Header" open={isModalOpen5} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
         </div>
       ),
       children: (
@@ -1115,6 +1460,11 @@ const SQlinject = (props) => {
         <a  style={{color:"red"}} href={OneData[1]} target="_blank" rel="noopener noreferrer">
                   {OneData[1]}
                 </a>
+                {Delete === 'Advance' && (
+  <Space size="middle">
+  <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
+</Space>
+          )}
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -1139,7 +1489,7 @@ const SQlinject = (props) => {
       highlightClassName="YourHighlightClass"
       searchWords={['Set-Cookie']} 
       autoEscape={true}
-      textToHighlight={OneData[3]}
+      textToHighlight={OneData[3]||OneData[8]}
     />
 </td>
       </tr>
@@ -1191,6 +1541,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname"> Missing Expires Attribute in Cookie Header</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(5)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing Expires Attribute in Cookie Header-" open={isModalOpen5} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
         </div>
       ),
     },
@@ -1222,6 +1593,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Missing SameSite Attribute in Cookie Header<per style={{color:"red"}}> ({samsite.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(6)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing SameSite Attribute in Cookie Header" open={isModalOpen6} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
         </div>
       ),
       children: (
@@ -1247,6 +1639,11 @@ const SQlinject = (props) => {
         <a  style={{color:"red"}}  href={OneData[1]} target="_blank" rel="noopener noreferrer">
                   {OneData[1]}
                 </a>
+                {Delete === 'Advance' && (
+  <Space size="middle">
+  <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
+</Space>
+          )}
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -1271,7 +1668,7 @@ const SQlinject = (props) => {
       highlightClassName="YourHighlightClass"
       searchWords={['Set-Cookie']} 
       autoEscape={true}
-      textToHighlight={OneData[3]}
+      textToHighlight={OneData[3]||OneData[8]}
     />
 </td>
       </tr>
@@ -1323,6 +1720,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname"> Missing SameSite Attribute in Cookie Header</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}}onClick={() => showModal(6)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing SameSite Attribute in Cookie Header-" open={isModalOpen6} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
         </div>
       ),
     },
@@ -1355,6 +1773,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname">Missing HTTP Strict Transport Security Header<per style={{color:"red"}}> ({HSTS.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(8)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing HTTP Strict Transport Security Header" open={isModalOpen8} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
         </div>
       ),
       children: (
@@ -1380,6 +1819,11 @@ const SQlinject = (props) => {
         <a  style={{color:"red"}}  href={OneData[1]} target="_blank" rel="noopener noreferrer">
                   {OneData[1]}
                 </a>
+                {Delete === 'Advance' && (
+  <Space size="middle">
+  <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
+</Space>
+          )}
         </div>
       ),
       children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
@@ -1404,7 +1848,7 @@ const SQlinject = (props) => {
       highlightClassName="YourHighlightClass"
       searchWords={['Set-Cookie']} 
       autoEscape={true}
-      textToHighlight={OneData[3]}
+      textToHighlight={OneData[3]||OneData[8]}
     />
 </td>
       </tr>
@@ -1456,6 +1900,27 @@ const SQlinject = (props) => {
       label: (
         <div className="projcollaspe-head">
           <h3 className="projname"> Missing HTTP Strict Transport Security Header</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(8)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Missing HTTP Strict Transport Security Header-" open={isModalOpen8} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
         </div>
       ),
     },

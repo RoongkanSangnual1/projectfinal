@@ -31,6 +31,7 @@ const URLlist = (props) => {
 
         })
         .then(response => {
+          console.log(response)
     
           setDelete(response.data[5].Role)
             seturl_target(response.data[1].url_target[0][0])
@@ -122,9 +123,14 @@ if(Delete==='Advance'){
 
       const Formsummit =()=>{
 
-
+        const token = localStorage.getItem('token')
         axios
-        .post(`http://127.0.0.1:5000/addurls`,{urls,method,parameter,project_name_id})
+        .post(`http://127.0.0.1:5000/addurls`,{urls,method,parameter,project_name_id},{
+          headers:{
+              Authorization: `Bearer ${token}`,
+          },
+
+      })
         .then(response=>{
             console.log(response)
             
@@ -157,7 +163,7 @@ if(Delete==='Advance'){
             >
               Location:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
               METHOD:<Input type="text" className="forminput-control" value={method} onChange={(e)=>setmethod(e.target.value)}/><br/>
-              Parameter:<Input type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/>
+              Status:<Input type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/>
                  </Form>
 
       </Modal>

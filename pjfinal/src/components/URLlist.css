@@ -8,3 +8,11 @@
     font-weight: bold;
     font-size: 15px;
   }
+
+
+  .forminput-control {
+    width: 100%;
+    box-sizing: border-box; 
+    margin-bottom: 10px; 
+  }
+  

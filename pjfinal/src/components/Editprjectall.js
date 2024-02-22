@@ -13,26 +13,6 @@ import { useDispatch } from "react-redux";
 import Editsql from './Editsql';
 
 
-const tabList = [
-  {
-    key: 'tab1',
-    tab: 'Dashboard',
-  },
-  {
-    key: 'tab2',
-    tab: 'Scan URLs',
-  },
-  {
-    key: 'tab3',
-    tab: 'Issues',
-  },
-];
-
-const contentList = {
-  tab1: <p><EditDashboard /></p>,
-  tab2: <p><EditProject /></p>,
-  tab3: <p><Editsql /></p>,
-};
 
 const EditPrjectDash = () => {
   const [activeTabKey1, setActiveTabKey1] = useState('tab1');
@@ -68,7 +48,26 @@ const EditPrjectDash = () => {
   const onTab1Change = (key) => {
     setActiveTabKey1(key);
   };
-
+  const tabList = [
+    {
+      key: 'tab1',
+      tab: 'Dashboard',
+    },
+    {
+      key: 'tab2',
+      tab: 'Scan URLs',
+    },
+    {
+      key: 'tab3',
+      tab: 'Issues',
+    },
+  ];
+  
+  const contentList = {
+    tab1: <p><EditDashboard /></p>,
+    tab2: <p><EditProject  id={auth2} name={name_pj}/></p>,
+    tab3: <p><Editsql id={auth2} name={name_pj}/></p>,
+  };
   return auth !== auth2 ? (
     <div>
       <Login/>

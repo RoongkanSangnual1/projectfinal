@@ -75,7 +75,22 @@ const Home = () => {
                         key: {index},
                         label: <div className="projcollaspe-head" >
                                   
-                                  <h3 className="projname">{project[1]}<pre style={{color:"grey"}}>{project[3]} ({project[4]}) </pre></h3>
+                                  <h3 className="projname">
+                                      {project[1]}
+                                      <pre style={{color:"grey"}}>
+                                        {project[3]} <br/>
+                                        {project[4] === project[5] ? (
+                                          <>
+                                            <p style={{color:"red"}}>crawl...</p>
+                                          </>
+                                        ) : (
+                                          <>
+                                            Start:({project[4]}) <br/> 
+                                            Complete:({project[5]})
+                                          </>
+                                        )}
+                                      </pre>
+                                    </h3>
                                   <Button type="link" icon={<CloseOutlined   className="close-button"  style={{ fontSize: '15px',color:'red'}} onClick={()=>Deleteprojuct(project[2])}/>} />
                                   
                                 </div>,

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
 import './Dashboard.css'
+import ClockLoader   from "react-spinners/ClockLoader";
 const Dashboard = () => {
   const { project_name_id } = useParams();
   const [projectOneDataSQL, setProjectOneDataSQL] = useState(0);
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [secure,setsecure] = useState(0)
   const [server,setserver] = useState(0)
   const [HSTS,setHSTS] = useState(0)
+  const [valueENDpp, setvalueENDpp] = useState([]);
+  const [valueTimep,setvalueTimep]= useState([])
   const user = localStorage.user;
 
   useEffect(() => {
@@ -24,7 +27,10 @@ const Dashboard = () => {
       },
     })
     .then(response => { 
+      console.log(response.data[11])
       console.log(response)
+      setvalueENDpp(response.data[11].valueENDpp)   
+      setvalueTimep(response.data[12].valueTimep[0])   
       setProjectOneDataSQL(response.data[1].select_att_sql_DATA.filter(item=> item !== null));
       setProjectOneDataXSS(response.data[2].select_att_ID_xsssql_DATA.filter(item=> item !== null));
       setProjectOneDataTravel(response.data[3].select_att_ID_select_att_traversal_DATA.filter(item=> item !== null));
@@ -73,6 +79,7 @@ const Dashboard = () => {
    
   return (
     <div className='dashboardd'>
+         <div className='dashboarddd'>
       <div className='dashboard'>
         <ResponsiveContainer width="100%" height={400}>
         <h1>Current Issue</h1>
@@ -101,6 +108,28 @@ const Dashboard = () => {
         <div className='circle-blue'></div>
         <p>low({httponly.length+server.length+secure.length+samsite.length+expire.length+HSTS.length})</p>
       </div>
+      </div>
+
+      <div className='dashboard2'>
+      <h1 style={{ textAlign: "center" }}>Current Process</h1>
+        {valueENDpp === null ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <ClockLoader 
+                color={"#36d7b7"}
+                loading={true}
+                size={280}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+            />
+            <p style={{ textAlign: "center" ,font:"16px"}}> Crawling...</p>
+        </div>
+        
+        ) : (
+          <p style={{ textAlign: "center" }}> complete <br/> Start: {valueTimep}  <br/> End:{valueENDpp} </p>
+        )}
+
+      </div>
+
       </div>
       <h1>Summary</h1>
       <div className='Sum'>
