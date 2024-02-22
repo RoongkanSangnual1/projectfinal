@@ -52,10 +52,11 @@ const Edithome = () => {
             .then(res => {
                 setLoad(false);
                 setLoadingButton(false);
+                alert(res.data)
             })
             .catch(error => {
                 setError("ไม่สามารถทำการได้");
-                console.error("Error crawling:", error);
+                console.error("error:", error);
             });
     };
         return (

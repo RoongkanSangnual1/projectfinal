@@ -7,6 +7,7 @@ import Sidemenu from './sidemenu';
 import Navbar from './navbar';
 import { FormOutlined } from '@ant-design/icons';
 import { Link} from "react-router-dom";
+import ClockLoader   from "react-spinners/ClockLoader";
 import { IoEarth } from "react-icons/io5";
 import { MdOutlineExpandMore } from "react-icons/md";
 const DashboardAll = () => {
@@ -14,6 +15,7 @@ const DashboardAll = () => {
   const [projectOneData, setProjectOneData] = useState({ data10: [], data11: [],data4:[] ,data2:[] ,data3:[] ,data5:[] ,data6:[] ,data1:[],data8:[]});
   const [alldata, setAlldata] = useState([]);
   const [projectOneDataTravel, setProjectOneDataTravel] = useState([]);
+  const [time, Settime] = useState([]);
   const user = localStorage.user;
   const [visibleCount, setVisibleCount] = useState(4);
 
@@ -29,8 +31,9 @@ const DashboardAll = () => {
         },
       })
     .then(response => { 
-    console.log(response.data.project_data_DashboardAll)
-    const data = response.data.project_data_DashboardAll
+    console.log(response)
+    Settime(response.data[1].time)
+    const data = response.data[0].project_data_DashboardAll
 const result = {};
 
 data.forEach(array => {
@@ -152,6 +155,21 @@ setProjectOneData({ data10: sum10, data11: sum11 ,data4:sum4 ,data2:sum2 ,data3:
     </div>
     <div className='dashboardAll3'>
     <h1 style={{color:'#1B337A'}}>Current Process</h1>
+    {time === 1 ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",color:'#1B337A' }}>
+            <ClockLoader 
+                color={"#36d7b7"}
+                loading={true}
+                size={200}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+            />
+            <p style={{ textAlign: "center" ,color:'#1B337A'}}> Crawling...</p>
+        </div>
+        
+        ) : (
+          <p style={{ textAlign: "center" }}> complete </p>
+        )}
     </div>
     
     </div>
