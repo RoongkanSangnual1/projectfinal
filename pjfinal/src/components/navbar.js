@@ -1,7 +1,7 @@
 import React from "react";
 import { DownOutlined, UserOutlined ,SettingOutlined,LogoutOutlined} from '@ant-design/icons';
 import { Button, Dropdown, message, Space } from 'antd';
-import logo from "./imgsrc/seclogo.svg";
+import logo from "./imgsrc/robo.svg";
 import './navbar.css';
 import {useNavigate} from "react-router-dom";
 
