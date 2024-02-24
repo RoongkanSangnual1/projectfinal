@@ -5,7 +5,7 @@ import { Link , useNavigate} from "react-router-dom";
 import {  Form,Input } from 'antd';
 import { useDispatch } from "react-redux";
 
-
+import Swal from 'sweetalert2'
 const Login = () =>{
 
     const [username ,setUsername] = useState("")
@@ -21,7 +21,8 @@ const Login = () =>{
         .then(response=>{
             if(response){
                 console.log(response.data.token)
-                alert(response.data.message)
+                Swal.fire(response.data.message);
+                // alert(response.data.message)
                 dispatch({
                     type:'LOGIN',
                     payload:response.data.token
@@ -33,7 +34,8 @@ const Login = () =>{
             }
         })
         .catch(err=>{
-            alert(err.response.data)
+            
+            Swal.fire(err.response.data)
         })      
     }
 

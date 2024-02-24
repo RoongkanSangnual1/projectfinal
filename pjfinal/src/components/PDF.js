@@ -155,7 +155,7 @@ data.forEach((item, index) => {
     });
     
     owaspLines.forEach((line, index) => {
-      doc.text(line, 14, doc.autoTable.previous.finalY + 130 + index * 10);
+      doc.text(line, 14, doc.autoTable.previous.finalY + 170 + index * 10);
     });
 
 

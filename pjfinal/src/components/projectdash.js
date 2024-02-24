@@ -8,13 +8,13 @@ import Navbar from './navbar';
 import Dashboard from './Dashboard';
 import Issues from './Issues';
 import URLlist from './URLlists';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import SQlinject from './SQlinject';
 import PDF from './PDF';
 
   
-
+import Swal from 'sweetalert2'
     
     
     
@@ -28,22 +28,55 @@ const ProjectDash = () => {
     const [link_, setLink_] = useState("");
     const project_name = project_name_id.project_name_id
     const project_name_n = project_name_id.project_name
+    const navigate = useNavigate()
     // const user = localStorage.user;
 
 
-    useEffect(() => {
-        const token = localStorage.getItem('token')
-        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`,{
-            headers:{
-                Authorization: `Bearer ${token}`,
-            },
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token')
+    //     axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`,{
+    //         headers:{
+    //             Authorization: `Bearer ${token}`,
+    //         },
 
-        })
-        .then(response => {
-          console.log("response",response)
-          setUrl(response.data[1].url_target[0][0])
-        })
-      },[]);
+    //     })
+    //     .then(response => {
+    //       console.log("response",response)
+    //       setUrl(response.data[1].url_target[0][0])
+    //     })
+    //   },[]);
+
+
+    useEffect(() => {
+      const token = localStorage.getItem('token')
+      axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`,{
+          headers:{
+              Authorization: `Bearer ${token}`,
+          },
+
+      })
+      .then(response => {
+        if (response.data && response.data["server error"]) {
+          Swal.fire({
+            icon: 'error',
+            title: 'User Eror',
+            // text: "User Eror",
+          });
+          
+          setUrl("error");
+          navigate('/login')
+        } else {
+
+          if (response.data[1].url_target[0]) {
+            setUrl(response.data[1].url_target[0][0]);
+          } else {
+            console.error("Unexpected response structure", response);
+          }
+        }
+      
+        console.log("response", response);
+      })
+    },[]);
     const tabList = [
       {
         key: 'tab1',
