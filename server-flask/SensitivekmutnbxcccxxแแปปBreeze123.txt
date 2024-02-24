@@ -1,3 +1,0 @@
-/.DS_Store            [32m (Status: 200) [0m [Size: 6148]
-/?view=log            [32m (Status: 200) [0m [Size: 85988]
-/?wsdl                [32m (Status: 200) [0m [Size: 85988]
