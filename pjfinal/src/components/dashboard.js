@@ -61,6 +61,15 @@ const Dashboard = () => {
       setvalueENDpp(response.data[11].valueENDpp)   
       setvalueTimep(response.data[12].valueTimep[0])   
       
+      setsamsite(response.data[8].select_att_ID_select_att_samsite_DATA[0].filter(item=> item !== null));
+      Setseveritysamsite(response.data[8].select_att_ID_select_att_samsite_DATA[1][0][0]);
+
+      setsecure(response.data[5].select_att_ID_select_att_secure_DATA[0].filter(item=> item !== null));
+      SetseveritySecure(response.data[5].select_att_ID_select_att_secure_DATA[1][0][0]);
+
+      
+      setserver(response.data[9].select_att_ID_select_att_server_DATA[0].filter(item=> item !== null));
+      Setseverityserver(response.data[9].select_att_ID_select_att_server_DATA[1][0][0]);
 
       setsensitive(response.data[14].select_att_ID_Sentitive[0].filter(item=> item !== null));
       Setseveritysensitive(response.data[14].select_att_ID_Sentitive[1][0][0]);
@@ -84,14 +93,6 @@ const Dashboard = () => {
       setexpire(response.data[7].select_att_ID_select_att_expire_DATA[0].filter(item=> item !== null));
       Setseverityexpire(response.data[7].select_att_ID_select_att_expire_DATA[1][0][0]);
 
-      setsamsite(response.data[8].select_att_ID_select_att_samsite_DATA[0].filter(item=> item !== null));
-      Setseveritysamsite(response.data[8].select_att_ID_select_att_samsite_DATA[1][0][0]);
-
-      setsecure(response.data[5].select_att_ID_select_att_secure_DATA[0].filter(item=> item !== null));
-      SetseveritySecure(response.data[5].select_att_ID_select_att_secure_DATA[1][0][0]);
-
-      setserver(response.data[9].select_att_ID_select_att_server_DATA[0].filter(item=> item !== null));
-      Setseverityserver(response.data[9].select_att_ID_select_att_server_DATA[1][0][0]);
 
 
     //   setsensitive(response.data[14].select_att_ID_Sentitive[0].filter(item=> item !== null));

@@ -27,6 +27,7 @@ const Target_url = () => {
 
         axios.post(`http://127.0.0.1:5000/crawl`, { project_name, authUser, url, description })
             .then(res => {
+                console.log(res)
                 setLoad(false);
                 setLoadingButton(false);
                 setProject_name_id(res.data.project_name_id_result);

@@ -833,32 +833,25 @@ async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
         print(f"The file {file_path} does not exist.")
     return i
 
-
 async def detect_web_server_leakage(Server):
     db = mysql.connection.cursor()
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=1")
-    db.execute(query2,)             
-    sql2_ = db.fetchall() 
+    query2 = "SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=1"
+    db.execute(query2)
+    sql2_ = db.fetchall()
+    
     for Server_data in Server:
-        # print(f"res_header[1]",Server_data[1])
-        # print(f"URL[0]",Server_data[0])
-        # print(f"PID[2]",Server_data[2])
-        # print(f"URL_ID[3]",Server_data[3])
         Server_word = "Server"
-        if  Server_data[1].find(Server_word) != -1:
+        if Server_data[1].find(Server_word) != -1:
             print("พบ Server")
             db = mysql.connection.cursor()
             insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
-                    )
-            values = (Server_data[3],Server_data[2],'1',Server_data[0],'T',Server_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                "INSERT INTO att_ps (URL_ID, PID, OID, URL, state, res_header, vul_des, vul_sol, vul_ref, OType, Vul_name) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            )
+            values = (Server_data[3], Server_data[2], '1', Server_data[0], 'T', Server_data[1], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4])
             db.execute(insert_query, values)
             mysql.connection.commit()
-        else :
+        else:
             print("ไม่พบ Server")
-
-
-
 
 
 async def HSTS(PTarget):
@@ -1033,9 +1026,9 @@ async def crawl_endpoint():
         # await run_gobustersensitive(baseURL,project_name,user)
         # print("baseURLsensitive",baseURL)
         # await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
-        # db = mysql.connection.cursor()
-        # queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s"
-        # db.execute(queryServer, (project_name_id_result))
+        db = mysql.connection.cursor()
+        queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s"
+        db.execute(queryServer, (project_name_id_result))
         Server = db.fetchall()
         await detect_web_server_leakage(Server)
         await check_cookie_attributes(Server)

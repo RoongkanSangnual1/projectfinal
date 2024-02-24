@@ -17,7 +17,7 @@ const handleMenuClick = (e) => {
     localStorage.removeItem('user')
     localStorage.removeItem('token')
     Swal.fire("Logout")
-    navigate('/login')
+    navigate('/')
   }
   else{
     message.info('Click on menu item.');
