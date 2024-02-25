@@ -2,10 +2,13 @@ import { useState } from "react";
 import './createproject.css'
 import axios from "axios";
 import Navbar from "./navbar";
+import Sidemenu from './sidemenu';
 import { Alert, Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
 import { CloseOutlined, RobotOutlined } from '@ant-design/icons';
 import ClipLoader  from "react-spinners/ClipLoader";
+import Swal from 'sweetalert2'
+
 
 const Target_url = () => {
     const [project_name, setProject_name] = useState("");
@@ -24,12 +27,13 @@ const Target_url = () => {
 
         axios.post(`http://127.0.0.1:5000/crawl`, { project_name, authUser, url, description })
             .then(res => {
+                console.log(res)
                 setLoad(false);
                 setLoadingButton(false);
                 setProject_name_id(res.data.project_name_id_result);
                 console.log(res.data.Change.length)
                 if (res.data.Change.length>0){
-                    alert(res.data.Change)
+                    Swal.fire(res.data.Change);
                 }
 
             })
@@ -42,8 +46,10 @@ const Target_url = () => {
     return (
         <div>
             <Navbar />
+            <div className='Applayout'>
+            <Sidemenu className='Sidemenu' />
             <div className="container2">
-                <Link to='/home' className="exit"><CloseOutlined /></Link>
+                <Link to='/home' className="exit"><CloseOutlined style={{color:"red"}} /></Link>
                 <h2>Create Project</h2>
                 <div className="createproject-form">
                     <Form
@@ -86,6 +92,8 @@ const Target_url = () => {
                     </div>
                 )}
             </div>
+            </div>
+
         </div>
     )
 }

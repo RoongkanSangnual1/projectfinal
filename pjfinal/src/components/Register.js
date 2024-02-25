@@ -3,6 +3,7 @@ import axios from 'axios'
 import "./Register.css";
 import {  Form,Input, Select } from 'antd';
 import { Link,useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
 const Register = () =>{
     const [username ,setUsername] = useState("")
     const [password,setPassword] = useState("")
@@ -19,11 +20,13 @@ const Register = () =>{
         axios
         .post(`http://localhost:8000/api/register`,{username,email,password,role})
         .then(response=>{
-            alert(response.data)
+            console.log(response)
+            Swal.fire(response.data);
             navigate('/login')
         })
         .catch(err=>{
-            alert(err.response.data)
+            console.log(err)
+            Swal.fire(err.response.data);
         })
         console.log(role)
     }
@@ -91,7 +94,14 @@ const Register = () =>{
 
                 <Form.Item
                 label="Role"
-                name="role">
+                name="role"
+                rules={[
+                    {
+                    required: true,
+                    message: 'Please input your username!',
+                    },
+                ]}
+                >
                 
                 <Select  value={role} onChange={(value)=>setRole(value)} options={[
                  { value: 'Standard', label: 'Standard' },

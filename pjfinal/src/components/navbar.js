@@ -4,6 +4,7 @@ import { Button, Dropdown, message, Space } from 'antd';
 import logo from "./imgsrc/robo.svg";
 import './navbar.css';
 import {useNavigate} from "react-router-dom";
+import Swal from 'sweetalert2'
 
 function Navbar(){
   const navigate = useNavigate()
@@ -15,8 +16,8 @@ const handleMenuClick = (e) => {
   if(e.key === '3'){
     localStorage.removeItem('user')
     localStorage.removeItem('token')
-    alert("Logout")
-    navigate('/login')
+    Swal.fire("Logout")
+    navigate('/')
   }
   else{
     message.info('Click on menu item.');

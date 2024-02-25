@@ -5,6 +5,7 @@ import { PlusOutlined,RightOutlined,CloseOutlined,FormOutlined } from '@ant-desi
 import { Link} from "react-router-dom";
 import axios from "axios";
 import { useState,useEffect } from "react";
+import Swal from 'sweetalert2'
 
 const Home = () => {
     const [projectdata, setProjectData] = useState([]);
@@ -30,30 +31,72 @@ const Home = () => {
             });
     }, []);
 
-      const Deleteprojuct=(id)=>{
-                /// ส่ง token user แบบheaders
-          const token = localStorage.getItem("token")
-          axios.delete(`http://127.0.0.1:5000/onedelete?project_name_id=${id}`,{
-            headers:{
-              Authorization:`Bearer ${token}`,
-            },
-          })
+    const Deleteprojuct = (id) => {
+      // Get the user's token from localStorage
+      const token = localStorage.getItem("token");
+    
+      // Show a confirmation dialog using SweetAlert
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete!",
+      }).then((result) => {
+        // Check if the user confirmed the action
+        if (result.isConfirmed) {
+          // Perform the deletion operation
+          axios
+            .delete(`http://127.0.0.1:5000/onedelete?project_name_id=${id}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              
+              if (response.status === 200) {
+               
+                setProjectData((prevData) =>
+                  prevData.filter((project) => project[2] !== id)
+                );
+    
+  
+                Swal.fire({
+                  title: "Deleted!",
+                  text: "Your project has been deleted.",
+                  icon: "success",
+                });
+              } else {    
+                Swal.fire({
+                  title: "Error!",
+                  text: "Unable to delete the file. Please try again.",
+                  icon: "error",
+                });
+              }
+    
+        
+              console.log(response);
+            })
+            .catch((error) => {
+           
+              Swal.fire({
+                title: "Error!",
+                text: "An error occurred while deleting the file.",
+                icon: "error",
+              });
+    
+          
+              console.log(error);
+            });
+        }
+      });
+    };
+    
 
 
 
-        .then(response => {
-          setProjectData(projectdata.filter((project=>project[2] !==id )))
-          console.log(response)
-          console.log(deletee)
-
-        })
-        .catch(error => {
-          console.log(error)
-        });
-       
-       
-
-    }
         return (
             <div className="mainDash">
               <Card title="My Project" extra={<Link to='/create'><Button type="primary" icon={<PlusOutlined />}>Add to create</Button></Link>}>
@@ -86,7 +129,7 @@ const Home = () => {
                                         ) : (
                                           <>
                                             Start:({project[4]}) <br/> 
-                                            Complete:({project[5]})
+                                            complete:({project[5]})
                                           </>
                                         )}
                                       </pre>

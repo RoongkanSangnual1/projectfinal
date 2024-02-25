@@ -5,6 +5,7 @@ import { Table,Button,Modal,Form,Input,Space } from 'antd';
 import './URLlist.css'
 import {PlusOutlined,ReloadOutlined,CloseOutlined} from '@ant-design/icons';
 import './maindashboard.css';
+import Swal from 'sweetalert2'
 import PDF from './PDF';
 const URLlist = (props) => {
   // console.log(props.name);
@@ -93,18 +94,68 @@ if(Delete==='Advance'){
 });
 }
 
-    const handleDelete = (iddelete) => {  
-        /// ส่ง token user แบบheaders
-      const token = localStorage.getItem("token")
-      axios.delete(`http://127.0.0.1:5000/oneurlsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
-        headers:{
-          Authorization:`Bearer ${token}`,
-        },
-      }).then(response => {
-        setProjectOneData(projectOneData.filter((project=>project[5] !==iddelete )))
+const handleDelete = (iddelete) => {  
 
-      })
-      };
+  const token = localStorage.getItem("token");
+
+  Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+     
+      if (result.isConfirmed) {
+          
+          axios.delete(`http://127.0.0.1:5000/oneurlsdelete?project_name_id=${project_name_id}&record=${iddelete}`, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          })
+          .then((response) => {
+             
+              if (response.status === 200) {
+                 
+                  setProjectOneData((prevData) =>
+                      prevData.filter((project) => project[5] !== iddelete)
+                  );
+
+                 
+                  Swal.fire({
+                      title: "Deleted!",
+                      text: "Your URL has been deleted.",
+                      icon: "success",
+                  });
+              } else {
+                 
+                  Swal.fire({
+                      title: "Error!",
+                      text: "Unable to delete the URL. Please try again.",
+                      icon: "error",
+                  });
+              }
+
+            
+              // console.log(response);
+          })
+          .catch((error) => {
+              // Show an error message if there was an error during the delete operation
+              Swal.fire({
+                  title: "Error!",
+                  text: "An error occurred while deleting the URL.",
+                  icon: "error",
+              });
+
+              // Log the error
+              console.log(error);
+          });
+      }
+  });
+};
+
 
 
     const showModal = () => {

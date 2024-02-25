@@ -7,7 +7,7 @@ import {PlusOutlined,ReloadOutlined,CloseOutlined,FormOutlined,RightOutlined} fr
 import { Link} from "react-router-dom";
 import { CgDanger } from "react-icons/cg";
 import Highlighter from 'react-highlight-words';
-
+import Swal from 'sweetalert2'
 import './maindashboard.css';
 import PDF from './PDF';
 import TextArea from 'antd/es/input/TextArea';
@@ -25,6 +25,7 @@ const SQlinject = (props) => {
     const [samsite,setsamsite] = useState([])
     const [secure,setsecure] = useState([])
     const [server,setserver] = useState([])
+    const [Sensitive,setSensitive] = useState([])
     const [HSTS,setHSTS] = useState([])
     const [Payload,setPayload] = useState([])
     const [Issue,setIssue] = useState([])
@@ -36,6 +37,7 @@ const SQlinject = (props) => {
     const [isModalOpen4, setIsModalOpen4] = useState(false);
     const [isModalOpen5, setIsModalOpen5] = useState(false);
     const [isModalOpen6, setIsModalOpen6] = useState(false);
+    const [isModalOpen7, setIsModalOpen7] = useState(false);
     const [isModalOpen8, setIsModalOpen8] = useState(false);
     const [isModalOpen10, setIsModalOpen10] = useState(false);
     const [isModalOpen11, setIsModalOpen11] = useState(false);
@@ -187,22 +189,52 @@ const SQlinject = (props) => {
                 }
               })
               .filter(item => item !== null);
+
+              const Sensitive = response.data[13].select_att_ID_sensitive
+              .map((data, index) => {
+                try {
+                  let decodedURL = decodeURIComponent(data[0]);
+                  let decodedURL1 = decodeURIComponent(data[1]);
+                  let decodedURL2 = decodeURIComponent(data[2]);
+                  return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
+                } catch (error) {
+                  console.error("Error decoding URL:", error);
+                 return null;
+                }
+              })
+              .filter(item => item !== null);
+             
               setresponsedata([{"SQL Injection":Index},{"Stored Cross Site Scriptng":IndexXss},{"Directory Traversal File Include":Indextraversal},{"Missing Secure Attribute in Cookie Header":IndexSecure},{"Missing HttpOnly Attribute in Cookie Header":httponly},{"Missing Expires Attribute in Cookie Header":expire},{"Missing SameSite Attribute in Cookie Header":samsite},{"Web Server Infomation Leakage through Server header":server},{"Missing HTTP Strict Transport Security Header":HSTS}])
               setHSTS(HSTS)     
               setsamsite(samsite)
               setserver(server)
-              console.log("server,",server)
+              // console.log("server,",server)
               setexpire(expire)
               sethttponly(httponly)
               setsecure(IndexSecure)
               setprojectOneDataXSSSQL(IndexXss);
             setprojectOneDataSQL(Index);
             settraversal(Indextraversal)
+            setSensitive(Sensitive)
+            console.log("Sensitive",Sensitive)
         })
         .catch(error => {
             console.error(error);
         });
     }, [user, project_name_id]);
+
+    useEffect(()=>{
+      setresponsedata([{"SQL Injection":projectOneDataSQL},{"Stored Cross Site Scriptng":projectOneDataXSSSQL},{"Directory Traversal File Include":traversal},{"Missing Secure Attribute in Cookie Header":secure},{"Missing HttpOnly Attribute in Cookie Header":httponly},{"Missing Expires Attribute in Cookie Header":expire},{"Missing SameSite Attribute in Cookie Header":samsite},{"Web Server Infomation Leakage through Server header":server},{"Missing HTTP Strict Transport Security Header":HSTS}])
+      setHSTS(HSTS)     
+      setsamsite(samsite)
+      setserver(server)
+      setexpire(expire)
+      sethttponly(httponly)
+      setsecure(secure)
+      setprojectOneDataXSSSQL(projectOneDataXSSSQL);
+    setprojectOneDataSQL(projectOneDataSQL);
+    settraversal(traversal)
+    },[HSTS,samsite,server,expire,httponly,secure,projectOneDataXSSSQL,projectOneDataSQL,traversal])
 
 
 
@@ -225,6 +257,9 @@ const SQlinject = (props) => {
       else if (OID === 6) {
         setIsModalOpen6(true);
       }
+      else if (OID === 7) {
+        setIsModalOpen8(true);
+      }
       else if (OID === 8) {
         setIsModalOpen8(true);
       }
@@ -234,6 +269,7 @@ const SQlinject = (props) => {
       else if (OID ===11) {
         setIsModalOpen11(true);
       }
+
 
 
     };
@@ -249,6 +285,7 @@ const SQlinject = (props) => {
         setIsModalOpen4(false);
         setIsModalOpen5(false);
         setIsModalOpen6(false);
+        setIsModalOpen7(false);
         setIsModalOpen8(false);
         setIsModalOpen10(false);
         setIsModalOpen11(false);
@@ -282,6 +319,7 @@ const SQlinject = (props) => {
         setIsModalOpen4(false);
         setIsModalOpen5(false);
         setIsModalOpen6(false);
+        setIsModalOpen7(false);
         setIsModalOpen8(false);
         setIsModalOpen10(false);
         setIsModalOpen11(false);
@@ -299,25 +337,46 @@ const SQlinject = (props) => {
 
       const handleDelete = (iddelete) => {  
         /// ส่ง token user แบบheaders
-      const token = localStorage.getItem("token")
-      axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
-        headers:{
-          Authorization:`Bearer ${token}`,
-        },
-      }).then(response => {
-        setserver(server.filter((project=>project[7] !==iddelete )))
-        setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
-        setprojectOneDataXSSSQL(projectOneDataXSSSQL.filter((project=>project[10] !==iddelete)));
-        settraversal(traversal.filter((project=> project[10]!==iddelete)))
-        setHSTS(HSTS.filter((project=>project[7] !==iddelete )))     
-        setsamsite(samsite.filter((project=>project[7] !==iddelete )))
-        setserver(server.filter((project=>project[7] !==iddelete )))
-        setexpire(expire.filter((project=>project[7] !==iddelete )))
-        sethttponly(httponly.filter((project=>project[7] !==iddelete )))
-        setsecure(secure.filter((project=>project[7] !==iddelete )))
-
-      })
+        const token = localStorage.getItem("token")
+      
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
+              headers:{
+                Authorization:`Bearer ${token}`,
+              },
+            }).then(response => {
+              setserver(server.filter((project=>project[7] !==iddelete )))
+              setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
+              setprojectOneDataXSSSQL(projectOneDataXSSSQL.filter((project=>project[10] !==iddelete)));
+              settraversal(traversal.filter((project=> project[10]!==iddelete)))
+              setHSTS(HSTS.filter((project=>project[7] !==iddelete )))     
+              setsamsite(samsite.filter((project=>project[7] !==iddelete )))
+              setserver(server.filter((project=>project[7] !==iddelete )))
+              setexpire(expire.filter((project=>project[7] !==iddelete )))
+              sethttponly(httponly.filter((project=>project[7] !==iddelete )))
+              setsecure(secure.filter((project=>project[7] !==iddelete )))
+      
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success"
+              });
+            }).catch(error => {
+              console.log(error)
+            });
+          }
+        });
       };
+      
     
     return (
         <div>
@@ -450,6 +509,22 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[8]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[9]}
+          </p>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -536,7 +611,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Stored Cross Site Scriptng<per style={{color:"red"}}>  ({projectOneDataXSSSQL.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(0)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(10)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Add URL Stored Cross Site Scriptng" open={isModalOpen10} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -621,6 +696,22 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[8]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[9]}
+          </p>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -656,7 +747,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Stored Cross Site Scriptng</h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(11)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(10)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Add URL Stored Cross Site Scriptng-" open={isModalOpen10} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -788,6 +879,22 @@ const SQlinject = (props) => {
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[8]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[9]}
+          </p>
         </td>
       </tr>
     </tbody>
@@ -975,6 +1082,22 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[6]}
+          </p>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -1062,7 +1185,7 @@ const SQlinject = (props) => {
           {Delete ==='Advance'&&(
                <Button  style={{backgroundColor:"red"}} onClick={() => showModal(2)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
-            <Modal title=">Missing Secure Attribute in Cookie Header" open={isModalOpen1} onOk={Formsummit} onCancel={handleCancel}>
+            <Modal title=">Missing Secure Attribute in Cookie Header" open={isModalOpen2} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
             onFinish={Formsummit}
             labelCol={{
@@ -1148,6 +1271,22 @@ const SQlinject = (props) => {
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
           <p>
           {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[6]}
           </p>
         </td>
       </tr>
@@ -1329,6 +1468,22 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[6]}
+          </p>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -1504,6 +1659,22 @@ const SQlinject = (props) => {
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
           <p>
           {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[6]}
           </p>
         </td>
       </tr>
@@ -1683,6 +1854,22 @@ const SQlinject = (props) => {
           <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
           <p>
           {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[6]}
           </p>
         </td>
       </tr>
@@ -1866,6 +2053,22 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[5]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[6]}
+          </p>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -1933,6 +2136,193 @@ const SQlinject = (props) => {
 
 
 
+<>
+{
+              Sensitive && Sensitive.length> 0 ? (
+            
+            <Collapse
+  className="projcollaspe"
+  collapsible="header"
+  size="small"
+  defaultActiveKey={['1']}
+  style={{ marginTop: '5px' }}
+  expandIcon={({ isActive }) => (
+    <>
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
+      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} />
+    </>
+  )}
+  items={[
+    {
+      label: (
+        <div className="projcollaspe-head">
+          <h3 className="projname">Sensitive File Disclosure<per style={{color:"red"}}>  ({Sensitive.length})</per></h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(7)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Add URL Stored Cross Site Scriptng" open={isModalOpen7} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+            
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+          
+        </div>
+      ),
+      children: (
+        <>
+        {
+        Sensitive.map((OneData, index) => (
+                  <Collapse
+  className="projcollaspe"
+  collapsible="header"
+  size="small"
+  defaultActiveKey={['10']}
+  style={{ marginTop: '5px' }}
+  expandIcon={({ isActive }) => (
+    <>
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+      {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
+    </>
+  )}
+  items={[
+    {
+      label: (
+        <div className="projcollaspe-head">
+                <a  style={{color:"red"}}   href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                  {OneData[3]}
+            </a>
+            {Delete === 'Advance'&& ( 
+            <Space size="middle">
+              
+              <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[10])}> </Button>
+          </Space>)}
+        </div>
+      ),
+      children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
+<div className="collapse-content" style={{ overflow: 'auto' }}>
+  <table>
+    <thead>
+      <tr>
+        <th>URL</th>
+        <th>EVIDENCE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      <td style={{textAlign:"center"}}>
+                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                  {OneData[1]}
+                </a>
+              </td>
+              <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+      </tr>
+      <tr>
+      <td colSpan="2"  style={{ textAlign: 'left'}}>
+          <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+          <p> {OneData[7]}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+          <p>
+          {OneData[8]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
+          <p>
+          {OneData[8]}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>OType:</strong>
+          <p>
+          {OneData[9]}
+          </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  
+
+        </div>
+      ),
+    },
+  ]}
+/>
+               )) } </>
+),
+    },
+  ]}
+/>
+):(
+<Collapse
+  className="projcollaspe"
+  collapsible="header"
+  size="small"
+  defaultActiveKey={['1']}
+  style={{ marginTop: '5px' }}
+  expandIcon={({ isActive }) => (
+    <>
+      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
+      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: '#47F777' }} />
+    </>
+  )}
+  items={[
+    {
+      label: (
+        <div className="projcollaspe-head">
+          <h3 className="projname">Sensitive File Disclosure</h3>
+          {Delete ==='Advance'&&(
+               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(7)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+            )}   
+            <Modal title="Add URL Stored Cross Site Scriptng-" open={isModalOpen7} onOk={Formsummit} onCancel={handleCancel}>
+            <Form className='input-container'
+            onFinish={Formsummit}
+            labelCol={{
+                span: 5,
+              }}
+            >
+          
+              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
+              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
+              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
+              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
+              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
+          
+  
+                 </Form>
+
+      </Modal>
+        </div>
+      ),
+    },
+  ]}
+/>
+)
+}
+
+</>
 
 
 

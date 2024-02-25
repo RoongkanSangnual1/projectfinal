@@ -8,6 +8,7 @@ import Navbar from "./navbar";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
 import ClipLoader  from "react-spinners/ClipLoader";
+import Swal from 'sweetalert2'
 
 
 const Edithome = () => {
@@ -52,7 +53,8 @@ const Edithome = () => {
             .then(res => {
                 setLoad(false);
                 setLoadingButton(false);
-                alert(res.data)
+                // alert(res.data)
+                Swal.fire(res.data);
             })
             .catch(error => {
                 setError("ไม่สามารถทำการได้");

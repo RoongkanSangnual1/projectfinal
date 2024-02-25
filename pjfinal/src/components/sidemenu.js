@@ -16,7 +16,7 @@ function getItem(label, key, icon, children, type) {
 const items = [
   
   getItem('Dashboard', '/Dashboard', <FundOutlined />),
-  getItem('Report', '/create', <SignalFilled />),
+  getItem('Home', '/Home', <SignalFilled />),
   
 ];
 
