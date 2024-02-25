@@ -5,7 +5,7 @@ import { ShareAltOutlined } from '@ant-design/icons';
 import './projectdash.css';
 import Login from './Login';
 import Navbar from './navbar';
-import Dashboard from './Dashboard';
+import Dashboard from './dashboard.js';
 import Issues from './Issues';
 import URLlist from './URLlists';
 import { useParams } from 'react-router-dom';
