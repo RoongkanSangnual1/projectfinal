@@ -3,11 +3,15 @@ import Navbar from './navbar.js';
 import { Button, Carousel } from 'antd';
 import { BugFilled, SmileFilled, FileTextFilled, ClockCircleFilled } from '@ant-design/icons';
 import "./startpage.css"
+import { useNavigate} from "react-router-dom"
 import fsp1 from "./imgsrc/rm373batch4-15.jpg"
 import fsp2 from "./imgsrc/7971777_3807687.png"
 import owasplogo from "./imgsrc/owasplogo.png"
 import robologo from "./imgsrc/logo.png"
-const Startpage = () => (
+const Startpage = () => {
+
+    const navigate = useNavigate()
+return(
     <div>
         <Navbar />
         <div className='firstSection'>
@@ -51,7 +55,7 @@ const Startpage = () => (
                 <h3 >3</h3>
                 </div>
             </Carousel>
-            <Button className='CButton'>Get Started</Button> 
+            <Button onClick={() => navigate('/login')} className='CButton'>Get Started</Button> 
         </div>
         <div className='secondSection'>
             
@@ -64,4 +68,5 @@ const Startpage = () => (
         
     </div>
 )
+}
 export default Startpage;

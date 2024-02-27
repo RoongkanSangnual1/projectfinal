@@ -1,16 +1,17 @@
 import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 import { Card,Button,Modal,Form,Input} from 'antd';
-import { ShareAltOutlined } from '@ant-design/icons';
+import { ShareAltOutlined,FormOutlined } from '@ant-design/icons';
 import './projectdash.css';
 import Login from './Login';
 import Navbar from './navbar';
 import Dashboard from './Dashboard';
 import Issues from './Issues';
 import URLlist from './URLlists';
-import { useParams,useNavigate } from 'react-router-dom';
+import { useParams,useNavigate ,Link} from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import SQlinject from './SQlinject';
+
 import PDF from './PDF';
 
   
@@ -22,61 +23,108 @@ const ProjectDash = () => {
     const [activeTabKey1, setActiveTabKey1] = useState('tab1');
     const [usershare,setUershare] = useState([])
     const project_name_id = useParams()
+    const [showComplete, setShowComplete] = useState(false);
     const dispatch = useDispatch()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [url,setUrl] = useState("")
+    const [start,setstart] = useState("")
+    const [end,setend] = useState("")
     const [link_, setLink_] = useState("");
+    const [titleText, settitleText] = useState("");
+    const [showStopButton, setShowStopButton] = useState(true);
+    const [reloadPage, setReloadPage] = useState(false);
     const project_name = project_name_id.project_name_id
     const project_name_n = project_name_id.project_name
+    const user = localStorage.user;
     const navigate = useNavigate()
-    // const user = localStorage.user;
-
-
-    // useEffect(() => {
-    //     const token = localStorage.getItem('token')
-    //     axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`,{
-    //         headers:{
-    //             Authorization: `Bearer ${token}`,
-    //         },
-
-    //     })
-    //     .then(response => {
-    //       console.log("response",response)
-    //       setUrl(response.data[1].url_target[0][0])
-    //     })
-    //   },[]);
-
-
     useEffect(() => {
-      const token = localStorage.getItem('token')
-      axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`,{
-          headers:{
+      const fetchData = async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`, {
+            headers: {
               Authorization: `Bearer ${token}`,
-          },
-
-      })
-      .then(response => {
-        if (response.data && response.data["server error"]) {
-          Swal.fire({
-            icon: 'error',
-            title: 'User Eror',
-            // text: "User Eror",
+            },
           });
-          
-          setUrl("error");
-          navigate('/login')
-        } else {
-
-          if (response.data[1].url_target[0]) {
-            setUrl(response.data[1].url_target[0][0]);
+    
+          if (response.data && response.data["server error"]) {
+            Swal.fire({
+              icon: 'error',
+              title: 'User Error',
+            });
+    
+            setUrl("error");
+            navigate('/login');
           } else {
-            console.error("Unexpected response structure", response);
+            if (response.data[1].url_target[0]) {
+              setUrl(response.data[1].url_target[0][0]);
+              setstart(response.data[1].url_target[0][3]);
+              setend(response.data[1].url_target[0][4]);
+            } else {
+              console.error("Unexpected response structure", response);
+            }
           }
+    
+          console.log("response", response);
+        } catch (error) {
+          console.error("Error fetching data", error);
         }
+      };
+    
+      fetchData(); // เรียกใช้ fetchData
+    
+      // Dependency array - รวม dependencies ที่จำเป็นเท่านั้น
+    }, [user, project_name, setUrl, setstart, setend, navigate]);
+
+
+
+useEffect(() => {
+  const save = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`http://127.0.0.1:5000/save`, { project_name }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       
-        console.log("response", response);
-      })
-    },[]);
+      setShowComplete(true); // เปลี่ยน state เมื่อคลิกปุ่ม
+      setReloadPage(prevState => !prevState);
+    } catch (error) {
+      console.error('Save Error', error);
+    }
+  };
+
+  const generateTitleText = () => {
+    return (
+      <>
+        Name:{project_name_id.project_name}        
+        <Link to={`/myproject/edit/${project_name_n}/${project_name}`} className="projedit-btn" style={{ marginLeft: '50px',color:"blue" }}>
+          <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
+        </Link>
+        <br />
+        URL:({url})
+        <br />
+        <>Start:{start}</>
+        <br />
+        {start !== end && (<> Complete {end}</>)}
+        {showComplete && (
+          <>
+            Complete
+            <br />
+          </>
+        )}
+        {start === end && !showComplete && <Button style={{backgroundColor:"red"}} onClick={save}>Stop Process</Button>}
+      </>
+    );
+  };
+
+  settitleText(generateTitleText());
+}, [project_name, project_name_id.project_name, project_name_n, url, start, end, reloadPage, showComplete]);
+    
+
+
+
     const tabList = [
       {
         key: 'tab1',
@@ -153,6 +201,8 @@ const handleCopy = () => {
       setIsModalOpen(false);   
   }
 
+      
+
   return (
     <div className='ProjectDash'>
       <Navbar />
@@ -161,7 +211,7 @@ const handleCopy = () => {
           style={{
             width: '100%',
           }}
-          title={`${project_name_id.project_name}-(${url})`}
+          title={titleText}
           tabList={tabList}
           activeTabKey={activeTabKey1}
           onTabChange={onTab1Change}

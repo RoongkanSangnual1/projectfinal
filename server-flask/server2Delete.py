@@ -21,63 +21,72 @@ app = Flask(__name__)
 CORS(app)
 
 
+
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'robo'
+app.config['MYSQL_CONNECT_TIMEOUT'] = 900
+app.config['MYSQL_MAX_PACKET'] = 32 * 1024 * 1024 
 
 mysql = MySQL(app)
 
 
 
 async def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
-    if len(visited_urls) >= 100:
-        return
-    
-    else:
-        if url not in visited_urls:
-            print(url,project_name,user,Host,baseURL,)
-            visited_urls.append(url)
-            response = await get_response(url,cookies_data)
-            if response is not None:
-                if urlparse(response.url).netloc == Host:
- 
-                    re_location = 'None'
-                    soup = BeautifulSoup(response.text, 'lxml')
-                    formlist = await findActForm(soup)
-                    if format != {}:
-                        i = 1
-                        await save_log(response, i,project_name,user,Host,http_log_data,formlist)
-                        i += 1
-                        i = await checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls,visited_post)
-                        
-                    else:
-                        await save_log(response, i,project_name,user,Host,http_log_data)
-                   
-                        i += 1
-                    
-                        
-                    
-                    print(f'Collect.. {response.url} -> {response.status_code} ..is {response.is_redirect} to {re_location}')
-                    await checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
-                    await get_links(soup,project_name,user,baseURL,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
-                    
+    try:
+        if len(visited_urls) >= 100:
+            return "crawl"
+        
         else:
-            return
-
+            if url not in visited_urls:
+                print(url,project_name,user,Host,baseURL,)
+                visited_urls.append(url)
+                response = await get_response(url,cookies_data)
+                if response is not None:
+                    if urlparse(response.url).netloc == Host:
+    
+                        re_location = 'None'
+                        soup = BeautifulSoup(response.text, 'lxml')
+                        formlist = await findActForm(soup)
+                        if format != {}:
+                            i = 1
+                            await save_log(response, i,project_name,user,Host,http_log_data,formlist)
+                            i += 1
+                            i = await checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls,visited_post)
+                            
+                        else:
+                            await save_log(response, i,project_name,user,Host,http_log_data)
+                    
+                            i += 1
+                        
+                            
+                        
+                        print(f'Collect.. {response.url} -> {response.status_code} ..is {response.is_redirect} to {re_location}')
+                        await checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                        await get_links(soup,project_name,user,baseURL,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                        
+            else:
+                return "crawl"
+    except Exception as e:
+        print(f"crawl: {e}")
+        return None
 
 async def checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
-    if response.status_code in (301,302):
-        re_location = response.headers.get('Location')
-        if re_location:
-            if not re_location.startswith('http'):
-                if re_location.startswith('/'):
-                    await crawl(baseURL+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+    try:
+        if response.status_code in (301,302):
+            re_location = response.headers.get('Location')
+            if re_location:
+                if not re_location.startswith('http'):
+                    if re_location.startswith('/'):
+                        await crawl(baseURL+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                    else:
+                        await crawl(baseURL+'/'+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
                 else:
-                    await crawl(baseURL+'/'+re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
-            else:
-                await crawl(re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
-
+                    await crawl(re_location,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
 
 
 async def post_response(url,cookies_data,postbody=None):
@@ -88,7 +97,7 @@ async def post_response(url,cookies_data,postbody=None):
         await set_cookies(response,cookies_data)
         return response
     except requests.exceptions.RequestException as e:
-        print(f"HTTP error: {e}")
+        print(f"checkRedirect: {e}")
         print(f'Cannot request: {url}')
         return None
 
@@ -103,586 +112,690 @@ async def get_response(url, cookies_data,payload=None):
         await set_cookies(response,cookies_data)
         return response
     except requests.exceptions.RequestException as e:
-        print(f"HTTP error: {e}")
+        print(f"get_response: {e}")
         print(f'Cannot request: {url}')
         return None
 
                 
            
 async def save_log(response, i,project_name,user,Host,http_log_data,formlist=None, state='c'):
-    log_key = str(i)
-    http_log_data = {}
-    if response.raw.version == 10:
-        http_ver = 'HTTP/1.0'
-    elif response.raw.version == 11:
-        http_ver = 'HTTP/1.1'
-    elif response.raw.version == 20:
-        http_ver = 'HTTP/2'
-    elif response.raw.version == 30:
-        http_ver = 'HTTP/3'
-    else:
-        http_ver = 'unknown'
-    if response.status_code in (301,302):
-        re_location = response.headers.get('Location')
-    else:
-        re_location = 'NONE'
-    req = {
-        'METHOD': response.request.method,
-        'URI': urlparse(response.request.path_url).path,
-        'Host': Host,
-        'httpver': http_ver,
-        'header': response.request.headers,
-        'body': response.request.body
-    }
-    res = {
-        'status': response.status_code,
-        'reason': response.reason,
-        'isredirect': response.is_redirect,
-        'redirect_to' : re_location,
-        'ActionFound' : formlist,
-        'header': response.headers,
-        'body': response.text,
-        'clength': len(response.text)
-    }
-    http_log_data['URL'] = response.url
-    http_log_data['request'] = req
-    http_log_data['response'] = res
-    # http_log[log_key] = http_log_data
-    # print(f'{i}-{http_log[log_key]["URL"]}')
+    try:
+        log_key = str(i)
+        MAX_IMAGE_SIZE_BYTES = 1024 * 1024
+        http_log_data = {}
+        if response.raw.version == 10:
+            http_ver = 'HTTP/1.0'
+        elif response.raw.version == 11:
+            http_ver = 'HTTP/1.1'
+        elif response.raw.version == 20:
+            http_ver = 'HTTP/2'
+        elif response.raw.version == 30:
+            http_ver = 'HTTP/3'
+        else:
+            http_ver = 'unknown'
+        if response.status_code in (301,302):
+            re_location = response.headers.get('Location')
+        else:
+            re_location = 'NONE'
+        req = {
+            'METHOD': response.request.method,
+            'URI': urlparse(response.request.path_url).path,
+            'Host': Host,
+            'httpver': http_ver,
+            'header': response.request.headers,
+            'body': response.request.body
+        }
+        res = {
+            'status': response.status_code,
+            'reason': response.reason,
+            'isredirect': response.is_redirect,
+            'redirect_to' : re_location,
+            'ActionFound' : formlist,
+            'header': response.headers,
+            'body': response.text,
+            'clength': len(response.text)
+        }
+        http_log_data['URL'] = response.url
+        http_log_data['request'] = req
+        http_log_data['response'] = res
+        # http_log[log_key] = http_log_data
+        # print(f'{i}-{http_log[log_key]["URL"]}')
+
+        if 'image' in response.headers.get('content-type', '').lower():
+            image_size = len(response.content)
+            if image_size > MAX_IMAGE_SIZE_BYTES:
+                print(f"รูปใหญ่เกิน")
+                return
 
 
+        db = mysql.connection.cursor()
+        select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+        db.execute(select_project_name_id_query, (project_name, user))
+        project_name_id_result = db.fetchall()
 
+        insert_query = (
+            "INSERT INTO urllist (URL, method, URI, Host, HTTPVer, status_code, reason,state,length, isredirect,redirect_to, ActionFound, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s)"
+        )
+        values = (
+            str(http_log_data['URL']),
+            str(req['METHOD']),
+            str(req['URI']),
+            str(req['Host']),
+            str(req['httpver']),
+            str(res['status']),
+            str(res['reason']),
+            state,
+            str(res['clength']),
+            str(res['isredirect']),
+            str(res['redirect_to']),
+            str(res['ActionFound']),
+            str(req['header']),
+            str(req['body']),
+            str(res['header']),
+            base64.b64encode(res['body'].encode()).decode('utf-8'),
+            project_name_id_result[0],
+        )
+        db.execute(insert_query, values)
+        mysql.connection.commit()
+        # http_log[log_key] = http_log_data
+        # print(f'{i}-{http_log[log_key]["URL"]}')
+        # csv_name = f"{project_name}.csv"
+        # with open(csv_name, "a", encoding='utf-8') as f:
+        #     fieldnames = ['no.', 'URL', 'METHOD', 'URI', 'Host', 'HTTPVer', 'status', 'reason', 'length', 'isredirect',
+        #                   'redirect_to', 'ActionFound', 'requestheader', 'requestbody', 'responseheader', 'responsebody']
+        #     data = csv.DictWriter(f, fieldnames=fieldnames)
+        #     url_str = str(http_log_data['URL'])
+        #     method_str = str(req['METHOD'])
+        #     path_str = str(req['URI'])
+        #     Host_str = str(req['Host'])
+        #     HTTPVer_str = str(req['httpver'])
+        #     status_str =str(res['status'])
+        #     reason_str =str(res['reason'])
+        #     clength_str = str(res['clength'])
+        #     isredirect_str =str(res['isredirect'])
+        #     redirect_to_str = str(res['redirect_to'])
+        #     actionfound_str =str(res['ActionFound'])
+        #     requestheader_str = str(req['header'])
+        #     requestbody_str = str(req['body'])
+        #     responseheader_str = str(res['header'])
+        #     responsebody_str = base64.b64encode(res['body'].encode()).decode('utf-8')
+        #     rowdata = {
+        #         'no.': k,
+        #         'URL': url_str,
+        #         'METHOD': method_str,
+        #         'URI': path_str,
+        #         'Host': Host_str,
+        #         'HTTPVer': HTTPVer_str,
+        #         'status': status_str,
+        #         'reason': reason_str,
+        #         'length': clength_str,
+        #         'isredirect': isredirect_str,
+        #         'redirect_to': redirect_to_str,
+        #         'ActionFound': actionfound_str,
+        #         'requestheader': requestheader_str,
+        #         'requestbody': requestbody_str,
+        #         'responseheader': responseheader_str,
+        #         'responsebody': responsebody_str
+        #     }
+        #     data.writerow(rowdata)
 
-    db = mysql.connection.cursor()
-    select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
-    db.execute(select_project_name_id_query, (project_name, user))
-    project_name_id_result = db.fetchall()
-
-    insert_query = (
-        "INSERT INTO urllist (URL, method, URI, Host, HTTPVer, status_code, reason,state,length, isredirect,redirect_to, ActionFound, req_header, req_body, res_header, res_body, PID) VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s)"
-    )
-    values = (
-        str(http_log_data['URL']),
-        str(req['METHOD']),
-        str(req['URI']),
-        str(req['Host']),
-        str(req['httpver']),
-        str(res['status']),
-        str(res['reason']),
-        state,
-        str(res['clength']),
-        str(res['isredirect']),
-        str(res['redirect_to']),
-        str(res['ActionFound']),
-        str(req['header']),
-        str(req['body']),
-        str(res['header']),
-        base64.b64encode(res['body'].encode()).decode('utf-8'),
-        project_name_id_result[0],
-    )
-    db.execute(insert_query, values)
-    mysql.connection.commit()
-    db.close()
-    # http_log[log_key] = http_log_data
-    # print(f'{i}-{http_log[log_key]["URL"]}')
-    # csv_name = f"{project_name}.csv"
-    # with open(csv_name, "a", encoding='utf-8') as f:
-    #     fieldnames = ['no.', 'URL', 'METHOD', 'URI', 'Host', 'HTTPVer', 'status', 'reason', 'length', 'isredirect',
-    #                   'redirect_to', 'ActionFound', 'requestheader', 'requestbody', 'responseheader', 'responsebody']
-    #     data = csv.DictWriter(f, fieldnames=fieldnames)
-    #     url_str = str(http_log_data['URL'])
-    #     method_str = str(req['METHOD'])
-    #     path_str = str(req['URI'])
-    #     Host_str = str(req['Host'])
-    #     HTTPVer_str = str(req['httpver'])
-    #     status_str =str(res['status'])
-    #     reason_str =str(res['reason'])
-    #     clength_str = str(res['clength'])
-    #     isredirect_str =str(res['isredirect'])
-    #     redirect_to_str = str(res['redirect_to'])
-    #     actionfound_str =str(res['ActionFound'])
-    #     requestheader_str = str(req['header'])
-    #     requestbody_str = str(req['body'])
-    #     responseheader_str = str(res['header'])
-    #     responsebody_str = base64.b64encode(res['body'].encode()).decode('utf-8')
-    #     rowdata = {
-    #         'no.': k,
-    #         'URL': url_str,
-    #         'METHOD': method_str,
-    #         'URI': path_str,
-    #         'Host': Host_str,
-    #         'HTTPVer': HTTPVer_str,
-    #         'status': status_str,
-    #         'reason': reason_str,
-    #         'length': clength_str,
-    #         'isredirect': isredirect_str,
-    #         'redirect_to': redirect_to_str,
-    #         'ActionFound': actionfound_str,
-    #         'requestheader': requestheader_str,
-    #         'requestbody': requestbody_str,
-    #         'responseheader': responseheader_str,
-    #         'responsebody': responsebody_str
-    #     }
-    #     data.writerow(rowdata)
-
-    # db.close()
-        
-
+        # db.close()
+    except Exception as e:
+        print(f"save_log: {e}")
+        return None
 
 
     
 
 async def set_cookies(response,cookies_data):
-    for req_headers in response.request.headers:
-        if req_headers == 'Cookie':
-            cookies_data.update(
-                {str(response.request.headers[req_headers]).split('=')[0]: str(response.request.headers[req_headers]).split('=')[1]})
-            pass  
-    for res_headers in response.headers:
-        if res_headers == 'Set-Cookie':
-            cookies_data.update(
-                {str(response.headers[res_headers]).split(';')[0].split('=')[0]: str(response.headers[res_headers]).split(';')[0].split('=')[1]})
-            pass  
-
+        try:
+            for req_headers in response.request.headers:
+                if req_headers == 'Cookie':
+                    cookies_data.update(
+                        {str(response.request.headers[req_headers]).split('=')[0]: str(response.request.headers[req_headers]).split('=')[1]})
+                    pass  
+            for res_headers in response.headers:
+                if res_headers == 'Set-Cookie':
+                    cookies_data.update(
+                        {str(response.headers[res_headers]).split(';')[0].split('=')[0]: str(response.headers[res_headers]).split(';')[0].split('=')[1]})
+        except Exception as e:
+            print(f"set_cookies: {e}")
+            return None
 
 
 async def get_links(soup,project_name,user,scope_url,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
-    links = soup.find_all('a', href=True)
-    for link in links:
-        link = link.get('href')
-        if link in visited_urls:
-            continue
-        if link != ('#' or '/'):
-            if not link.startswith('http'):
-                if link.startswith('/'):
-                    link = baseURL + link
-                else:
-                    link = baseURL+'/' + link
-            if link.startswith(scope_url) and not link.endswith(('pdf', 'xls', 'docx')):
-                await crawl(link,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
-
+    try:
+        links = soup.find_all('a', href=True)
+        for link in links:
+            link = link.get('href')
+            if link in visited_urls:
+                continue
+            if link != ('#' or '/'):
+                if not link.startswith('http'):
+                    if link.startswith('/'):
+                        link = baseURL + link
+                    else:
+                        link = baseURL+'/' + link
+                if link.startswith(scope_url) and not link.endswith(('pdf', 'xls', 'docx','jpg','png')):
+                    await crawl(link,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+    except Exception as e:
+        print(f"get_links: {e}")
+        return None
 
 
 async def findActForm(soup):
-    formlist = {}
-    forms = soup.find_all('form')
-    for form in forms:
-        if form.get('id') is not None:
-            formid = form.get('id')
-        elif form.get('class') is not None:
-            formid = form.get('class')[0]
-        else:
-            formid = 'unknown'
-        act = form.get('action')
-        met = form.get('method')
-        formdetail = {}
-        parameters = {}
-        for input_element in form.find_all('input'):
-            name = input_element.get('name')
-            value = input_element.get('value', '')
-            input_type = input_element.get('type', '')
-            # Check for the presence of the required attribute in any form of capitalization
-            required = 'required' in [attr.lower() for attr in input_element.attrs]
-            paramsdetail = {'required': required, 'type': input_type,'value': value}
-            parameters[name] = paramsdetail
+    try:
+        formlist = {}
+        forms = soup.find_all('form')
+        for form in forms:
+            if form.get('id') is not None:
+                formid = form.get('id')
+            elif form.get('class') is not None:
+                formid = form.get('class')[0]
+            else:
+                formid = 'unknown'
+            act = form.get('action')
+            met = form.get('method')
+            formdetail = {}
+            parameters = {}
+            for input_element in form.find_all('input'):
+                name = input_element.get('name')
+                value = input_element.get('value', '')
+                input_type = input_element.get('type', '')
+                # Check for the presence of the required attribute in any form of capitalization
+                required = 'required' in [attr.lower() for attr in input_element.attrs]
+                paramsdetail = {'required': required, 'type': input_type,'value': value}
+                parameters[name] = paramsdetail
 
-        for select_element in form.find_all('select'):
-            name = select_element.get('name')
-            input_type = 'select'
-            required = 'required' in [attr.lower() for attr in select_element.attrs]
-            # Collect all option values
-            options = select_element.find_all('option')
-            option_values = [option.get('value', '') for option in options]
-            paramsdetail = {'required': required, 'type': input_type, 'value': option_values}
-            parameters[name] = paramsdetail
-        formdetail['action'] = act
-        formdetail['method'] = met
-        formdetail['parameters'] = parameters
-        formlist[formid] = formdetail
+            for select_element in form.find_all('select'):
+                name = select_element.get('name')
+                input_type = 'select'
+                required = 'required' in [attr.lower() for attr in select_element.attrs]
+                # Collect all option values
+                options = select_element.find_all('option')
+                option_values = [option.get('value', '') for option in options]
+                paramsdetail = {'required': required, 'type': input_type, 'value': option_values}
+                parameters[name] = paramsdetail
+            formdetail['action'] = act
+            formdetail['method'] = met
+            formdetail['parameters'] = parameters
+            formlist[formid] = formdetail
 
-    
-    return formlist
-
+        
+        return formlist
+    except Exception as e:
+        print(f"findActForm: {e}")
+        return None
 
 async def checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls,visited_post):
-    temppost = ''
-    data = {}
-    posttemp = set()
-    for tempAct in formlist:
-        if tempAct == 'unknown':
-            print(f"checkAct: {tempAct}")
-            continue 
-        print("tempAct",tempAct)
-        print('Act: ' + formlist[str(tempAct)]['action'])
-        print('method: ' + str(formlist[str(tempAct)]['method']))
-        Params = formlist[str(tempAct)]['parameters']
-        print('params :' + str(Params))
-
-        for p in Params:
-            #ข้อมูลjsonของparameterแต่ละตัว
-            Pinfo = Params[p]
-            #วนจบครบทุกพารามิเตอร์
-            if isinstance(Pinfo['value'], list):
-                #เช็คว่าเป็นตัวแปรselectมั้ย ถ้าใช่เอาค่าเดียวก็พอมาเป็นเบสไลน์
-                temppost += str(p) + '=' + str(Pinfo['value'][0]) + '&'
-                data.update({str(p): Pinfo['value'][0]})
-                posttemp.add(str(p))
-            else:
-                temppost += str(p) + '=' + str(Pinfo['value']) + '&'
-                data.update({str(p): Pinfo['value']})
-                posttemp.add(str(p))
-            # print('+++++++++')
-        
-        print("action",baseURL+formlist[str(tempAct)]['action'])
-        print("action",temppost[:-1])  # Remove the trailing '&'
-        print("action",posttemp)
-        
-        if formlist[str(tempAct)]['action'].startswith('/'):
-            acturl = baseURL+formlist[str(tempAct)]['action']
-        else:
-            acturl = baseURL+'/'+formlist[str(tempAct)]['action']
-        print('acturl: '+acturl)
-        if str(formlist[str(tempAct)]['method']) == 'GET' :
-            try:
-                
-                if acturl not in visited_urls:
-                    visited_urls.append(acturl)
-                    response = await get_response(acturl,cookies_data, data)
-                    print('R:'+response.url)
-                    if response is not None:
-                        visited_urls.append(response.url)
-                        await save_log(response, i,project_name,user,Host,http_log_data,formlist)
-                        i = i+1
-            except Exception as e:
-                print('checkact error:', e)
-            
-        elif formlist[str(tempAct)]['method'] == 'POST':
-            try:
-                response = await post_response(acturl,cookies_data, data)
-                if response is not None:
-                    if acturl not in visited_post:
-                        visited_post[acturl] = set()
-                    if (acturl in visited_post) and ((tuple(sorted(posttemp))) not in visited_post[acturl]): 
-                        visited_post[acturl].add(tuple(sorted(posttemp)))
-                        await save_log(response, i,project_name,user,Host,http_log_data,formlist)
-                        i=i+1
-
-
-            except Exception as e:
-                print('checkact error2:', e)
-            
-        data ={}
-        tempAct = ''
+    try:
         temppost = ''
-        
+        data = {}
+        posttemp = set()
+        for tempAct in formlist:
+            if tempAct == 'unknown':
+                print(f"checkAct: {tempAct}")
+                continue 
+            print("tempAct",tempAct)
+            print('Act: ' + formlist[str(tempAct)]['action'])
+            print('method: ' + str(formlist[str(tempAct)]['method']))
+            Params = formlist[str(tempAct)]['parameters']
+            print('params :' + str(Params))
 
-    return i
+            for p in Params:
+                #ข้อมูลjsonของparameterแต่ละตัว
+                Pinfo = Params[p]
+                #วนจบครบทุกพารามิเตอร์
+                if isinstance(Pinfo['value'], list):
+                    #เช็คว่าเป็นตัวแปรselectมั้ย ถ้าใช่เอาค่าเดียวก็พอมาเป็นเบสไลน์
+                    temppost += str(p) + '=' + str(Pinfo['value'][0]) + '&'
+                    data.update({str(p): Pinfo['value'][0]})
+                    posttemp.add(str(p))
+                else:
+                    temppost += str(p) + '=' + str(Pinfo['value']) + '&'
+                    data.update({str(p): Pinfo['value']})
+                    posttemp.add(str(p))
+                # print('+++++++++')
+            
+            print("action",baseURL+formlist[str(tempAct)]['action'])
+            print("action",temppost[:-1])  # Remove the trailing '&'
+            print("action",posttemp)
+            
+            if formlist[str(tempAct)]['action'].startswith('/'):
+                acturl = baseURL+formlist[str(tempAct)]['action']
+            else:
+                acturl = baseURL+'/'+formlist[str(tempAct)]['action']
+            print('acturl: '+acturl)
+            if str(formlist[str(tempAct)]['method']) == 'GET' :
+                try:
+                    
+                    if acturl not in visited_urls:
+                        visited_urls.append(acturl)
+                        response = await get_response(acturl,cookies_data, data)
+                        print('R:'+response.url)
+                        if response is not None:
+                            visited_urls.append(response.url)
+                            await save_log(response, i,project_name,user,Host,http_log_data,formlist)
+                            i = i+1
+                except Exception as e:
+                    print('checkact error:', e)
+                
+            elif formlist[str(tempAct)]['method'] == 'POST':
+                try:
+                    response = await post_response(acturl,cookies_data, data)
+                    if response is not None:
+                        if acturl not in visited_post:
+                            visited_post[acturl] = set()
+                        if (acturl in visited_post) and ((tuple(sorted(posttemp))) not in visited_post[acturl]): 
+                            visited_post[acturl].add(tuple(sorted(posttemp)))
+                            await save_log(response, i,project_name,user,Host,http_log_data,formlist)
+                            i=i+1
 
+
+                except Exception as e:
+                    print('checkact error2:', e)
+                
+            data ={}
+            tempAct = ''
+            temppost = ''
+            
+
+        return i
+
+    except Exception as e:
+        print(f"checkActr: {e}")
+        return None
+    
 
 async def contentlenpercent(response,baseper):
+    try:
     
-    per = len(response.content)
-    diffper = ((per-baseper)/baseper) * 100
-    return diffper
-
+        per = len(response.content)
+        diffper = ((per-baseper)/baseper) * 100
+        return diffper
+    except Exception as e:
+        print(f"contentlenpercent: {e}")
+        return None
 
 async def checkerr(response):
-    errors = {
-        # MySQL
-        "you have an error in your sql syntax;",
-        "warning: mysql",
-        # SQL Server
-        "unclosed quotation mark after the character string",
-        # Oracle
-        "quoted string not properly terminated",
-    }
-    for error in errors:
-        if error in response.content.decode().lower():
-            return True
-    # no error detected
-    return False
-
+    try:
+        errors = {
+            # MySQL
+            "you have an error in your sql syntax;",
+            "warning: mysql",
+            # SQL Server
+            "unclosed quotation mark after the character string",
+            # Oracle
+            "quoted string not properly terminated",
+        }
+        for error in errors:
+            if error in response.content.decode().lower():
+                return True
+        # no error detected
+        return False
+    except Exception as e:
+        print(f"checkerr: {e}")
+        return None
 
 
 async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name, user,cookies_data_):
-    db = mysql.connection.cursor()
-    query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.sql')) AS payload FROM owasp WHERE OID=11")
-    db.execute(query,)             
-    sql_ = db.fetchall() 
+    try:
+        db = mysql.connection.cursor()
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.sql')) AS payload FROM owasp WHERE OID=11")
+        db.execute(query,)             
+        sql_ = db.fetchall() 
 
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=11")
-    db.execute(query2,)             
-    sql2_ = db.fetchall() 
-    # print("sql2_[0][0]",sql2_[0][0])
-    # print("sql2_[0][1]",sql2_[0][1])
-    # print("sql2_[0][2]",sql2_[0][2])
-    # print("sql2_[0][2]",sql2_[0][3])
-    word_list = json.loads(sql_[0][0])
-    # print(word_list)
-    wordlist_path = 'wordlistsql.txt'
-    with open(wordlist_path, 'w') as file:
-        for item in word_list:
-            file.write(item + '\n')   
-    results = [] 
-    f = open(wordlist_path, "r") 
-    for payload in f:
-        for i in att_params:
-            try:
-                new_att_params = att_params.copy()
-                new_att_params[i] = new_att_params[i] + payload.strip()
-                # print(f'att_url',new_att_params[i])
-                # print(f'new_att_params',new_att_params[i])
-                response = await get_response(att_url, cookies_data_,new_att_params)
-                select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
-                db.execute(select_project_name_id_query, (project_name, user))
-                project_name_id_result = db.fetchall()
-                # print(f'select_url_id_data',select_url_id_data[0])
-                # print(f'project_name_id_result',project_name_id_result[0][0])
-                select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
-                db.execute(select_url_id_query, (project_name_id_result[0][0],select_url_id_data[0]))
-                select_url_id = db.fetchall()
-                select_URL_data = select_url_id[0][0]
-                # insert_query = (
-                #     "INSERT INTO att_ps (URL_ID, PID, OID, URL) VALUES (%s, %s, %s,%s)"
-                # )
-                # values = (select_url_id_data[0],project_name_id_result[0][0],'11',select_URL_data)
-                # db.execute(insert_query, values)
-                # mysql.connection.commit()
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=11")
+        db.execute(query2,)             
+        sql2_ = db.fetchall() 
+        # print("sql2_[0][0]",sql2_[0][0])
+        # print("sql2_[0][1]",sql2_[0][1])
+        # print("sql2_[0][2]",sql2_[0][2])
+        # print("sql2_[0][2]",sql2_[0][3])
+        word_list = json.loads(sql_[0][0])
+        # print(word_list)
+        wordlist_path = 'wordlistsql.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_list:
+                file.write(item + '\n')   
+        results = [] 
+        f = open(wordlist_path, "r") 
+        for payload in f:
+            for i in att_params:
+                try:
+                    new_att_params = att_params.copy()
+                    new_att_params[i] = new_att_params[i] + payload.strip()
+                    # print(f'att_url',new_att_params[i])
+                    # print(f'new_att_params',new_att_params[i])
+                    response = await get_response(att_url, cookies_data_,new_att_params)
+                    select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+                    db.execute(select_project_name_id_query, (project_name, user))
+                    project_name_id_result = db.fetchall()
+                    # print(f'select_url_id_data',select_url_id_data[0])
+                    # print(f'project_name_id_result',project_name_id_result[0][0])
+                    select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
+                    db.execute(select_url_id_query, (project_name_id_result[0][0],select_url_id_data[0]))
+                    select_url_id = db.fetchall()
+                    select_URL_data = select_url_id[0][0]
+                    # insert_query = (
+                    #     "INSERT INTO att_ps (URL_ID, PID, OID, URL) VALUES (%s, %s, %s,%s)"
+                    # )
+                    # values = (select_url_id_data[0],project_name_id_result[0][0],'11',select_URL_data)
+                    # db.execute(insert_query, values)
+                    # mysql.connection.commit()
 
-                # print(unquote(response.url))  
-                # print(len(response.content))
-                # print(await contentlenpercent(response, baseper))
-                vres = False
-                if response.status_code == 500:
-                    print('SQL found with :' + payload.strip() + 'in ' + i)  
-                    vres = True
-                    vparams = i
-                    results.append((vres, vparams))
-                    insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-                    db.execute(insert_query, values)
-                    mysql.connection.commit()
-                    return vres,vparams
-                elif await checkerr(response) == True:
-                    print('SQL found with :' + payload.strip() + 'in ' + i) 
-                    vres = True
-                    vparams = i
-                    results.append((vres, vparams))
-                    insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-                    db.execute(insert_query, values)
-                    mysql.connection.commit()
-                    return vres,vparams
-                    # ,response.text,response.request.headers,response.request.body,response.request.method
-                elif int(await contentlenpercent(response, baseper)) > 70:
-                    print('SQL found with :' + payload.strip() + ' in ' + i)
-                    print(int(await contentlenpercent(response, baseper)))
- 
-                    vres = True
-                    vparams = i
-                    results.append((vres, vparams))
-                    insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-                    db.execute(insert_query, values)
-                    mysql.connection.commit()
-                    return vres,vparams
-                else:
-                    print('sqli not found')
-            except Exception as e:
-                print(f"An error occurred: {str(e)}")
-
+                    # print(unquote(response.url))  
+                    # print(len(response.content))
+                    # print(await contentlenpercent(response, baseper))
+                    vres = False
+                    if response.status_code == 500:
+                        print('SQL found with :' + payload.strip() + 'in ' + i)  
+                        vres = True
+                        vparams = i
+                        results.append((vres, vparams))
+                        insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
+                        values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                        db.execute(insert_query, values)
+                        mysql.connection.commit()
+                        return vres,vparams
+                    elif await checkerr(response) == True:
+                        print('SQL found with :' + payload.strip() + 'in ' + i) 
+                        vres = True
+                        vparams = i
+                        results.append((vres, vparams))
+                        insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
+                        values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                        db.execute(insert_query, values)
+                        mysql.connection.commit()
+                        return vres,vparams
+                        # ,response.text,response.request.headers,response.request.body,response.request.method
+                    elif int(await contentlenpercent(response, baseper)) > 70:
+                        print('SQL found with :' + payload.strip() + ' in ' + i)
+                        print(int(await contentlenpercent(response, baseper)))
+    
+                        vres = True
+                        vparams = i
+                        results.append((vres, vparams))
+                        insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
+                        values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                        db.execute(insert_query, values)
+                        mysql.connection.commit()
+                        return vres,vparams
+                    else:
+                        print('sqli not found')
+                except Exception as e:
+                    print(f"An error occurred: {str(e)}")
+    except Exception as e:
+        print(f"brutesql: {e}")
+        return None
     
 
 
 async def checkscript(response,payload):
+    try:        
+        if payload.lower() in response.content.decode().lower():
+            return True
+        # no error detected
+        return False
+    except Exception as e:
+        print(f"checkscript: {e}")
+        return None
     
-    
-    if payload.lower() in response.content.decode().lower():
-        return True
-    # no error detected
-    return False
 
 async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data_):
-# f = open("wordlistxss-sql.txt", "r", encoding='utf-8')
-    db = mysql.connection.cursor()
-    query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.xss-sql')) AS payload FROM owasp WHERE OID=10")
-    db.execute(query,)
-    sql_ = db.fetchall()
-    select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
-    db.execute(select_project_name_id_query, (project_name, user))
-    project_name_id_result = db.fetchall()
-    select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
-    db.execute(select_url_id_query,
-               (project_name_id_result[0][0], select_url_id_data[0]))
-    select_url_id = db.fetchall()
-    select_URL_data = select_url_id[0][0]
-    # print(common)
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=10")
-    db.execute(query2,)             
-    sql2_ = db.fetchall() 
-    word_list = json.loads(sql_[0][0])
-    # print(word_list)
-    wordlist_path = 'wordlistxss-sql.txt'
-    with open(wordlist_path, 'w') as file:
-        for item in word_list:
-            file.write(item + '\n')
-    results = []
-    f = open(wordlist_path, "r")
-    for i in att_paramsname:
-        f.seek(0)
-        for payload in f:
-            new_att_params = att_params.copy()
-            new_att_params[i] = payload.strip()
-            # print(new_att_params)
-            if payload != '':
+    try:
+    # f = open("wordlistxss-sql.txt", "r", encoding='utf-8')
+        db = mysql.connection.cursor()
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.xss-sql')) AS payload FROM owasp WHERE OID=10")
+        db.execute(query,)
+        sql_ = db.fetchall()
+        select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+        db.execute(select_project_name_id_query, (project_name, user))
+        project_name_id_result = db.fetchall()
+        select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
+        db.execute(select_url_id_query,
+                (project_name_id_result[0][0], select_url_id_data[0]))
+        select_url_id = db.fetchall()
+        select_URL_data = select_url_id[0][0]
+        # print(common)
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=10")
+        db.execute(query2,)             
+        sql2_ = db.fetchall() 
+        word_list = json.loads(sql_[0][0])
+        # print(word_list)
+        wordlist_path = 'wordlistxss-sql.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_list:
+                file.write(item + '\n')
+        results = []
+        f = open(wordlist_path, "r")
+        for i in att_paramsname:
+            f.seek(0)
+            for payload in f:
+                new_att_params = att_params.copy()
+                new_att_params[i] = payload.strip()
+                # print(new_att_params)
+                if payload != '':
+                    response = await get_response(att_url, cookies_data_,new_att_params)
+                    # print(f"att_url",att_url)  
+                    # print(unquote(response.url))
+                    # print(len(response.content))
+                    # print(contentlenpercent(response,baseper))
+                    vres = False
+                    
+                    
+                    if await checkscript(response,payload.strip()) == True:
+                        print('XSS found with : '+ payload.strip()+' in '+ i)
+                        vres = True
+                        vparams = i
+                        insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
+                        values = (select_url_id_data[0],project_name_id_result[0][0],'10',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                        db.execute(insert_query, values)
+                        mysql.connection.commit()
+                        return vres,vparams
+                    elif int(await contentlenpercent(response,baseper)) > 70:
+                        print('XSS found with : '+ payload.strip()+' in '+ i) 
+                        print(int(await contentlenpercent(response,baseper)))
+                        vres = True
+                        vparams = i
+                        insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
+                        values = (select_url_id_data[0],project_name_id_result[0][0],'10',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                        db.execute(insert_query, values)
+                        mysql.connection.commit()
+                        return vres,vparams
+                    else:
+                        print('XSS not found w/ '+ payload.strip())
+    except Exception as e:
+        print(f"brutexss: {e}")
+        return None
+
+
+async def brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data_):
+    try:
+        db = mysql.connection.cursor()
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.pathraversal')) AS payload FROM owasp WHERE OID=4")
+        db.execute(query,)
+        sql_ = db.fetchall()
+        select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+        db.execute(select_project_name_id_query, (project_name, user))
+        project_name_id_result = db.fetchall()
+        select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
+        db.execute(select_url_id_query,
+                (project_name_id_result[0][0], select_url_id_data[0]))
+        select_url_id = db.fetchall()
+        # select_URL_data = select_url_id[0][0]
+        # print(common)
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType ,Vul_name FROM owasp WHERE OID=4")
+        db.execute(query2,)             
+        sql2_ = db.fetchall() 
+        word_listpathraversal = json.loads(sql_[0][0])
+        # print(word_list)
+        wordlist_path = 'word_listpathraversal.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_listpathraversal:
+                file.write(item + '\n')
+        results = []
+        f = open(wordlist_path, "r")
+        for i in att_paramsname:
+            f.seek(0)
+            for payload in f:
+                new_att_params = att_params.copy()
+                new_att_params[i] = payload.strip()
+                print(new_att_params)
+        
                 response = await get_response(att_url, cookies_data_,new_att_params)
-                # print(f"att_url",att_url)  
-                # print(unquote(response.url))
+                # print(unquote(response.url))  
                 # print(len(response.content))
                 # print(contentlenpercent(response,baseper))
                 vres = False
                 
                 
-                if await checkscript(response,payload.strip()) == True:
-                    print('XSS found with : '+ payload.strip()+' in '+ i)
+                if response.status_code == 200 and (int(await contentlenpercent(response,baseper)) > 70):
+                    print('[+] Path traversal found with : '+ payload.strip()+' in '+ i + ' case 1')
+                    print(response.status_code)
                     vres = True
                     vparams = i
                     insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'10',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'4',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
                     db.execute(insert_query, values)
                     mysql.connection.commit()
-                    return vres,vparams
-                elif int(await contentlenpercent(response,baseper)) > 70:
-                    print('XSS found with : '+ payload.strip()+' in '+ i) 
-                    print(int(await contentlenpercent(response,baseper)))
-                    vres = True
-                    vparams = i
-                    insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    )
-                    values = (select_url_id_data[0],project_name_id_result[0][0],'10',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-                    db.execute(insert_query, values)
-                    mysql.connection.commit()
-                    return vres,vparams
+                    # return vres,vparams
+                
                 else:
-                    print('XSS not found w/ '+ payload.strip())
+                    print('[-] Path traversal not found w/ '+ payload.strip())
+        
+        # return vres,vparams
+    except Exception as e:
+        print(f"brutepathtraversal: {e}")
+        return None
 
-
-
-async def brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data_):
-    db = mysql.connection.cursor()
-    query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.pathraversal')) AS payload FROM owasp WHERE OID=4")
-    db.execute(query,)
-    sql_ = db.fetchall()
-    select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
-    db.execute(select_project_name_id_query, (project_name, user))
-    project_name_id_result = db.fetchall()
-    select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
-    db.execute(select_url_id_query,
-               (project_name_id_result[0][0], select_url_id_data[0]))
-    select_url_id = db.fetchall()
-    # select_URL_data = select_url_id[0][0]
-    # print(common)
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType ,Vul_name FROM owasp WHERE OID=4")
-    db.execute(query2,)             
-    sql2_ = db.fetchall() 
-    word_listpathraversal = json.loads(sql_[0][0])
-    # print(word_list)
-    wordlist_path = 'word_listpathraversal.txt'
-    with open(wordlist_path, 'w') as file:
-        for item in word_listpathraversal:
-            file.write(item + '\n')
-    results = []
-    f = open(wordlist_path, "r")
-    for i in att_paramsname:
-        f.seek(0)
-        for payload in f:
-            new_att_params = att_params.copy()
-            new_att_params[i] = payload.strip()
-            print(new_att_params)
+async def brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data_,req_body):
+    try:
+        db = mysql.connection.cursor()
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.common-inject')) AS payload FROM owasp WHERE OID=12")
+        db.execute(query,)
+        sql_ = db.fetchall()
+        select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
+        db.execute(select_project_name_id_query, (project_name, user))
+        project_name_id_result = db.fetchall()
+        select_url_id_query = "SELECT URL FROM urllist WHERE PID = %s AND URL_ID = %s "
+        db.execute(select_url_id_query,
+                (project_name_id_result[0][0], select_url_id_data[0]))
+        select_url_id = db.fetchall()
+        select_URL_data = select_url_id[0][0]
+        # print(common)
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=12")
+        db.execute(query2,)             
+        sql2_ = db.fetchall() 
+        word_list = json.loads(sql_[0][0])
+        # print(word_list)
+        wordlist_path = 'common-inject.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_list:
+                file.write(item + '\n')
+        results = []
+        f = open(wordlist_path, "r")
+        # f = open("commandinject-unix.txt", "r", encoding='utf-8')
+        for i in att_paramsname:
+            f.seek(0)
+            for payload in f:
+                new_att_params = att_params.copy()
+                new_att_params[i] = payload.strip()
+                print(new_att_params)
+        
+                response = await post_response(att_url, cookies_data_,req_body)
+                print('contenttttt : '+str(response.text))
+                # print(len(response.content))
+                # print(contentlenpercent(response,baseper))
+                vres = False
+                
+                checkcontent = (await contentlenpercent(response,baseper))
+                print(checkcontent)
+                if response.status_code == 200 and (int(checkcontent) > 70):
+                    print('[+] Command injection found with : '+ payload.strip()+' in '+ i )
+                    print(response.status_code)
+                    vres = True
+                    vparams = i
+                    insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
+                    values = (select_url_id_data[0],project_name_id_result[0][0],'12',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()                   
+                    return vres,vparams
+                
+                else:
+                    print('[-] Command injection not found w/ '+ payload.strip())
+        
+        return vres,vparams
+    except Exception as e:
+        print(f"brutexss: {e}")
+        return None
     
-            response = await get_response(att_url, cookies_data_,new_att_params)
-            # print(unquote(response.url))  
-            # print(len(response.content))
-            # print(contentlenpercent(response,baseper))
-            vres = False
-            
-            
-            if response.status_code == 200 and (int(await contentlenpercent(response,baseper)) > 70):
-                print('[+] Path traversal found with : '+ payload.strip()+' in '+ i + ' case 1')
-                print(response.status_code)
-                vres = True
-                vparams = i
-                insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    )
-                values = (select_url_id_data[0],project_name_id_result[0][0],'4',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-                db.execute(insert_query, values)
-                mysql.connection.commit()
-                # return vres,vparams
-            
-            else:
-                print('[-] Path traversal not found w/ '+ payload.strip())
-    
-    # return vres,vparams
-
 
 
 
 
 async def detect_pathtraversal(pathtraversal):
-    db = mysql.connection.cursor()
-    query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.pathraversal')) AS payload FROM owasp WHERE OID=4")
-    db.execute(query,)
-    sql_ = db.fetchall()
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType, Vul_name FROM owasp WHERE OID=4")
-    db.execute(query2,)             
-    sql2_ = db.fetchall() 
-    # select_URL_data = select_url_id[0][0]
-    # print(common)
-    word_listpathraversal = json.loads(sql_[0][0])
-    # print(word_list)
-    wordlist_path = 'word_listpathraversal.txt'
-    with open(wordlist_path, 'w') as file:
-        for item in word_listpathraversal:
-            file.write(item + '\n')
-    results = []
-    f = open(wordlist_path, "r")
-    results = []
-    with open(wordlist_path, "r") as f:
-            for line in f:
-                line = line.strip()  
-                for Server_data in pathtraversal:
-                    # print(f"res_header[1]", Server_data[1])
-                    # print(f"URL[0]", Server_data[0])
-                    # print(f"PID[2]", Server_data[2])
-                    # print(f"URL_ID[3]", Server_data[3])
-                    Server_word = line
-                    if Server_data[1].find(Server_word) != -1:
-                        print("พบ detect word listpathraversal")
-                        db = mysql.connection.cursor()
-                        insert_query = (
-                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,vul_des , vul_sol , vul_ref , OType, Vul_name ) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
-                        ),
-                        values = (Server_data[3], Server_data[2], '4', Server_data[0], 'T', Server_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-                        db.execute(insert_query, values)
-                        mysql.connection.commit()
-                    else:
-                        print("ไม่พบ detect word listpathraversal")
-
+    try:
+        db = mysql.connection.cursor()
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.pathraversal')) AS payload FROM owasp WHERE OID=4")
+        db.execute(query,)
+        sql_ = db.fetchall()
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType, Vul_name FROM owasp WHERE OID=4")
+        db.execute(query2,)             
+        sql2_ = db.fetchall() 
+        # select_URL_data = select_url_id[0][0]
+        # print(common)
+        word_listpathraversal = json.loads(sql_[0][0])
+        # print(word_list)
+        wordlist_path = 'word_listpathraversal.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_listpathraversal:
+                file.write(item + '\n')
+        results = []
+        f = open(wordlist_path, "r")
+        results = []
+        with open(wordlist_path, "r") as f:
+                for line in f:
+                    line = line.strip()  
+                    for Server_data in pathtraversal:
+                        # print(f"res_header[1]", Server_data[1])
+                        # print(f"URL[0]", Server_data[0])
+                        # print(f"PID[2]", Server_data[2])
+                        # print(f"URL_ID[3]", Server_data[3])
+                        Server_word = line
+                        if Server_data[1].find(Server_word) != -1:
+                            print("พบ detect word listpathraversal")
+                            db = mysql.connection.cursor()
+                            insert_query = (
+                                "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,vul_des , vul_sol , vul_ref , OType, Vul_name ) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                            ),
+                            values = (Server_data[3], Server_data[2], '4', Server_data[0], 'T', Server_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                            db.execute(insert_query, values)
+                            mysql.connection.commit()
+                        else:
+                            print("ไม่พบ detect word listpathraversal")
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
 
 async def run_gobuster(url,project_name,user):
     try:
         db = mysql.connection.cursor()
-        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.common')) AS payload FROM owasp WHERE OID=20")
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.common')) AS payload FROM owasp WHERE OID=13")
         db.execute(query,)             
         common = db.fetchall() 
         # print(common)
@@ -709,43 +822,46 @@ async def run_gobuster(url,project_name,user):
 
 
 async def checkTempFuzz(i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls,state='T'):
-    file_path = f"{project_name}{user}.txt"
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, "r") as f:
-                lines = f.readlines()
-            lines = [line.replace('', ' ') for line in lines]
-            lines = [line for line in lines if '(Status: 500)' not in line and '(Status: 429)' not in line and '(Status: 403)' not in line and '(Status: 400)' not in line and '(Status: 301)' not in line and '()']
+    try:
+        file_path = f"{project_name}{user}.txt"
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, "r") as f:
+                    lines = f.readlines()
+                lines = [line.replace('', ' ') for line in lines]
+                lines = [line for line in lines if '(Status: 500)' not in line and '(Status: 429)' not in line and '(Status: 403)' not in line and '(Status: 400)' not in line and '(Status: 301)' not in line and '()']
 
 
-            with open(file_path, 'w') as file:
-                file.writelines(lines)
+                with open(file_path, 'w') as file:
+                    file.writelines(lines)
 
-            with open(file_path, "r") as f:
-                j = 1
+                with open(file_path, "r") as f:
+                    j = 1
 
-                for x in f:
-                    print(str(j))
-                    print(baseURL + x.split()[0])
-                    url = baseURL+x.split()[0]
-                    # query = (
-                    #     'INSERT INTO urllist(URL,state,PID)  VALUES(%s, %s, %s)')
-                    # db.execute(query, (url, state, project_name_id_result),)
-                    # print(baseURL+ x.split()[0], end='\n')
-                    j = j+1
-                    if (url) not in visited_urls:
-                        response = await get_response(url,cookies_data)
-                        if response is not None:
-                            print("responsefuzz",response)
-                            await save_log(response, i,project_name,user,Host,http_log_data)
-                            i = i+1
+                    for x in f:
+                        print(str(j))
+                        print(baseURL + x.split()[0])
+                        url = baseURL+x.split()[0]
+                        # query = (
+                        #     'INSERT INTO urllist(URL,state,PID)  VALUES(%s, %s, %s)')
+                        # db.execute(query, (url, state, project_name_id_result),)
+                        # print(baseURL+ x.split()[0], end='\n')
+                        j = j+1
+                        if (url) not in visited_urls:
+                            response = await get_response(url,cookies_data)
+                            if response is not None:
+                                print("responsefuzz",response)
+                                await save_log(response, i,project_name,user,Host,http_log_data)
+                                i = i+1
 
-        except IOError as e:
-            print(f"Error reading file: {e}")
-    else:
-        print(f"The file {file_path} does not exist.")
-    return i
-
+            except IOError as e:
+                print(f"Error reading file: {e}")
+        else:
+            print(f"The file {file_path} does not exist.")
+        return i
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
 
 async def run_gobustersensitive(url,project_name,user):
     try:
@@ -756,7 +872,7 @@ async def run_gobustersensitive(url,project_name,user):
         # print(common)
         word_list = json.loads(common[0][0])
         # print(word_list)
-        wordlist_path = 'wordlist.txt'
+        wordlist_path = 'wordlistzsensitive.txt'
         with open(wordlist_path, 'w') as file:
             for item in word_list:
                 file.write(item + '\n')
@@ -777,113 +893,233 @@ async def run_gobustersensitive(url,project_name,user):
 
 
 async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
-    file_path = f"Sensitive{project_name}{user}.txt"
-    print("project_name_id",project_name_id)
-    print("scope_url",scope_url)
-    db = mysql.connection.cursor()
+    try:
+        file_path = f"Sensitive{project_name}{user}.txt"
+        print("project_name_id",project_name_id)
+        print("scope_url",scope_url)
+        db = mysql.connection.cursor()
 
-    select_project_name_id_query = "SELECT URL_ID FROM urllist WHERE URL = %s AND PID = %s"
-    db.execute(select_project_name_id_query, (scope_url, project_name_id))             
-    url_ID = db.fetchone() 
-    print("url_ID",url_ID[0])
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType, Vul_name FROM owasp WHERE OID=7")
-    db.execute(query2)             
-    sql2_ = db.fetchall() 
-    print("sql2_",sql2_)
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, "r") as f:
-                lines = f.readlines()
-            lines = [line.replace('', ' ') for line in lines]
-            lines = [line for line in lines if '(Status: 500)' not in line and '(Status: 429)' not in line and '(Status: 403)' not in line and '(Status: 400)' not in line and '(Status: 301)' not in line and '()']
+        select_project_name_id_query = "SELECT URL_ID FROM urllist WHERE URL = %s AND PID = %s"
+        db.execute(select_project_name_id_query, (scope_url, project_name_id))             
+        url_ID = db.fetchone() 
+        print("url_ID",url_ID[0])
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType, Vul_name FROM owasp WHERE OID=7")
+        db.execute(query2)             
+        sql2_ = db.fetchall() 
+        print("sql2_",sql2_)
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, "r") as f:
+                    lines = f.readlines()
+                lines = [line.replace('', ' ') for line in lines]
+                lines = [line for line in lines if '(Status: 500)' not in line and '(Status: 429)' not in line and '(Status: 403)' not in line and '(Status: 400)' not in line and '(Status: 301)' not in line and '()']
 
 
-            with open(file_path, 'w') as file:
-                file.writelines(lines)
+                with open(file_path, 'w') as file:
+                    file.writelines(lines)
 
-            with open(file_path, "r") as f:
-                j = 1
+                with open(file_path, "r") as f:
+                    j = 1
 
-                for x in f:
-                    print(" x.split()[0]", x.split()[0])
-                    baseURL = urlparse(scope_url).scheme + '://' + urlparse(scope_url).netloc
-                    url = baseURL+x.split()[0]
-                    print(url)
-                    db = mysql.connection.cursor()
-                    insert_query = (
-                        "INSERT INTO att_ps (URL_ID, position , PID, OID, URL, state, payload, vul_des, vul_sol, vul_ref, OType, Vul_name) "
-                        "VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                    )
-                    values = (url_ID[0], url ,project_name_id, '7', scope_url, 'T', x.split()[0], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4])
-                    db.execute(insert_query, values)
-                    mysql.connection.commit()
+                    for x in f:
+                        print(" x.split()[0]", x.split()[0])
+                        baseURL = urlparse(scope_url).scheme + '://' + urlparse(scope_url).netloc
+                        url = baseURL+x.split()[0]
+                        print(url)
+                        db = mysql.connection.cursor()
+                        insert_query = (
+                            "INSERT INTO att_ps (URL_ID, position , PID, OID, URL, state, payload, vul_des, vul_sol, vul_ref, OType, Vul_name) "
+                            "VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                        )
+                        values = (url_ID[0], url ,project_name_id, '7', scope_url, 'T', x.split()[0], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4])
+                        db.execute(insert_query, values)
+                        mysql.connection.commit()
 
-                    # # print(baseURL+ x.split()[0], end='\n')
-                    # j = j+1
-                    # if (url) not in visited_urls:
-                    #     response = await get_response(url,cookies_data)
-                    #     if response is not None:
-                    #         print("responsefuzz",response)
-                    #         await save_log(response, i,project_name,user,Host,http_log_data)
-                    #         i = i+1
+                        # # print(baseURL+ x.split()[0], end='\n')
+                        # j = j+1
+                        # if (url) not in visited_urls:
+                        #     response = await get_response(url,cookies_data)
+                        #     if response is not None:
+                        #         print("responsefuzz",response)
+                        #         await save_log(response, i,project_name,user,Host,http_log_data)
+                        #         i = i+1
 
-        except IOError as e:
-            print(f"Error reading file: {e}")
-    else:
-        print(f"The file {file_path} does not exist.")
-    return i
+            except IOError as e:
+                print(f"Error reading file: {e}")
+        else:
+            print(f"The file {file_path} does not exist.")
+        return i
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
+    
 
 async def detect_web_server_leakage(Server):
-    db = mysql.connection.cursor()
-    query2 = "SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=1"
-    db.execute(query2)
-    sql2_ = db.fetchall()
-    
-    for Server_data in Server:
-        Server_word = "Server"
-        if Server_data[1].find(Server_word) != -1:
-            print("พบ Server")
-            db = mysql.connection.cursor()
-            insert_query = (
-                "INSERT INTO att_ps (URL_ID, PID, OID, URL, state, res_header, vul_des, vul_sol, vul_ref, OType, Vul_name) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            )
-            values = (Server_data[3], Server_data[2], '1', Server_data[0], 'T', Server_data[1], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4])
-            db.execute(insert_query, values)
-            mysql.connection.commit()
-        else:
-            print("ไม่พบ Server")
-
+    try:
+        db = mysql.connection.cursor()
+        query2 = "SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=1"
+        db.execute(query2)
+        sql2_ = db.fetchall()
+        
+        for Server_data in Server:
+            Server_word = "Server"
+            if Server_data[1].find(Server_word) != -1:
+                print("พบ Server")
+                db = mysql.connection.cursor()
+                insert_query = (
+                    "INSERT INTO att_ps (URL_ID, PID, OID, URL, state, res_header, vul_des, vul_sol, vul_ref, OType, Vul_name) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                )
+                values = (Server_data[3], Server_data[2], '1', Server_data[0], 'T', Server_data[1], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4])
+                db.execute(insert_query, values)
+                mysql.connection.commit()
+            else:
+                print("ไม่พบ Server")
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
 
 async def HSTS(PTarget):
-    db = mysql.connection.cursor()
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=8")
-    db.execute(query2,)             
-    sql2_ = db.fetchall()
-    for HSTS_data in PTarget:
-        print(f"res_header[1]",HSTS_data[1])
-        print(f"URL[0]",HSTS_data[0])
-        print(f"PID[2]",HSTS_data[2])
-        print(f"URL_ID[3]",HSTS_data[3])
-        # HSTS_word = ["Strict-Transport-Security", "includeSubDomains", "preload", "max-age"]
-        HSTS_word = ["Strict-Transport-Security", "includeSubDomains"]
+    try:
+        db = mysql.connection.cursor()
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=8")
+        db.execute(query2,)             
+        sql2_ = db.fetchall()
+        for HSTS_data in PTarget:
+            print(f"res_header[1]",HSTS_data[1])
+            print(f"URL[0]",HSTS_data[0])
+            print(f"PID[2]",HSTS_data[2])
+            print(f"URL_ID[3]",HSTS_data[3])
+            # HSTS_word = ["Strict-Transport-Security", "includeSubDomains", "preload", "max-age"]
+            HSTS_word = ["Strict-Transport-Security", "includeSubDomains"]
 
-        if HSTS_word[0] in HSTS_data[1]:
-            print("Strict-Transport-Security")
-        elif HSTS_word[1] in HSTS_data[1]:
-            print("includeSubDomains")
-        # elif HSTS_word[2] in HSTS_data[1]:
-        #     print("preload")
-        # elif HSTS_word[3] in HSTS_data[1]:
-        #     print("max-age")
-        else:
-            db = mysql.connection.cursor()
-            insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s, %s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
-                    )
-            values = (HSTS_data[3],HSTS_data[2],'8',HSTS_data[0],'T',HSTS_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-            db.execute(insert_query, values)
-            mysql.connection.commit()
-            print("ไม่พบ Strict-Transport-Security")
+            if HSTS_word[0] in HSTS_data[1]:
+                print("Strict-Transport-Security")
+            elif HSTS_word[1] in HSTS_data[1]:
+                print("includeSubDomains")
+            # elif HSTS_word[2] in HSTS_data[1]:
+            #     print("preload")
+            # elif HSTS_word[3] in HSTS_data[1]:
+            #     print("max-age")
+            else:
+                db = mysql.connection.cursor()
+                insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s, %s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                        )
+                values = (HSTS_data[3],HSTS_data[2],'8',HSTS_data[0],'T',HSTS_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                db.execute(insert_query, values)
+                mysql.connection.commit()
+                print("ไม่พบ Strict-Transport-Security")
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
+
+
+
+
+
+
+
+async def webFramework(PTarget):
+    try:
+        db = mysql.connection.cursor()
+
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.web_response')) AS payload FROM owasp WHERE OID=9")
+        db.execute(query)
+        sql_ = db.fetchall()
+        print("word_list",sql_)
+        query2 = ("SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name FROM owasp WHERE OID=9")
+        db.execute(query2)
+        sql2_ = db.fetchall()
+
+
+        word_list = json.loads(sql_[0][0])
+        # print("word_list",word_list)
+        wordlist_path = 'WEB_word.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_list:
+                file.write(item + '\n')
+
+        with open(wordlist_path, 'r') as file:
+            for payload in file:
+
+                detected_payload = payload
+                for HSTS_data in PTarget:
+                    if detected_payload in HSTS_data[1]:
+                        print(f"Detected web framework: {detected_payload}")
+
+                        db = mysql.connection.cursor()
+                        insert_query = (
+                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, state, res_header, payload, vul_des, vul_sol, vul_ref, OType, Vul_name) "
+                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                        )
+                        values = (
+                           
+                            HSTS_data[3], HSTS_data[2], '9', HSTS_data[0], 'T', HSTS_data[1],
+                            detected_payload+" In Response Header "+HSTS_data[1], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4]
+                        )
+                        db.execute(insert_query, values)
+                        mysql.connection.commit()
+                    else:
+                        print("ไม่พบwebframe")
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
+
+
+async def webFrameworkhtml(PTarget):
+    try:
+        db = mysql.connection.cursor()
+
+        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.web-html')) AS payload FROM owasp WHERE OID=9")
+        db.execute(query)
+        sql_ = db.fetchall()
+        print("word_list",sql_)
+        query2 = ("SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name FROM owasp WHERE OID=9")
+        db.execute(query2)
+        sql2_ = db.fetchall()
+
+
+        word_list = json.loads(sql_[0][0])
+        # print("word_list",word_list)
+        wordlist_path = 'WEB_wordHTML.txt'
+        with open(wordlist_path, 'w') as file:
+            for item in word_list:
+                file.write(item + '\n')
+
+        with open(wordlist_path, 'r') as file:
+            for payload in file:
+                detected_payload = payload.strip()
+                for HSTS_data in PTarget:
+                    encoded_data = HSTS_data[1]
+                    print("detected_payload",detected_payload)
+                    try:
+                        decoded_data = base64.b64decode(encoded_data).decode('utf-8')
+                        if detected_payload in decoded_data:
+
+                            
+                            # print(f"Detected web framework: {detected_payload}")
+
+                            db = mysql.connection.cursor()
+                            insert_query = (
+                                "INSERT INTO att_ps (URL_ID, PID, OID, URL, state, res_body, payload, vul_des, vul_sol, vul_ref, OType, Vul_name) "
+                                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                            )
+                            values = (
+                                HSTS_data[3], HSTS_data[2], '9', HSTS_data[0], 'T', HSTS_data[1],
+                                detected_payload + "in HTML", sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4]
+                            )
+                            db.execute(insert_query, values)
+                            mysql.connection.commit()
+                            break  
+                    except Exception as decode_error:
+                        print(f"Error decoding {encoded_data}: {decode_error}")
+
+                else:
+                    print("ไม่พบwebframehtml")
+
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
 
 
 
@@ -891,89 +1127,93 @@ async def HSTS(PTarget):
 
 
 async def check_cookie_attributes(Server):
-    db = mysql.connection.cursor()
-    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=2")
-    db.execute(query2,)             
-    sql2_ = db.fetchall()
-    query3 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=3")
-    db.execute(query3,)             
-    sql3_ = db.fetchall()
-    query5 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType ,Vul_name FROM owasp WHERE OID=5")
-    db.execute(query5,)             
-    sql5_ = db.fetchall()
-    query6 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType ,Vul_name FROM owasp WHERE OID=6")
-    db.execute(query6,)             
-    sql6_ = db.fetchall()
-    for Server_data in Server:
-        # print(f"res_header[1]", Server_data[1])
-        Set_Cookie = 'Set-Cookie'
-        Secure_Header = 'Secure'
-        HttpOnly_Header = 'HttpOnly'
-        Expires_Header = 'Expires'
-        SameSite_Header = 'SameSite'
-        if Server_data[1].find(Set_Cookie) != -1:
-             print(f'พบ Set-Cookie ที่ URL: {Server_data[0]}')
-             if  Server_data[1].find(Secure_Header) != -1:
-                    web = Server_data[1].find(Secure_Header)
-             else:
-                print(f'ไม่พบ Secure:{Server_data[0]}')
-                db = mysql.connection.cursor()
-                insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
-                    )
-                values = (Server_data[3],Server_data[2],'2',Server_data[0],'T',Server_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
-                db.execute(insert_query, values)
-                mysql.connection.commit()
-            
-             if Server_data[1].find(HttpOnly_Header) != -1:
-                    web = Server_data[1].find(HttpOnly_Header)
-             else:
-                db = mysql.connection.cursor()
-                insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
-                    )
-                values = (Server_data[3],Server_data[2],'3',Server_data[0],'T',Server_data[1],sql3_[0][0],sql3_[0][1],sql3_[0][2],sql3_[0][3],sql3_[0][4])
-                db.execute(insert_query, values)
-                mysql.connection.commit()
-                print(f'ไม่พบ HttpOnly:{Server_data[0]}')
+    try:
+        db = mysql.connection.cursor()
+        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=2")
+        db.execute(query2,)             
+        sql2_ = db.fetchall()
+        query3 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType,Vul_name FROM owasp WHERE OID=3")
+        db.execute(query3,)             
+        sql3_ = db.fetchall()
+        query5 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType ,Vul_name FROM owasp WHERE OID=5")
+        db.execute(query5,)             
+        sql5_ = db.fetchall()
+        query6 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType ,Vul_name FROM owasp WHERE OID=6")
+        db.execute(query6,)             
+        sql6_ = db.fetchall()
+        for Server_data in Server:
+            # print(f"res_header[1]", Server_data[1])
+            Set_Cookie = 'Set-Cookie'
+            Secure_Header = 'Secure'
+            HttpOnly_Header = 'HttpOnly'
+            Expires_Header = 'Expires'
+            SameSite_Header = 'SameSite'
+            if Server_data[1].find(Set_Cookie) != -1:
+                print(f'พบ Set-Cookie ที่ URL: {Server_data[0]}')
+                if  Server_data[1].find(Secure_Header) != -1:
+                        web = Server_data[1].find(Secure_Header)
+                else:
+                    print(f'ไม่พบ Secure:{Server_data[0]}')
+                    db = mysql.connection.cursor()
+                    insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                        )
+                    values = (Server_data[3],Server_data[2],'2',Server_data[0],'T',Server_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4])
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()
+                
+                if Server_data[1].find(HttpOnly_Header) != -1:
+                        web = Server_data[1].find(HttpOnly_Header)
+                else:
+                    db = mysql.connection.cursor()
+                    insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                        )
+                    values = (Server_data[3],Server_data[2],'3',Server_data[0],'T',Server_data[1],sql3_[0][0],sql3_[0][1],sql3_[0][2],sql3_[0][3],sql3_[0][4])
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()
+                    print(f'ไม่พบ HttpOnly:{Server_data[0]}')
 
-             if Server_data[1].find(Expires_Header) != -1:
-                    web = Server_data[1].find(Expires_Header)
-                    print(f'{web}')
-             else:
+                if Server_data[1].find(Expires_Header) != -1:
+                        web = Server_data[1].find(Expires_Header)
+                        print(f'{web}')
+                else:
 
-                db = mysql.connection.cursor()
-                insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
-                    )
-                values = (Server_data[3],Server_data[2],'5',Server_data[0],'T',Server_data[1],sql5_[0][0],sql5_[0][1],sql5_[0][2],sql5_[0][3],sql5_[0][4])
-                db.execute(insert_query, values)
-                mysql.connection.commit()
-                print(f'ไม่พบ Expires:{Server_data[0]}')
+                    db = mysql.connection.cursor()
+                    insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                        )
+                    values = (Server_data[3],Server_data[2],'5',Server_data[0],'T',Server_data[1],sql5_[0][0],sql5_[0][1],sql5_[0][2],sql5_[0][3],sql5_[0][4])
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()
+                    print(f'ไม่พบ Expires:{Server_data[0]}')
 
 
-             if Server_data[1].find(SameSite_Header) != -1:
-                    web = Server_data[1].find(SameSite_Header)
-                    print(f'{web}')
-             else:
-                  
-                db = mysql.connection.cursor()
-                insert_query = (
-                       "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
-                    )
-                values = (Server_data[3],Server_data[2],'6',Server_data[0],'T',Server_data[1],sql6_[0][0],sql6_[0][1],sql6_[0][2],sql6_[0][3],sql6_[0][4])
-                db.execute(insert_query, values)
-                mysql.connection.commit()
-                print(f'ไม่พบ SameSite:{Server_data[0]}')
-
+                if Server_data[1].find(SameSite_Header) != -1:
+                        web = Server_data[1].find(SameSite_Header)
+                        print(f'{web}')
+                else:
+                    
+                    db = mysql.connection.cursor()
+                    insert_query = (
+                        "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                        )
+                    values = (Server_data[3],Server_data[2],'6',Server_data[0],'T',Server_data[1],sql6_[0][0],sql6_[0][1],sql6_[0][2],sql6_[0][3],sql6_[0][4])
+                    db.execute(insert_query, values)
+                    mysql.connection.commit()
+                    print(f'ไม่พบ SameSite:{Server_data[0]}')
+    except Exception as e:
+        print(f"HTTP error: {e}")
+        return None
 
 
 @app.route("/crawl", methods=['POST'])
 async def crawl_endpoint():
     try:
-        # token = request.headers.get('Authorization').split(" ")[1]
-        # user = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])['user']
-        # admin = user.get('role', None)
+        token = request.headers.get('Authorization').split(" ")[1]
+        user_ = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])['user']
+        user = user_.get('username', None)
+        admin = user_.get('role', None)
         visited_urls = []
         cookies_data = {}
         http_log_data = {}
@@ -984,7 +1224,7 @@ async def crawl_endpoint():
 
         project_name = request.json['project_name']
      
-        user = request.json['authUser']
+        # user = request.json['authUser']
         scope_url = request.json['url']
         Host = urlparse(scope_url).netloc
         baseURL = urlparse(scope_url).scheme + '://' + urlparse(scope_url).netloc
@@ -1009,43 +1249,68 @@ async def crawl_endpoint():
         db.execute(insert_query11, values11)
         mysql.connection.commit()
         # csv_name = f"{project_name}.csv"
-        
-        await crawl(scope_url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
-
+        try:            
+            cres = await crawl(scope_url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+        except Exception as e:
+            print(f"crawl error: {e}")
+        # print("cres",cres)
         db = mysql.connection.cursor()
         select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
         db.execute(select_project_name_id_query, (project_name, user))             
         project_name_id_result = db.fetchall()   
-        print(project_name_id_result[0][0])
-        await run_gobuster(baseURL,project_name,user)
-        print("baseURL",baseURL)
-        
-        await checkTempFuzz(i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls)
 
-
-        # await run_gobustersensitive(baseURL,project_name,user)
-        # print("baseURLsensitive",baseURL)
-        # await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
+        try:   
+            print(project_name_id_result[0][0])
+            await run_gobuster(baseURL,project_name,user)
+            print("baseURL",baseURL)        
+            await checkTempFuzz(i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls)
+        except Exception as e:
+                    print(f"run_gobuster: {e}")
         db = mysql.connection.cursor()
         queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s"
         db.execute(queryServer, (project_name_id_result))
         Server = db.fetchall()
-        await detect_web_server_leakage(Server)
-        await check_cookie_attributes(Server)
-
+        try:   
+            await detect_web_server_leakage(Server)
+        except Exception as e:
+                    print(f"detect_web_server_leakage: {e}")
+        try:  
+             await check_cookie_attributes(Server)
+        except Exception as e:
+                    print(f"check_cookie_attributes: {e}")
         querypathtraversal = "SELECT URL,req_header,PID,URL_ID FROM urllist WHERE PID = %s"
         db.execute(querypathtraversal, (project_name_id_result))
         pathtraversal = db.fetchall()
-        await detect_pathtraversal(pathtraversal)
+
+        try:
+            await detect_pathtraversal(pathtraversal)
+        except Exception as e:
+                    print(f"await detect_pathtraversal(pathtraversal): {e}")
+
 
         queryPTarget = "SELECT URL,res_header,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s"
         db.execute(queryPTarget, (project_name_id_result,scope_url))
         PTarget = db.fetchall()
         print("PTarget", PTarget[0][1])
         await HSTS(PTarget)
+        try:
+            await webFramework(PTarget)
+        except Exception as e:
+            print(f"await webFramework(PTarget): {e}")
+
+
+        queryPTargethtml = "SELECT URL,res_body,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s"
+        db.execute(queryPTargethtml, (project_name_id_result,scope_url))
+        PTarget = db.fetchall()
+        
+        try:       
+            await webFrameworkhtml(PTarget)
+        except Exception as e:
+            print(f"await webFrameworkhtml(PTarget): {e}")
+
 
         db = mysql.connection.cursor()
-        queryURL_data = "SELECT URL FROM urllist WHERE PID = %s"
+        queryURL_data = "SELECT URL , method,req_body FROM urllist WHERE PID = %s"
         db.execute(queryURL_data, (project_name_id_result))
         URL_data = db.fetchall()
         for url_data in URL_data:
@@ -1076,7 +1341,10 @@ async def crawl_endpoint():
                     # print(i)
                     att_params.update({i.split('=')[0]: i.split('=')[1]})
                 print("project_name",project_name)
-                await brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name, user,cookies_data)
+                try:
+                    await brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name, user,cookies_data)
+                except Exception as e:
+                    print(f"brutesql: {e}")
             # print(vresults)
             # all_results.extend(vresults)
             # for vres, vparams in vresults:
@@ -1096,8 +1364,11 @@ async def crawl_endpoint():
                     att_params.update({i.split('=')[0]: i.split('=')[1]})
                     att_paramsname.append(i.split('=')[0])
                 # print(att_url)
-                print("project_name",project_name)    
-                await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data)
+                print("project_name",project_name)
+                try: 
+                    await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data)
+                except Exception as e:
+                    print(f"brutexss: {e}")
                 # if vres and vparams != None:
                 #     print(vres)
                 #     print(vparams)
@@ -1116,22 +1387,49 @@ async def crawl_endpoint():
                     att_params.update({i.split('=')[0]: i.split('=')[1]})
                     att_paramsname.append(i.split('=')[0])
                 # print(att_url)
-                print("project_name",project_name)    
-                await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data)
-                # if vres and vparams != None:
+                print("project_name",project_name) 
+                try:   
+                    await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data)
+                except Exception as e:
+                    print(f"brutepathtraversal: {e}")
+                                    # if vres and vparams != None:
                 #     print(vres)
                 #     print(vparams)
             else:
                 print('[-] we cannot find path traversal')
 
 
-        await run_gobustersensitive(baseURL,project_name,user)
-        print("baseURLsensitive",baseURL)
-        await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
+            if url_data[1] == 'POST':
+                print("url_data[0] POST",url_data[1])
+                if url_data[2] != None :
+                    att_paramsnum = len(url_data[2].split('&'))
+                    att_params={}
+                    att_paramsname = []
+                    #parse full query to dictionary
+                    for i in url_data[2].split('&'):
+                        #params=value
+                        # print(i)
+                        att_params.update({i.split('=')[0]: i.split('=')[1]})
+                        att_paramsname.append(i.split('=')[0])
+                    # print(att_url)
+                    try:      
+                        await brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,url_data[2])
+                    except Exception as e:
+                        print(f"brutepathtraversal: {e}")
+                    # if vres and vparams != None:
+                    #     print(vres)
+                    #     print(vparams)
+            else:
+                print('[-] we cannot find command injection')
+        try:        
+            await run_gobustersensitive(baseURL,project_name,user)
+            print("baseURLsensitive",baseURL)
+            await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
+        except Exception as e:
+            print(f"run_gobustersensitive: {e}")
         db = mysql.connection.cursor()
         queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s"
         db.execute(queryServer, (project_name_id_result))
-
 
 
         db = mysql.connection.cursor()
@@ -1315,7 +1613,39 @@ async def crawl_endpoint():
              mysql.connection.commit()
         else:
             print("ไม่มีข้อมูล")
-        
+
+
+        select_att_ID_Server = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_Server, (project_name_id_result[0][0], '9'))
+        select_att_ID_select_att_HSTS_DATA = db.fetchall()
+        if select_att_ID_select_att_HSTS_DATA:
+             db = mysql.connection.cursor()
+             query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name FROM owasp WHERE OID=9"
+             db.execute(query2)
+             sql2_ = db.fetchall()
+
+             insert_query = "INSERT INTO owasp (Vul_des, Vul_sol, Vul_ref, Vul_name, OType, PID, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+             values = (sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][4], sql2_[0][3], project_name_id_result[0][0], "Low")
+             db.execute(insert_query, values)
+             mysql.connection.commit()
+        else:
+            print("ไม่มีข้อมูล")
+
+        select_att_ID_command = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_command, (project_name_id_result[0][0], '12'))
+        select_att_ID_select_att_command_DATA = db.fetchall()
+        if select_att_ID_select_att_command_DATA:
+             db = mysql.connection.cursor()
+             query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name FROM owasp WHERE OID=12"
+             db.execute(query2)
+             sql2_ = db.fetchall()
+
+             insert_query = "INSERT INTO owasp (Vul_des, Vul_sol, Vul_ref, Vul_name, OType, PID, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+             values = (sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][4], sql2_[0][3], project_name_id_result[0][0], "High")
+             db.execute(insert_query, values)
+             mysql.connection.commit()
+        else:
+            print("ไม่มีข้อมูล")
 
         db = mysql.connection.cursor()
         EndTime_query = ('UPDATE project SET EndTime = CURRENT_TIMESTAMP WHERE PID = %s')
@@ -1326,24 +1656,65 @@ async def crawl_endpoint():
         return {"project_name_id_result":project_name_id_result }
     except Exception as e:
         return jsonify({"server error": str(e)})
-    
-    
-@app.route("/home", methods=['GET'])
-def home():
+
+
+@app.route("/save", methods=['POST'])
+def savee():
     try:
         token = request.headers.get('Authorization').split(' ')[1]
         user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
         user_data = user.get('username', None)
+        Admin = user.get('role', None)
+        PID = request.json["project_name"]
+        print("PID",PID)
+
+
+        db = mysql.connection.cursor()
+        user_query = "SELECT username FROM project WHERE username = %s AND PID = %s"
+        db.execute(user_query, (user_data, PID))
+        username = db.fetchall()
+
+     
+        if username[0][0] not in user_data:
+            return jsonify({'error': 'User Error'}), 403
+
+        db = mysql.connection.cursor()
+        EndTime_query = ('UPDATE project SET EndTime = CURRENT_TIMESTAMP WHERE PID = %s')
+        db.execute(EndTime_query, (PID,))
+        mysql.connection.commit()
+        # print(project_data)
+
+        return jsonify({"project_data"})
+    except Exception as e:
+        return jsonify({"server error": str(e)})
+    
+
+@app.route("/home", methods=['GET'])
+def home():
+    try:
+        user_data = None
+        token = request.headers.get('Authorization').split(' ')[1]
+        if token is None:
+            return jsonify({'error': 'Token is missing'}), 403        
+        user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+
+
+
+
+        
         db = mysql.connection.cursor()
         query = "SELECT PDes, PName, PID,PTarget,timeproject,EndTime FROM project WHERE username = %s"
         db.execute(query, (user_data,))
         project_data = db.fetchall()
         db.close()
         # print(project_data)
-        
+
+
 
         return jsonify({"project_data": project_data})
     except Exception as e:
+        print(e)
         return jsonify({"server error": str(e)})
 
 @app.route("/DashboardAll", methods=['GET'])
@@ -1546,7 +1917,29 @@ def dashboard():
             Severity7= Severity7
         else:
             Severity7= [0]
-   
+
+        select_att_ID_web="SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
+        db.execute(select_att_ID_web, (project_name_id, '9'))
+        select_att_ID_webb = db.fetchall()
+        select_att_ID_web = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        db.execute(select_att_ID_web, (project_name_id, 'Web Application Framework Infomation Leakage'))
+        Severity9 = db.fetchall()  
+        if Severity9:
+            Severity9= Severity9
+        else:
+            Severity9= [0]
+
+        select_att_ID_command="SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
+        db.execute(select_att_ID_command, (project_name_id, '12'))
+        select_att_ID_commandd = db.fetchall()
+        select_att_ID_command = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        db.execute(select_att_ID_command, (project_name_id, 'Command Injection'))
+        Severity12 = db.fetchall()  
+        if Severity12:
+            Severity12= Severity12
+        else:
+            Severity12= [0]
+
         owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
         db.execute(owasp_query, (project_name_id,))
         owasp_ = db.fetchall()
@@ -1564,7 +1957,7 @@ def dashboard():
             valueENDpp = valueENDp
 
         return jsonify({"url_target": url_target}, {"select_att_sql_DATA": [select_att_ID_sql_DATA,Severity11]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,Severity10]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,Severity4]}, {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,Severity2]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,Severity3]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,Severity5]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,Severity6]}
-                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,Severity1]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,Severity8]},{"valueENDpp":valueENDpp},{"valueTimep":valueTimep},{"owasp_":owasp_}, {"select_att_ID_Sentitive": [select_att_ID_Sentitive,Severity7]})
+                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,Severity1]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,Severity8]},{"valueENDpp":valueENDpp},{"valueTimep":valueTimep},{"owasp_":owasp_}, {"select_att_ID_Sentitive": [select_att_ID_Sentitive,Severity7]}, {"select_att_ID_webb": [select_att_ID_webb,Severity9]}, {"select_att_ID_commandd": [select_att_ID_commandd,Severity12]})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})
@@ -1845,42 +2238,50 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         # print("sql2_[0][2]",sql2_[0][2])
         # print("sql2_[0][2]",sql2_[0][3])
 
-        targets_url = "SELECT PTarget , PDes,PName FROM project WHERE username = %s AND PID = %s"
+        targets_url = "SELECT PTarget , PDes,PName,timeproject,EndTime FROM project WHERE username = %s AND PID = %s"
         db.execute(targets_url, (user_data, project_name_id))
         url_target = db.fetchall()
 
         # print(url_target)
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = db.fetchall()
-        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_traversal, (project_name_id, '4'))
         select_att_ID_select_att_traversal_DATA = db.fetchall()
-        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload  FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref  FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_secure, (project_name_id, '2'))
         select_att_ID_select_att_secure_DATA = db.fetchall()
-        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_httponly, (project_name_id, '3'))
         select_att_ID_select_att_httponly_DATA = db.fetchall()
-        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_expire, (project_name_id, '5'))
         select_att_ID_select_att_expire_DATA = db.fetchall()
-        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_samsite, (project_name_id, '6'))
         select_att_ID_select_att_samsite_DATA = db.fetchall()
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_Server, (project_name_id, '1'))
         select_att_ID_select_att_server_DATA = db.fetchall()
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_Server, (project_name_id, '8'))
         select_att_ID_select_att_HSTS_DATA = db.fetchall()
-        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_Sensitive, (project_name_id, '7'))
         select_att_ID_sensitive = db.fetchall()
 
+
+        select_att_ID_web = "SELECT URL , payload,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref  FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_web, (project_name_id, '9'))
+        select_att_ID_webb = db.fetchall()
+
+        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_command, (project_name_id, '12'))
+        select_att_ID_command_DATA = db.fetchall()
 
         valueTime_query = "SELECT timeproject FROM project WHERE PID = %s"
         db.execute(valueTime_query, (project_name_id,))
@@ -1898,7 +2299,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
 
         return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA": select_att_ID_sql_DATA}, {"select_att_ID_xsssql_DATA": select_att_ID_xsssql_DATA}, {"select_att_ID_select_att_traversal_DATA": select_att_ID_select_att_traversal_DATA}, 
                        {"Role": Role},{"select_att_ID_select_att_secure_DATA":select_att_ID_select_att_secure_DATA},{"select_att_ID_select_att_httponly_DATA":select_att_ID_select_att_httponly_DATA},{"select_att_ID_select_att_expire_DATA":select_att_ID_select_att_expire_DATA},{"select_att_ID_select_att_samsite_DATA":select_att_ID_select_att_samsite_DATA}
-                       ,{"select_att_ID_select_att_server_DATA":select_att_ID_select_att_server_DATA},{"select_att_ID_select_att_HSTS_DATA":select_att_ID_select_att_HSTS_DATA},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":select_att_ID_sensitive})
+                       ,{"select_att_ID_select_att_server_DATA":select_att_ID_select_att_server_DATA},{"select_att_ID_select_att_HSTS_DATA":select_att_ID_select_att_HSTS_DATA},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":select_att_ID_sensitive},{"select_att_ID_webb":select_att_ID_webb},{"select_att_ID_command_DATA":select_att_ID_command_DATA})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})
@@ -2086,9 +2487,21 @@ def oneVulsdelete():
         token = request.headers.get('Authorization').split(" ")[1]
         user = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])['user']
         Role = user.get('role', None)
+        user_data = user.get('username', None)
         project_name_id = request.args.get('project_name_id')
         print(project_name_id)
         att_id = request.args.get('record')
+
+
+        db = mysql.connection.cursor()
+        user_query = "SELECT username FROM project WHERE username = %s AND PID = %s"
+        db.execute(user_query, (user_data, project_name_id))
+        username = db.fetchall()
+
+     
+        if username[0][0] not in user_data:
+            return jsonify({'error': 'User Error'}), 403
+        
         if (Role == 'Advance'):
             db = mysql.connection.cursor()
             print("project_name_id",project_name_id)
@@ -2119,6 +2532,18 @@ def oneSeverity():
         project_name_id = request.args.get('project_name_id')
         print(project_name_id)
         OID = request.args.get('record')
+        user_data = user.get('username', None)
+        
+        db = mysql.connection.cursor()
+        user_query = "SELECT username FROM project WHERE username = %s AND PID = %s"
+        db.execute(user_query, (user_data, project_name_id))
+        username = db.fetchall()
+
+     
+        if username[0][0] not in user_data:
+            return jsonify({'error': 'User Error'}), 403
+        
+
         if (Role == 'Advance'):
             db = mysql.connection.cursor()
             print("project_name_id",project_name_id)

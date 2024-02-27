@@ -2,7 +2,7 @@ import React from "react";
 import './maindashboard.css';
 import { Card,theme,Collapse,ConfigProvider,Button} from 'antd';
 import { PlusOutlined,RightOutlined,CloseOutlined,FormOutlined } from '@ant-design/icons';
-import { Link} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import { useState,useEffect } from "react";
 import Swal from 'sweetalert2'
@@ -10,6 +10,7 @@ import Swal from 'sweetalert2'
 const Home = () => {
     const [projectdata, setProjectData] = useState([]);
     const [deletee,setDelete] = useState([]);
+    const navigate = useNavigate()
     
   
     useEffect(() => {
@@ -23,6 +24,15 @@ const Home = () => {
             .then(response => {
                 setProjectData(response.data.project_data);
                 console.log(response)
+        if (response.data && response.data["server error"]) {
+          navigate('/login')
+          Swal.fire({
+            icon: 'error',
+            title: 'User Eror',
+            // text: "User Eror",
+          });
+         
+        }
 
             
             })

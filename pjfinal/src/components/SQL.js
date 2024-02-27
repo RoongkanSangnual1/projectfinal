@@ -10,7 +10,6 @@ import Highlighter from 'react-highlight-words';
 import Swal from 'sweetalert2'
 import './maindashboard.css';
 import PDF from './PDF';
-import { useMemo } from 'react';
 import TextArea from 'antd/es/input/TextArea';
 const SQlinject = (props) => {
   // console.log(props.name);
@@ -26,10 +25,9 @@ const SQlinject = (props) => {
     const [samsite,setsamsite] = useState([])
     const [secure,setsecure] = useState([])
     const [server,setserver] = useState([])
-    const [web,setwebb] = useState([])
     const [Sensitive,setSensitive] = useState([])
     const [HSTS,setHSTS] = useState([])
-    const [Command,setCommand] = useState([])
+    const [Payload,setPayload] = useState([])
     const [Issue,setIssue] = useState([])
     const [url_target,seturl_target] = useState([])
     const [Details,setDetails] = useState([])
@@ -41,10 +39,8 @@ const SQlinject = (props) => {
     const [isModalOpen6, setIsModalOpen6] = useState(false);
     const [isModalOpen7, setIsModalOpen7] = useState(false);
     const [isModalOpen8, setIsModalOpen8] = useState(false);
-    const [isModalOpen9, setIsModalOpen9] = useState(false);
     const [isModalOpen10, setIsModalOpen10] = useState(false);
     const [isModalOpen11, setIsModalOpen11] = useState(false);
-    const [isModalOpen12, setIsModalOpen12] = useState(false);
     const [Delete,setDelete] = useState("")
     const [urls,setUrls] = useState([])
     const [EVIDENCE,setEVIDENCE] = useState([])
@@ -207,37 +203,8 @@ const SQlinject = (props) => {
               })
               .filter(item => item !== null);
              
-
-              const web = response.data[14].select_att_ID_webb
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-             
-
-              const Command = response.data[15].select_att_ID_command_DATA
-              .map((data, index) => {
-                try {
-                  let decodedURL = decodeURIComponent(data[0]);
-                  let decodedURL1 = decodeURIComponent(data[1]);
-                  let decodedURL2 = decodeURIComponent(data[2]);
-                  return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                 return null;
-                }
-              })
-              .filter(item => item !== null);
-             
               setresponsedata([{"SQL Injection":Index},{"Stored Cross Site Scriptng":IndexXss},{"Directory Traversal File Include":Indextraversal},{"Missing Secure Attribute in Cookie Header":IndexSecure},{"Missing HttpOnly Attribute in Cookie Header":httponly},{"Missing Expires Attribute in Cookie Header":expire},{"Missing SameSite Attribute in Cookie Header":samsite},{"Web Server Infomation Leakage through Server header":server},{"Missing HTTP Strict Transport Security Header":HSTS}])
-              setHSTS(HSTS)   
-              setwebb(web)  
+              setHSTS(HSTS)     
               setsamsite(samsite)
               setserver(server)
               // console.log("server,",server)
@@ -248,13 +215,12 @@ const SQlinject = (props) => {
             setprojectOneDataSQL(Index);
             settraversal(Indextraversal)
             setSensitive(Sensitive)
-            setCommand(Command)
             console.log("Sensitive",Sensitive)
         })
         .catch(error => {
             console.error(error);
         });
-    }, []);
+    }, [user, project_name_id,responsedata]);
 
     // useEffect(()=>{
     //   setresponsedata([{"SQL Injection":projectOneDataSQL},{"Stored Cross Site Scriptng":projectOneDataXSSSQL},{"Directory Traversal File Include":traversal},{"Missing Secure Attribute in Cookie Header":secure},{"Missing HttpOnly Attribute in Cookie Header":httponly},{"Missing Expires Attribute in Cookie Header":expire},{"Missing SameSite Attribute in Cookie Header":samsite},{"Web Server Infomation Leakage through Server header":server},{"Missing HTTP Strict Transport Security Header":HSTS}])
@@ -296,18 +262,11 @@ const SQlinject = (props) => {
       else if (OID === 8) {
         setIsModalOpen8(true);
       }
-      else if (OID ===9) {
-        setIsModalOpen9(true);
-      }
-
       else if (OID === 10) {
         setIsModalOpen10(true);
       }
       else if (OID ===11) {
         setIsModalOpen11(true);
-      }
-      else if (OID ===12) {
-        setIsModalOpen12(true);
       }
 
 
@@ -329,10 +288,7 @@ const SQlinject = (props) => {
         setIsModalOpen8(false);
         setIsModalOpen10(false);
         setIsModalOpen11(false);
-        setIsModalOpen9(false);
-        setIsModalOpen12(false);
       };
-    
 
 
 
@@ -365,8 +321,6 @@ const SQlinject = (props) => {
         setIsModalOpen8(false);
         setIsModalOpen10(false);
         setIsModalOpen11(false);
-        setIsModalOpen9(false);
-        setIsModalOpen12(false);
     }
 
 
@@ -408,7 +362,6 @@ const SQlinject = (props) => {
               setexpire(expire.filter((project=>project[7] !==iddelete )))
               sethttponly(httponly.filter((project=>project[7] !==iddelete )))
               setsecure(secure.filter((project=>project[7] !==iddelete )))
-              setwebb(web.filter((project=>project[7] !==iddelete )))
       
               Swal.fire({
                 title: "Deleted!",
@@ -422,10 +375,8 @@ const SQlinject = (props) => {
         });
           
       };
-      const memoizedPDF = useMemo(() => {
-        return <PDF id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata}></PDF>;
-      }, [responsedata]);
-        
+      
+    
     return (
         <div>
             <div>
@@ -2382,498 +2333,7 @@ const SQlinject = (props) => {
 
 
 
-<>
-{
-              web && web.length> 0 ? (
-            
-            <Collapse
-  className="projcollaspe"
-  collapsible="header"
-  size="small"
-  defaultActiveKey={['1']}
-  style={{ marginTop: '5px' }}
-  expandIcon={({ isActive }) => (
-    <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px'}} />
-      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} />
-    </>
-  )}
-  items={[
-    {
-      label: (
-        <div className="projcollaspe-head">
-          <h3 className="projname">Web Application Framework Infomation Leakage <per style={{color:"red"}}> ({web.length})</per></h3>
-          {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(9)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
-            )}   
-            <Modal title="Missing HTTP Strict Transport Security Header" open={isModalOpen9} onOk={Formsummit} onCancel={handleCancel}>
-            <Form className='input-container'
-            onFinish={Formsummit}
-            labelCol={{
-                span: 5,
-              }}
-            >
-              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
-              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
-              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
-              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
-          
-  
-                 </Form>
-
-      </Modal>
-          
-        </div>
-      ),
-      children: (
-        <>
-        {
-        web.map((OneData, index) => (
-                  <Collapse
-  className="projcollaspe"
-  collapsible="header"
-  size="small"
-  defaultActiveKey={['10']}
-  style={{ marginTop: '5px' }}
-  expandIcon={({ isActive }) => (
-    <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
-      {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
-    </>
-  )}
-  items={[
-    {
-      label: (
-        <div className="projcollaspe-head">
-        <a  style={{color:"red"}}  href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
-                {Delete === 'Advance' && (
-  <Space size="middle">
-  <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[7])}> </Button>
-</Space>
-          )}
-        </div>
-      ),
-      children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
-<div className="collapse-content" style={{ overflow: 'auto' }}>
-  <table>
-    <thead>
-      <tr>
-        <th>URL</th>
-        <th>EVIDENCE</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-      <td style={{textAlign:"center"}}>
-                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
-              </td>
-              <td style={{ textAlign: "center", color: "red" }}>
-    <Highlighter
-     style={{color:"red"}}
-      highlightClassName="YourHighlightClass"
-      searchWords={[
-        "Express",
-        "Django",
-        "Phusion Passenger",
-        "Flask",
-        "ASP.NET",
-        "SpringBoot",
-        "FastAPI",
-        "Laravel",
-        "Play Framework",
-        "Meteor",
-        "NestJS",
-        "CherryPy",
-        "Mono",
-        "Blood, sweat and tears",
-        "Swiftlet",
-        "X-Powered-By",
-        "X-Generator",
-        "WoltLab",
-        "XenForo",
-        "vBulletin",
-        "MyBB",
-        "OpenCart",
-        "Shopify",
-        "Magento",
-        "PrestaShop",
-        "Joomla",
-        "MediaWiki",
-        "SMF",
-        "wcf_user",
-        "xf_user",
-        "vb_session",
-        "mybb",
-        "oc_sessionPassphrase",
-        "_secure_session_id",
-        "frontend",
-        "adminhtml",
-        "PrestaShop-[some_numeric_value]",
-        "joomla_user_state",
-        "wiki_session",
-        "SMFCookie[numeric_value]",
-        "zope",
-        "cakephp",
-        "kohanasession",
-        "laravel_session",
-        "phpbb3_",
-        "wp-settings",
-        "BITRIX_",
-        "AMP",
-        "django",
-        "DotNetNukeAnonymous",
-        "e107_tz",
-        "EPiTrace",
-        "EPiServer",
-        "graffitibot",
-        "hotaru_mobile",
-        "ICMSession",
-        "MAKACSESSION",
-        "InstantCMS[logdate]",
-        "CMSPreferredCulture",
-        "SN4[12symb]",
-        "fe_typo_user",
-        "Dynamicweb",
-        "lep[some_numeric_value]+sessionid",
-        "Domain=.wix.com",
-        "VivvoSessionId",
-        "<flask",
-        "{% extends \"base.html\" %}",
-        "<spring",
-        "<th:include",
-        "@extends",
-        "@section",
-        "@yield",
-        "<ng-app",
-        "<ng-controller",
-        "<ng-repeat",
-        "<ng-if",
-        "<div data-reactroot",
-        "<div data-reactid",
-        "<ng-app",
-        "<ng-controller",
-        "<div v-bind",
-        "<input v-model",
-        "<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>",
-        "{% extends",
-        "{% block",
-        "<ng-app",
-        "<ng-controller",
-        "<ng-repeat",
-        "<ng-if",
-        "<div v-bind",
-        "<input v-model",
-        "<ul v-for",
-        "<li v-for",
-        "<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>",
-        "<script src=\"/path/to/jquery.js\"></script>",
-        "{% block",
-        "{% include",
-        "{% for",
-        "<%= render",
-        "<%= link_to",
-        "<%= form_for",
-        ""
-      ]} 
-      autoEscape={true}
-      textToHighlight={OneData[3]||OneData[8]}
-    />
-        {/* <p>{OneData[3]||OneData[8]}</p> */}
-</td>
-      </tr>
-      <tr>
-      <td colSpan="2"  style={{ textAlign: 'left'}}>
-          <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
-          <p> {OneData[4]}</p>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan="2"  style={{ textAlign: 'left' }}>
-          <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
-          <p>
-          {OneData[5]}
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan="2"  style={{ textAlign: 'left' }}>
-          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
-          <p>
-          {OneData[9]}
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan="2"  style={{ textAlign: 'left' }}>
-          <strong  style={{fontSize:"16px"}}>OType:</strong>
-          <p>
-          {OneData[6]}
-          </p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-  
-
-        </div>
-      ),
-    },
-  ]}
-/>
-               )) } </>
-),
-    },
-  ]}
-/>
-): (
-  <Collapse
-  className="projcollaspe"
-  collapsible="header"
-  size="small"
-  defaultActiveKey={['1']}
-  style={{ marginTop: '5px' }}
-  expandIcon={({ isActive }) => (
-    <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
-      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: '#47F777' }} />
-    </>
-  )}
-  items={[
-    {
-      label: (
-        <div className="projcollaspe-head">
-          <h3 className="projname"> Web Application Framework Infomation Leakage </h3>
-          {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(9)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
-            )}   
-            <Modal title="Missing HTTP Strict Transport Security Header-" open={isModalOpen9} onOk={Formsummit} onCancel={handleCancel}>
-            <Form className='input-container'
-            onFinish={Formsummit}
-            labelCol={{
-                span: 5,
-              }}
-            >
-              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
-              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
-              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
-              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
-          
-  
-                 </Form>
-
-      </Modal>
-          
-        </div>
-      ),
-    },
-  ]}
-/>
-)
-}
-</>
-
-
-
-
-
-<>
-{
-              Command && Command.length> 0 ? (
-            
-            <Collapse
-  className="projcollaspe"
-  collapsible="header"
-  size="small"
-  defaultActiveKey={['1']}
-  style={{ marginTop: '5px' }}
-  expandIcon={({ isActive }) => (
-    <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
-      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} />
-    </>
-  )}
-  items={[
-    {
-      label: (
-        <div className="projcollaspe-head">
-          <h3 className="projname">Command Injection<per style={{color:"red"}}>  ({Command.length})</per></h3>
-          {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(12)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
-            )}   
-            <Modal title="Add URL Command Injection" open={isModalOpen12} onOk={Formsummit} onCancel={handleCancel}>
-            <Form className='input-container'
-            onFinish={Formsummit}
-            labelCol={{
-                span: 5,
-              }}
-            >
-            
-              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
-              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
-              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
-              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
-          
-  
-                 </Form>
-
-      </Modal>
-          
-        </div>
-      ),
-      children: (
-        <>
-        {
-        Command.map((OneData, index) => (
-                  <Collapse
-  className="projcollaspe"
-  collapsible="header"
-  size="small"
-  defaultActiveKey={['10']}
-  style={{ marginTop: '5px' }}
-  expandIcon={({ isActive }) => (
-    <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
-      {/* <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: 'red' }} /> */}
-    </>
-  )}
-  items={[
-    {
-      label: (
-        <div className="projcollaspe-head">
-                <a  style={{color:"red"}}   href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                  {OneData[3]}
-            </a>
-            {Delete === 'Advance'&& ( 
-            <Space size="middle">
-              
-              <Button type="danger" icon={<CloseOutlined className="close-button" style={{color:'red,',marginBottom: '20px' }}/>} onClick={() => handleDelete(OneData[10])}> </Button>
-          </Space>)}
-        </div>
-      ),
-      children: ( <div className="collapse-content" style={{ overflow: 'auto' }}>
-<div className="collapse-content" style={{ overflow: 'auto' }}>
-  <table>
-    <thead>
-      <tr>
-        <th>URL</th>
-        <th>EVIDENCE</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-      <td style={{textAlign:"center"}}>
-                <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                  {OneData[1]}
-                </a>
-              </td>
-              <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
-      </tr>
-      <tr>
-      <td colSpan="2"  style={{ textAlign: 'left'}}>
-          <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
-          <p> {OneData[7]}</p>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan="2"  style={{ textAlign: 'left' }}>
-          <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
-          <p>
-          {OneData[8]}
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan="2"  style={{ textAlign: 'left' }}>
-          <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
-          <p>
-          {OneData[10]}
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan="2"  style={{ textAlign: 'left' }}>
-          <strong  style={{fontSize:"16px"}}>OType:</strong>
-          <p>
-          {OneData[9]}
-          </p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-  
-
-        </div>
-      ),
-    },
-  ]}
-/>
-               )) } </>
-),
-    },
-  ]}
-/>
-):(
-<Collapse
-  className="projcollaspe"
-  collapsible="header"
-  size="small"
-  defaultActiveKey={['1']}
-  style={{ marginTop: '5px' }}
-  expandIcon={({ isActive }) => (
-    <>
-      <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '40px' }} />
-      <CgDanger className="projcollaspe-ico" style={{ fontSize: '30px', marginTop: '40px', color: '#47F777' }} />
-    </>
-  )}
-  items={[
-    {
-      label: (
-        <div className="projcollaspe-head">
-          <h3 className="projname">Command Injection</h3>
-          {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(12)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
-            )}   
-            <Modal title="Add URL Command Injection" open={isModalOpen12} onOk={Formsummit} onCancel={handleCancel}>
-            <Form className='input-container'
-            onFinish={Formsummit}
-            labelCol={{
-                span: 5,
-              }}
-            >
-          
-              URL:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
-              EVIDENCE:<TextArea type="text" className="forminput-control" value={EVIDENCE} onChange={(e)=>setEVIDENCE(e.target.value)}/><br/>
-              {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-              Risk Description:<TextArea type="text" className="forminput-control" value={Risk} onChange={(e)=>setRisk(e.target.value)}/><br/>
-              Recommendation:<TextArea type="text" className="forminput-control" value={Recommendation} onChange={(e)=>setRecommendation(e.target.value)}/>
-          
-  
-                 </Form>
-
-      </Modal>
-        </div>
-      ),
-    },
-  ]}
-/>
-)
-}
-
-</>
-
-
-{memoizedPDF}
+            <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata}></PDF>
         </div>
     );
 };

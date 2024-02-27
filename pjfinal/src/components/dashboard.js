@@ -18,16 +18,20 @@ const Dashboard = () => {
   const [severityTraval,SetseverityTraval] = useState([]);
   const [severitySecure,SetseveritySecure] = useState([]);
   const [severityhttponly,Setseverityhttponly] = useState([]);
+  const [severitywebb,Setseveritywebb] = useState([]);
   const [severityexpire,Setseverityexpire] = useState([]);
   const [severitysamsite,Setseveritysamsite] = useState([]);
   const [severityHSTS,SetseverityHSTS] = useState([]);
+  const [severitycommand,Setseveritycommand] = useState([]);
   const [severitysensitive,Setseveritysensitive] = useState([]);
   const [severityserver,Setseverityserver] = useState([]);
   const [projectOneDataXSS, setProjectOneDataXSS] = useState(0);
   const [projectOneDataTravel, setProjectOneDataTravel] = useState(0);
   const [httponly,sethttponly] = useState(0)
   const [Sensitive,setsensitive] = useState(0)
+  const [command,setcommand] = useState(0)
   const [expire,setexpire] = useState(0)
+  const [web,setwebb] = useState(0)
   const [samsite,setsamsite] = useState(0)
   const [secure,setsecure] = useState(0)
   const [server,setserver] = useState(0)
@@ -41,19 +45,21 @@ const Dashboard = () => {
   const user = localStorage.user;
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios.get(`http://127.0.0.1:5000/dashboard?project_name_id=${project_name_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then(response => { 
-      if(response.data === "server error"){
-        Swal.fire({
-          icon: 'error',
-          title: 'User Eror',
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`http://127.0.0.1:5000/dashboard?project_name_id=${project_name_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-      }
+  
+        if (response.data === "server error") {
+          Swal.fire({
+            icon: 'error',
+            title: 'User Error',
+          });
+        }
       console.log(response)
       
       setDelete(response.data[4].Role)
@@ -64,37 +70,85 @@ const Dashboard = () => {
       setsamsite(response.data[8].select_att_ID_select_att_samsite_DATA[0].filter(item=> item !== null));
       Setseveritysamsite(response.data[8].select_att_ID_select_att_samsite_DATA[1][0][0]);
 
-      setsecure(response.data[5].select_att_ID_select_att_secure_DATA[0].filter(item=> item !== null));
-      SetseveritySecure(response.data[5].select_att_ID_select_att_secure_DATA[1][0][0]);
 
       
-      setserver(response.data[9].select_att_ID_select_att_server_DATA[0].filter(item=> item !== null));
-      Setseverityserver(response.data[9].select_att_ID_select_att_server_DATA[1][0][0]);
+      if(response.data[8].select_att_ID_select_att_samsite_DATA[1][0]){
 
-      setsensitive(response.data[14].select_att_ID_Sentitive[0].filter(item=> item !== null));
-      Setseveritysensitive(response.data[14].select_att_ID_Sentitive[1][0][0]);
-      setHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[0].filter(item=> item !== null));
-        // console.log(response)
-    //   console.log(response.data[10].select_att_ID_select_att_HSTS_DATA[0])
-    //   console.log("dsd",response.data[10].select_att_ID_select_att_HSTS_DATA[1][0][0])
-      SetseverityHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[1][0][0]);
-      setProjectOneDataSQL(response.data[1].select_att_sql_DATA[0].filter(item=> item !== null));
-      SetseveritySQL(response.data[1].select_att_sql_DATA[1][0][0]);
+        setsamsite(response.data[8].select_att_ID_select_att_samsite_DATA[0].filter(item=> item !== null));
+        Setseveritysamsite(response.data[8].select_att_ID_select_att_samsite_DATA[1][0][0]);
+  
+        
+  
+      }
+      if(response.data[5].select_att_ID_select_att_secure_DATA[1][0]){
 
-      setProjectOneDataXSS(response.data[2].select_att_ID_xsssql_DATA[0].filter(item=> item !== null));
-      SetseverityXSS(response.data[2].select_att_ID_xsssql_DATA[1][0][0]);
+        setsecure(response.data[5].select_att_ID_select_att_secure_DATA[0].filter(item=> item !== null));
+        SetseveritySecure(response.data[5].select_att_ID_select_att_secure_DATA[1][0][0]);
+  
+        
+  
+      }
+      
+      
+      if(response.data[9].select_att_ID_select_att_server_DATA[1][0]){
 
-      setProjectOneDataTravel(response.data[3].select_att_ID_select_att_traversal_DATA[0].filter(item=> item !== null));
-      SetseverityTraval(response.data[3].select_att_ID_select_att_traversal_DATA[1][0][0]);
+        setserver(response.data[9].select_att_ID_select_att_server_DATA[0].filter(item=> item !== null));
+        Setseverityserver(response.data[9].select_att_ID_select_att_server_DATA[1][0][0]);
+  
+      }
+      
+      if(response.data[14].select_att_ID_Sentitive[1][0]){
 
-      sethttponly(response.data[6].select_att_ID_select_att_httponly_DATA[0].filter(item=> item !== null));
-      Setseverityhttponly(response.data[6].select_att_ID_select_att_httponly_DATA[1][0][0]);
+        setsensitive(response.data[14].select_att_ID_Sentitive[0].filter(item=> item !== null));
+        Setseveritysensitive(response.data[14].select_att_ID_Sentitive[1][0][0]);
+      }
 
-      setexpire(response.data[7].select_att_ID_select_att_expire_DATA[0].filter(item=> item !== null));
-      Setseverityexpire(response.data[7].select_att_ID_select_att_expire_DATA[1][0][0]);
+      if(response.data[10].select_att_ID_select_att_HSTS_DATA[1][0]){
+        setHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[0].filter(item=> item !== null));
+        SetseverityHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[1][0][0]);
+      }
 
 
 
+
+      if(response.data[1].select_att_sql_DATA[1][0]){
+        setProjectOneDataSQL(response.data[1].select_att_sql_DATA[0].filter(item=> item !== null));
+        SetseveritySQL(response.data[1].select_att_sql_DATA[1][0][0]);
+      }
+
+
+      if(response.data[2].select_att_ID_xsssql_DATA[1][0]){
+        setProjectOneDataXSS(response.data[2].select_att_ID_xsssql_DATA[0].filter(item=> item !== null));
+        SetseverityXSS(response.data[2].select_att_ID_xsssql_DATA[1][0][0])
+      }
+
+
+      if(response.data[3].select_att_ID_select_att_traversal_DATA[1][0]){       
+        setProjectOneDataTravel(response.data[3].select_att_ID_select_att_traversal_DATA[0].filter(item=> item !== null));
+        SetseverityTraval(response.data[3].select_att_ID_select_att_traversal_DATA[1][0][0]);
+      }
+
+
+      if(response.data[6].select_att_ID_select_att_httponly_DATA[1][0]){
+        sethttponly(response.data[6].select_att_ID_select_att_httponly_DATA[0].filter(item=> item !== null));
+        Setseverityhttponly(response.data[6].select_att_ID_select_att_httponly_DATA[1][0][0]);
+      }
+
+
+
+      if(response.data[7].select_att_ID_select_att_expire_DATA[1][0]){
+        setexpire(response.data[7].select_att_ID_select_att_expire_DATA[0].filter(item=> item !== null));
+        Setseverityexpire(response.data[7].select_att_ID_select_att_expire_DATA[1][0][0]);
+      }
+
+      if(response.data[15].select_att_ID_webb[1][0]){
+        setwebb(response.data[15].select_att_ID_webb[0].filter(item=> item !== null));
+        Setseveritywebb(response.data[15].select_att_ID_webb[1][0][0]);
+      }
+      if(response.data[16].select_att_ID_commandd[1][0]){
+        setcommand(response.data[16].select_att_ID_commandd[0].filter(item=> item !== null));
+        Setseveritycommand(response.data[16].select_att_ID_commandd[1][0][0]);
+      }
     //   setsensitive(response.data[14].select_att_ID_Sentitive[0].filter(item=> item !== null));
     //   Setseveritysensitive(response.data[14].select_att_ID_Sentitive[1][0][0]);
     //   setHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[0].filter(item=> item !== null));
@@ -104,14 +158,14 @@ const Dashboard = () => {
     //   SetseverityHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[1][0][0]);
 
       
-    })
-    .catch(error => {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'User Eror',
-    //   });
-    })
-  }, [user, project_name_id]); 
+
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+fetchData();
+}, [user,project_name_id, setDelete, setOwaspData,]);
 
 
   const PieCout = () => {
@@ -127,7 +181,9 @@ const Dashboard = () => {
           (severityhttponly === "High" ? httponly.length : 0) +
           (severityHSTS === "High" ? HSTS.length : 0) +
           (severityexpire === "High" ? expire.length : 0)+
-          (severitysensitive === "High" ? Sensitive.length : 0),
+          (severitysensitive === "High" ? Sensitive.length : 0)+
+          (severitywebb === "High" ? web.length : 0)+
+          (severitycommand === "High" ? command.length : 0),
         medium:
         (severitySQL === "Medium" ? projectOneDataSQL.length : 0) +
         (severityXSS === "Medium" ? projectOneDataXSS.length : 0) +
@@ -138,7 +194,9 @@ const Dashboard = () => {
         (severityhttponly === "Medium" ? httponly.length : 0) +
         (severityHSTS === "Medium" ? HSTS.length : 0) +
         (severityexpire === "Medium" ? expire.length : 0)+
-        (severitysensitive === "Medium" ? Sensitive.length : 0),
+        (severitysensitive === "Medium" ? Sensitive.length : 0)+
+        (severitywebb === "Medium" ? web.length : 0)+
+        (severitycommand === "Medium" ? command.length : 0),
         low:
         (severitySQL === "Low" ? projectOneDataSQL.length : 0) +
         (severityXSS === "Low" ? projectOneDataXSS.length : 0) +
@@ -149,7 +207,9 @@ const Dashboard = () => {
         (severityhttponly === "Low" ? httponly.length : 0) +
         (severityHSTS === "Low" ? HSTS.length : 0) +
         (severityexpire === "Low" ? expire.length : 0)+
-        (severitysensitive === "Low" ? Sensitive.length : 0),
+        (severitysensitive === "Low" ? Sensitive.length : 0)+
+        (severitywebb === "Low" ? web.length : 0)+
+        (severitycommand === "Low" ? command.length : 0),
       };
       
     return counts;
@@ -320,7 +380,9 @@ const Dashboard = () => {
           (severityhttponly === "High" ? httponly.length : 0) +
           (severityHSTS === "High" ? HSTS.length : 0) +
           (severityexpire === "High" ? expire.length : 0)+
-          (severitysensitive === "High" ? Sensitive.length : 0)
+          (severitysensitive === "High" ? Sensitive.length : 0)+
+          (severitywebb === "High" ? web.length : 0)+
+          (severitycommand === "High" ? command.length : 0)
           
        })
        </p>
@@ -335,7 +397,9 @@ const Dashboard = () => {
                     (severityhttponly === "Medium" ? httponly.length : 0) +
                     (severityHSTS === "Medium" ? HSTS.length : 0) +
                     (severityexpire === "Medium" ? expire.length : 0)+
-                    (severitysensitive === "Medium" ? Sensitive.length : 0)
+                    (severitysensitive === "Medium" ? Sensitive.length : 0)+
+                    (severitywebb === "Medium" ? web.length : 0)+
+                    (severitycommand === "Medium" ? command.length : 0)
                     })</p>
             <div className='circle-blue'></div>
             <p>low({      
@@ -348,7 +412,9 @@ const Dashboard = () => {
         (severityhttponly === "Low" ? httponly.length : 0) +
         (severityHSTS === "Low" ? HSTS.length : 0) +
         (severityexpire === "Low" ? expire.length : 0)+
-        (severitysensitive === "Low" ? Sensitive.length : 0)
+        (severitysensitive === "Low" ? Sensitive.length : 0)+
+        (severitywebb === "Low" ? web.length : 0)+
+        (severitycommand === "Low" ? command.length : 0)
         })</p>
           </div>
         </div>

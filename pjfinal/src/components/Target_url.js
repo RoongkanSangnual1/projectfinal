@@ -4,42 +4,76 @@ import axios from "axios";
 import Navbar from "./navbar";
 import Sidemenu from './sidemenu';
 import { Alert, Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { CloseOutlined, RobotOutlined } from '@ant-design/icons';
 import ClipLoader  from "react-spinners/ClipLoader";
 import Swal from 'sweetalert2'
-
 
 const Target_url = () => {
     const [project_name, setProject_name] = useState("");
     const [url, setUrl] = useState("");
     const [project_name_id, setProject_name_id] = useState();
-    const [ProjectChange, setProjectChange] = useState();
+    const [ProjectChange, setProjectChange] = useState("");
     const [load, setLoad] = useState(false);
     const [error, setError] = useState(false);
     const [description, setDescription] = useState("");
     const authUser = localStorage.user;
     const [loadingButton, setLoadingButton] = useState(false);
+    const token = localStorage.getItem('token')
+
+    const navigate = useNavigate()
+    if (!token) {
+        navigate('/login');
+        Swal.fire({
+            icon: 'error',
+            title: 'User Error',
+        });
+    }
+
 
     const Formsummit = () => {
+
+        
         setLoad(true);
         setLoadingButton(true);
 
-        axios.post(`http://127.0.0.1:5000/crawl`, { project_name, authUser, url, description })
+        axios.post(`http://127.0.0.1:5000/crawl`, { project_name, url, description },{
+            headers:{
+              Authorization:`Bearer ${token}`,
+            },
+          })
             .then(res => {
                 console.log(res)
                 setLoad(false);
                 setLoadingButton(false);
                 setProject_name_id(res.data.project_name_id_result);
-                console.log(res.data.Change.length)
-                if (res.data.Change.length>0){
+                if (res.data.Change) {
+                    console.log(res.data.Change.length)
+                    setProjectChange(res.data.Change);
                     Swal.fire(res.data.Change);
                 }
+                // else if(project_name_id) {
 
+                // }
+                // else{
+                //     Swal.fire("ไม่สามารถทำการได้");
+                // }
+                // if (res.data && res.data["server error"]) {
+                //     Swal.fire({
+                //       icon: 'error',
+                //       title: 'User Eror',
+                //       // text: "User Eror",
+                //     });
+                //     navigate('/login')
+                //   }
+        
             })
             .catch(error => {
-                setError("ไม่สามารถทำการได้");
                 console.error("Error crawling:", error);
+                if (project_name_id) {
+                } else {
+                    Swal.fire("ไม่สามารถทำการได้");
+                }
             });
     };
 
