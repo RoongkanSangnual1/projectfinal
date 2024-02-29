@@ -71,9 +71,8 @@ const ProjectDash = () => {
         }
       };
     
-      fetchData(); // เรียกใช้ fetchData
-    
-      // Dependency array - รวม dependencies ที่จำเป็นเท่านั้น
+      fetchData(); 
+   
     }, [user, project_name, setUrl, setstart, setend, navigate]);
 
 
@@ -88,7 +87,7 @@ useEffect(() => {
         },
       });
       
-      setShowComplete(true); // เปลี่ยน state เมื่อคลิกปุ่ม
+      setShowComplete(true); 
       setReloadPage(prevState => !prevState);
     } catch (error) {
       console.error('Save Error', error);

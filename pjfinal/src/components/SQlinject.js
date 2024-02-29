@@ -51,15 +51,18 @@ const SQlinject = (props) => {
     const [EVIDENCE,setEVIDENCE] = useState([])
     const [parameter,setparameter]= useState([])
     const [Risk,setRisk] = useState([])
-    const [OID10, setOID10] = useState(10);
-    const [OID1, setOID1] = useState(1);
-    const [OID2, setOID2] = useState(2);
-    const [OID3, setOID3] = useState(3);
-    const [OID4, setOID4] = useState(4);
-    const [OID5, setOID5] = useState(5);
-    const [OID6, setOID6] = useState(6);
-    const [OID8, setOID8] = useState(8);
-    const [OID11, setOID11] = useState(11);
+    const [severitySQL,SetseveritySQL] = useState([]);
+    const [severityXSS,SetseverityXSS] = useState([]);
+    const [severityTraval,SetseverityTraval] = useState([]);
+    const [severitySecure,SetseveritySecure] = useState([]);
+    const [severityhttponly,Setseverityhttponly] = useState([]);
+    const [severitywebb,Setseveritywebb] = useState([]);
+    const [severityexpire,Setseverityexpire] = useState([]);
+    const [severitysamsite,Setseveritysamsite] = useState([]);
+    const [severityHSTS,SetseverityHSTS] = useState([]);
+    const [severitycommand,Setseveritycommand] = useState([]);
+    const [severitysensitive,Setseveritysensitive] = useState([]);
+    const [severityserver,Setseverityserver] = useState([]);
     const [OID, setOID] = useState('');
     const [Recommendation,setRecommendation]= useState([])
     const user = localStorage.user;
@@ -71,12 +74,17 @@ const SQlinject = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
+        console.log(response)
         setDelete(response.data[5].Role);
         seturl_target(response.data[1].url_target[0][0]);
         setDetails(response.data[1].url_target[0][1]);
-  
-        const Index = response.data[2].select_att_sql_DATA
+
+        if(response.data[2].select_att_sql_DATA[1].length !==0 ){
+          SetseveritySQL(response.data[2].select_att_sql_DATA[1][0][0])
+            console.log(response.data[2].select_att_sql_DATA[1][0][0])
+        }
+        const Index = response.data[2].select_att_sql_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -90,7 +98,13 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const IndexXss = response.data[3].select_att_ID_xsssql_DATA
+
+          
+        if(response.data[3].select_att_ID_xsssql_DATA[1].length !==0 ){
+          SetseverityXSS(response.data[3].select_att_ID_xsssql_DATA[1][0][0])
+            console.log(response.data[3].select_att_ID_xsssql_DATA[1][0][0])
+        }
+        const IndexXss = response.data[3].select_att_ID_xsssql_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -103,8 +117,13 @@ const SQlinject = (props) => {
             }
           })
           .filter(item => item !== null);
-  
-        const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA
+
+
+          if(response.data[4].select_att_ID_select_att_traversal_DATA[1].length !==0 ){
+            SetseverityTraval(response.data[4].select_att_ID_select_att_traversal_DATA[1][0][0])
+              console.log(response.data[4].select_att_ID_select_att_traversal_DATA[1][0][0])
+          } 
+        const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -117,8 +136,14 @@ const SQlinject = (props) => {
             }
           })
           .filter(item => item !== null);
-  
-        const IndexSecure = response.data[6].select_att_ID_select_att_secure_DATA
+
+
+
+          if(response.data[6].select_att_ID_select_att_secure_DATA[1].length !==0 ){
+            SetseveritySecure(response.data[6].select_att_ID_select_att_secure_DATA[1][0][0])
+              console.log(response.data[6].select_att_ID_select_att_secure_DATA[1][0][0])
+          } 
+        const IndexSecure = response.data[6].select_att_ID_select_att_secure_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -130,7 +155,27 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const httponly = response.data[7].select_att_ID_select_att_httponly_DATA
+
+          if(response.data[7].select_att_ID_select_att_httponly_DATA[1].length !==0 ){
+            Setseverityhttponly(response.data[7].select_att_ID_select_att_httponly_DATA[1][0][0])
+              console.log(response.data[7].select_att_ID_select_att_httponly_DATA[1][0][0])
+          } 
+        const httponly = response.data[7].select_att_ID_select_att_httponly_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+          if(response.data[8].select_att_ID_select_att_expire_DATA[1].length !==0 ){
+            Setseverityexpire(response.data[8].select_att_ID_select_att_expire_DATA[1][0][0])
+              console.log(response.data[8].select_att_ID_select_att_expire_DATA[1][0][0])
+          }   
+        const expire = response.data[8].select_att_ID_select_att_expire_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -142,7 +187,12 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const expire = response.data[8].select_att_ID_select_att_expire_DATA
+
+          if(response.data[9].select_att_ID_select_att_samsite_DATA[1].length !==0 ){
+            Setseveritysamsite(response.data[9].select_att_ID_select_att_samsite_DATA[1][0][0])
+              console.log(response.data[9].select_att_ID_select_att_samsite_DATA[1][0][0])
+          }   
+        const samsite = response.data[9].select_att_ID_select_att_samsite_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -154,7 +204,12 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const samsite = response.data[9].select_att_ID_select_att_samsite_DATA
+
+          if(response.data[10].select_att_ID_select_att_server_DATA[1].length !==0 ){
+            Setseverityserver(response.data[10].select_att_ID_select_att_server_DATA[1][0][0])
+              console.log(response.data[10].select_att_ID_select_att_server_DATA[1][0][0])
+          }   
+        const server = response.data[10].select_att_ID_select_att_server_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -166,7 +221,12 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const server = response.data[10].select_att_ID_select_att_server_DATA
+
+          if(response.data[11].select_att_ID_select_att_HSTS_DATA[1].length !==0 ){
+            SetseverityHSTS(response.data[11].select_att_ID_select_att_HSTS_DATA[1][0][0])
+              console.log(response.data[11].select_att_ID_select_att_HSTS_DATA[1][0][0])
+          } 
+        const HSTS = response.data[11].select_att_ID_select_att_HSTS_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -178,19 +238,13 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const HSTS = response.data[11].select_att_ID_select_att_HSTS_DATA
-          .map((data, index) => {
-            try {
-              let decodedURL = decodeURIComponent(data[0]);
-              return [index + 1, decodedURL, ...data];
-            } catch (error) {
-              console.error("Error decoding URL:", error);
-              return [index + 1, data[0], ...data];
-            }
-          })
-          .filter(item => item !== null);
-  
-        const Sensitive = response.data[13].select_att_ID_sensitive
+
+
+          if(response.data[13].select_att_ID_sensitive[1].length !==0 ){
+            Setseveritysensitive(response.data[13].select_att_ID_sensitive[1][0][0])
+              console.log(response.data[13].select_att_ID_sensitive[1][0][0])
+          } 
+        const Sensitive = response.data[13].select_att_ID_sensitive[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -204,7 +258,12 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const web = response.data[14].select_att_ID_webb
+
+          if(response.data[14].select_att_ID_webb[1].length !==0 ){
+            Setseveritywebb(response.data[14].select_att_ID_webb[1][0][0])
+              console.log(response.data[14].select_att_ID_webb[1][0][0])
+          } 
+        const web = response.data[14].select_att_ID_webb[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -216,7 +275,12 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
-        const Command = response.data[15].select_att_ID_command_DATA
+
+          if(response.data[15].select_att_ID_command_DATA[1].length !==0 ){
+            Setseveritycommand(response.data[15].select_att_ID_command_DATA[1][0][0])
+              console.log(response.data[15].select_att_ID_command_DATA[1][0][0])
+          } 
+        const Command = response.data[15].select_att_ID_command_DATA[0]
           .map((data, index) => {
             try {
               let decodedURL = decodeURIComponent(data[0]);
@@ -230,6 +294,8 @@ const SQlinject = (props) => {
           })
           .filter(item => item !== null);
   
+
+
         setresponsedata([
           {"SQL Injection": Index},
           {"Stored Cross Site Scriptng": IndexXss},
@@ -619,7 +685,7 @@ const SQlinject = (props) => {
 
 
           <h3 className="projname">SQL-injection <per style={{color:"red"}}>  ({projectOneDataSQL.length})</per></h3> {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(11)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button style={{ background: getColorForSeverity(severitySQL) }} onClick={() => showModal(11)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Add URL SQL-injection" open={isModalOpen11} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -827,7 +893,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Stored Cross Site Scriptng<per style={{color:"red"}}>  ({projectOneDataXSSSQL.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(10)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button   style={{ background: getColorForSeverity(severityXSS) }} onClick={() => showModal(10)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Add URL Stored Cross Site Scriptng" open={isModalOpen10} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -1037,7 +1103,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Directory Traversal File Include<per style={{color:"red"}}> ({traversal.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(4)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severityTraval) }} onClick={() => showModal(4)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Directory Traversal File Include" open={isModalOpen4} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -1237,7 +1303,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Web Server Infomation Leakage through 'Server' header<per style={{color:"red"}}>  ({server.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(1)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severityserver) }} onClick={() => showModal(1)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Web Server Infomation Leakage through 'Server' header" open={isModalOpen1} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -1459,7 +1525,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Missing Secure Attribute in Cookie Header <per style={{color:"red"}}> ({secure.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(2)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button   style={{ background: getColorForSeverity(severitySecure) }}onClick={() => showModal(2)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title=">Missing Secure Attribute in Cookie Header" open={isModalOpen2} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -1674,7 +1740,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Missing HttpOnly Attribute in Cookie Header <per style={{color:"red"}}> ({httponly.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(3)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severityhttponly) }}onClick={() => showModal(3)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Missing HttpOnly Attribute in Cookie Header" open={isModalOpen3} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -1891,7 +1957,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
            <h3 className="projname">Missing Expires Attribute in Cookie Header <per style={{color:"red"}}> ({expire.length})</per></h3>
            {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(5)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button style={{ background: getColorForSeverity(severityexpire) }} onClick={() => showModal(5)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Missing Expires Attribute in Cookie Header" open={isModalOpen5} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -2107,7 +2173,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Missing SameSite Attribute in Cookie Header<per style={{color:"red"}}> ({samsite.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(6)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severitysamsite) }} onClick={() => showModal(6)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Missing SameSite Attribute in Cookie Header" open={isModalOpen6} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -2325,7 +2391,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Missing HTTP Strict Transport Security Header<per style={{color:"red"}}> ({HSTS.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(8)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severityHSTS) }} onClick={() => showModal(8)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Missing HTTP Strict Transport Security Header" open={isModalOpen8} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -2544,7 +2610,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Sensitive File Disclosure<per style={{color:"red"}}>  ({Sensitive.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(7)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severitysensitive) }} onClick={() => showModal(7)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Add URL Sensitive File Disclosure" open={isModalOpen7} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -2758,7 +2824,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Web Application Framework Infomation Leakage <per style={{color:"red"}}> ({web.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}}onClick={() => showModal(9)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severitywebb) }}onClick={() => showModal(9)}type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Missing HTTP Strict Transport Security Header" open={isModalOpen9} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
@@ -3081,7 +3147,7 @@ const SQlinject = (props) => {
         <div className="projcollaspe-head">
           <h3 className="projname">Command Injection<per style={{color:"red"}}>  ({Command.length})</per></h3>
           {Delete ==='Advance'&&(
-               <Button  style={{backgroundColor:"red"}} onClick={() => showModal(12)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
+               <Button  style={{ background: getColorForSeverity(severitycommand) }} onClick={() => showModal(12)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
             <Modal title="Add URL Command Injection" open={isModalOpen12} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'

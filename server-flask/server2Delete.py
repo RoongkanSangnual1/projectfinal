@@ -2254,6 +2254,10 @@ def updateSeverity():
         values = (newSeverity, project_name_id,vulnerability)
         db.execute(update_query, values)
         mysql.connection.commit()
+        update_query = 'UPDATE att_ps SET Severity = %s WHERE PID = %s AND Vul_name = %s '
+        values = (newSeverity, project_name_id,vulnerability)
+        db.execute(update_query, values)
+        mysql.connection.commit()
         return jsonify("Update Success!")
     except Exception as e:
         app.logger.error(str(e))
@@ -2320,6 +2324,10 @@ def updateeditSeverity():
         values = (newSeverity, project_id,vulnerability)
         db.execute(update_query, values)
         mysql.connection.commit()
+        update_query = 'UPDATE att_ps SET Severity = %s WHERE PID = %s AND Vul_name = %s '
+        values = (newSeverity, project_id,vulnerability)
+        db.execute(update_query, values)
+        mysql.connection.commit()
         return jsonify("Update Success!")
     except Exception as e:
         app.logger.error(str(e))
@@ -2374,45 +2382,132 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         url_target = db.fetchall()
 
         # print(url_target)
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_sql_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_sql_DATA[0][9],project_name_id,))
+            owasp11_ = db.fetchall()
+        else:
+            owasp11_ = [0]
+
+        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = db.fetchall()
-        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_xsssql_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_xsssql_DATA[0][9],project_name_id,))
+            owasp10_ = db.fetchall()
+        else:
+            owasp10_ = [0]   
+
+
+
+        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_traversal, (project_name_id, '4'))
         select_att_ID_select_att_traversal_DATA = db.fetchall()
-        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity  FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_select_att_traversal_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_traversal_DATA[0][9],project_name_id,))
+            owasp4_ = db.fetchall()
+        else:
+            owasp4_ = [0]
+
+
+        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_secure, (project_name_id, '2'))
         select_att_ID_select_att_secure_DATA = db.fetchall()
-        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_select_att_secure_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_secure_DATA[0][9],project_name_id,))
+            owasp2_ = db.fetchall()
+        else:
+            owasp2_ = [0]
+
+        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_httponly, (project_name_id, '3'))
         select_att_ID_select_att_httponly_DATA = db.fetchall()
-        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_select_att_httponly_DATA:           
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_httponly_DATA[0][9],project_name_id,))
+            owasp3_ = db.fetchall()
+        else:
+            owasp3_ = [0]
+
+
+        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_expire, (project_name_id, '5'))
         select_att_ID_select_att_expire_DATA = db.fetchall()
-        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_select_att_expire_DATA:       
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_expire_DATA[0][9],project_name_id,))
+            owasp5_ = db.fetchall()
+        else:
+            owasp5_ = [0]
+
+        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_samsite, (project_name_id, '6'))
         select_att_ID_select_att_samsite_DATA = db.fetchall()
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_select_att_samsite_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_samsite_DATA[0][9],project_name_id,))
+            owasp6_ = db.fetchall()
+        else:
+            owasp6_ = [0]
+
+
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_Server, (project_name_id, '1'))
         select_att_ID_select_att_server_DATA = db.fetchall()
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_select_att_server_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_server_DATA[0][9],project_name_id,))
+            owasp1_ = db.fetchall()
+        else:
+            owasp1_ = [0]
+
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_Server, (project_name_id, '8'))
         select_att_ID_select_att_HSTS_DATA = db.fetchall()
-        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_select_att_HSTS_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_HSTS_DATA[0][9],project_name_id,))
+            owasp8_ = db.fetchall()
+        else:
+            owasp8_ = [0]
+
+        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_Sensitive, (project_name_id, '7'))
         select_att_ID_sensitive = db.fetchall()
-
-
-        select_att_ID_web = "SELECT URL , payload,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity  FROM att_ps WHERE PID = %s AND OID = %s "
+        if select_att_ID_sensitive:      
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_sensitive[0][9],project_name_id,))
+            owasp7_ = db.fetchall()
+        else:
+            owasp7_ = [0]
+            
+        select_att_ID_web = "SELECT URL , payload,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_web, (project_name_id, '9'))
         select_att_ID_webb = db.fetchall()
+        if select_att_ID_webb:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_webb[0][9],project_name_id,))
+            owasp9_ = db.fetchall()
+        else:
+            owasp9_ = [0]
 
-        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity FROM att_ps WHERE PID = %s AND OID = %s "
+
+        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_command, (project_name_id, '12'))
         select_att_ID_command_DATA = db.fetchall()
+        if select_att_ID_command_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_command_DATA[0][9],project_name_id,))
+            owasp12_ = db.fetchall()
+        else:
+            owasp12_ = [0]
+
 
         valueTime_query = "SELECT timeproject FROM project WHERE PID = %s"
         db.execute(valueTime_query, (project_name_id,))
@@ -2422,15 +2517,19 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         db.execute(valueEND_query, (project_name_id,))
         valueENDp = db.fetchall()
 
+
+        owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
+        db.execute(owasp_query, (project_name_id,))
+        owasp_ = db.fetchall()
         if valueTimep and valueENDp and valueTimep[0][0] == valueENDp[0][0]:
             valueENDpp = None
         else:
             valueENDpp = valueENDp
 
 
-        return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA": select_att_ID_sql_DATA}, {"select_att_ID_xsssql_DATA": select_att_ID_xsssql_DATA}, {"select_att_ID_select_att_traversal_DATA": select_att_ID_select_att_traversal_DATA}, 
-                       {"Role": Role},{"select_att_ID_select_att_secure_DATA":select_att_ID_select_att_secure_DATA},{"select_att_ID_select_att_httponly_DATA":select_att_ID_select_att_httponly_DATA},{"select_att_ID_select_att_expire_DATA":select_att_ID_select_att_expire_DATA},{"select_att_ID_select_att_samsite_DATA":select_att_ID_select_att_samsite_DATA}
-                       ,{"select_att_ID_select_att_server_DATA":select_att_ID_select_att_server_DATA},{"select_att_ID_select_att_HSTS_DATA":select_att_ID_select_att_HSTS_DATA},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":select_att_ID_sensitive},{"select_att_ID_webb":select_att_ID_webb},{"select_att_ID_command_DATA":select_att_ID_command_DATA})
+        return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA":[select_att_ID_sql_DATA,owasp11_]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,owasp10_]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,owasp4_]}, 
+                       {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,owasp2_]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,owasp3_]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,owasp5_]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,owasp6_]}
+                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})
@@ -2448,11 +2547,11 @@ def edit_issue():
         # print(token)
         decoded_token = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])
         user_id = decoded_token.get('user_id', '')
-        project_id = decoded_token.get('project_id', '')
-        print("user_id", user_id, project_id)
+        project_name_id = decoded_token.get('project_id', '')
+        print("user_id", user_id, project_name_id)
         print("user_data", user_data)
         print("Role", Role)
-        if user_id is None or project_id is None:
+        if user_id is None or project_name_id is None:
             return jsonify({'error': 'Invalid token'}), 401
     # เชคสิทธิ์
         if user_id not in user_data:
@@ -2466,73 +2565,165 @@ def edit_issue():
         JOIN project tbl2 ON tbl1.PID = tbl2.PID
         WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_code != %s
                 """
-        db.execute(query, (user_data, project_id, 'c', '404'))
+        db.execute(query, (user_data, project_name_id, 'c', '404'))
         crawl_data = db.fetchall()
 
 
 
         targets_url = "SELECT PTarget, PDes FROM project WHERE PID = %s"
-        db.execute(targets_url, (project_id,))
+        db.execute(targets_url, (project_name_id,))
         url_target = db.fetchall()
         print("url_target", url_target)
 
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_sql, (project_id, '11'))
+        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_sql, (project_id, '10'))
+        if select_att_ID_sql_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_sql_DATA[0][9],project_name_id,))
+            owasp11_ = db.fetchall()
+        else:
+            owasp11_ = [0]
+
+        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = db.fetchall()
-        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_traversal, (project_id, '4'))
+        if select_att_ID_xsssql_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_xsssql_DATA[0][9],project_name_id,))
+            owasp10_ = db.fetchall()
+        else:
+            owasp10_ = [0]   
+
+
+
+        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_traversal, (project_name_id, '4'))
         select_att_ID_select_att_traversal_DATA = db.fetchall()
-        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref  FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_secure, (project_id, '2'))
+        if select_att_ID_select_att_traversal_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_traversal_DATA[0][9],project_name_id,))
+            owasp4_ = db.fetchall()
+        else:
+            owasp4_ = [0]
+
+
+        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_secure, (project_name_id, '2'))
         select_att_ID_select_att_secure_DATA = db.fetchall()
-        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_httponly, (project_id, '3'))
+        if select_att_ID_select_att_secure_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_secure_DATA[0][9],project_name_id,))
+            owasp2_ = db.fetchall()
+        else:
+            owasp2_ = [0]
+
+        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_httponly, (project_name_id, '3'))
         select_att_ID_select_att_httponly_DATA = db.fetchall()
-        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_expire, (project_id, '5'))
+        if select_att_ID_select_att_httponly_DATA:           
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_httponly_DATA[0][9],project_name_id,))
+            owasp3_ = db.fetchall()
+        else:
+            owasp3_ = [0]
+
+
+        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_expire, (project_name_id, '5'))
         select_att_ID_select_att_expire_DATA = db.fetchall()
-        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_samsite, (project_id, '6'))
+        if select_att_ID_select_att_expire_DATA:       
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_expire_DATA[0][9],project_name_id,))
+            owasp5_ = db.fetchall()
+        else:
+            owasp5_ = [0]
+
+        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_samsite, (project_name_id, '6'))
         select_att_ID_select_att_samsite_DATA = db.fetchall()
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_Server, (project_id, '1'))
+        if select_att_ID_select_att_samsite_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_samsite_DATA[0][9],project_name_id,))
+            owasp6_ = db.fetchall()
+        else:
+            owasp6_ = [0]
+
+
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_Server, (project_name_id, '1'))
         select_att_ID_select_att_server_DATA = db.fetchall()
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_Server, (project_id, '8'))
+        if select_att_ID_select_att_server_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_server_DATA[0][9],project_name_id,))
+            owasp1_ = db.fetchall()
+        else:
+            owasp1_ = [0]
+
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_Server, (project_name_id, '8'))
         select_att_ID_select_att_HSTS_DATA = db.fetchall()
-        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_Sensitive, (project_id, '7'))
+        if select_att_ID_select_att_HSTS_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_select_att_HSTS_DATA[0][9],project_name_id,))
+            owasp8_ = db.fetchall()
+        else:
+            owasp8_ = [0]
+
+        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_Sensitive, (project_name_id, '7'))
         select_att_ID_sensitive = db.fetchall()
-
-
-        select_att_ID_web = "SELECT URL , payload,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref  FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_web, (project_id, '9'))
+        if select_att_ID_sensitive:      
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_sensitive[0][9],project_name_id,))
+            owasp7_ = db.fetchall()
+        else:
+            owasp7_ = [0]
+            
+        select_att_ID_web = "SELECT URL , payload,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_web, (project_name_id, '9'))
         select_att_ID_webb = db.fetchall()
+        if select_att_ID_webb:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_webb[0][9],project_name_id,))
+            owasp9_ = db.fetchall()
+        else:
+            owasp9_ = [0]
 
-        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_command, (project_id, '12'))
+
+        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        db.execute(select_att_ID_command, (project_name_id, '12'))
         select_att_ID_command_DATA = db.fetchall()
+        if select_att_ID_command_DATA:
+            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
+            db.execute(owasp_query, (select_att_ID_command_DATA[0][9],project_name_id,))
+            owasp12_ = db.fetchall()
+        else:
+            owasp12_ = [0]
+
 
         valueTime_query = "SELECT timeproject FROM project WHERE PID = %s"
-        db.execute(valueTime_query, (project_id,))
+        db.execute(valueTime_query, (project_name_id,))
         valueTimep = db.fetchall()
 
         valueEND_query = "SELECT EndTime FROM project WHERE PID = %s"
-        db.execute(valueEND_query, (project_id,))
+        db.execute(valueEND_query, (project_name_id,))
         valueENDp = db.fetchall()
 
+
+        owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
+        db.execute(owasp_query, (project_name_id,))
+        owasp_ = db.fetchall()
         if valueTimep and valueENDp and valueTimep[0][0] == valueENDp[0][0]:
             valueENDpp = None
         else:
             valueENDpp = valueENDp
 
 
-        return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA": select_att_ID_sql_DATA}, {"select_att_ID_xsssql_DATA": select_att_ID_xsssql_DATA}, {"select_att_ID_select_att_traversal_DATA": select_att_ID_select_att_traversal_DATA}, 
-                       {"Role": Role},{"select_att_ID_select_att_secure_DATA":select_att_ID_select_att_secure_DATA},{"select_att_ID_select_att_httponly_DATA":select_att_ID_select_att_httponly_DATA},{"select_att_ID_select_att_expire_DATA":select_att_ID_select_att_expire_DATA},{"select_att_ID_select_att_samsite_DATA":select_att_ID_select_att_samsite_DATA}
-                       ,{"select_att_ID_select_att_server_DATA":select_att_ID_select_att_server_DATA},{"select_att_ID_select_att_HSTS_DATA":select_att_ID_select_att_HSTS_DATA},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":select_att_ID_sensitive},{"select_att_ID_webb":select_att_ID_webb},{"select_att_ID_command_DATA":select_att_ID_command_DATA})
+
+        return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA":[select_att_ID_sql_DATA,owasp11_]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,owasp10_]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,owasp4_]}, 
+                       {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,owasp2_]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,owasp3_]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,owasp5_]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,owasp6_]}
+                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})

@@ -44,7 +44,7 @@ const Dashboard = () => {
 
   const user = localStorage.user;
 
-  useEffect(() => {
+ 
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -164,8 +164,12 @@ const Dashboard = () => {
   }
 };
 
-fetchData();
-}, [user,project_name_id, setDelete, setOwaspData,]);
+
+
+
+useEffect(() => {
+  fetchData();
+}, [project_name_id]);
 
 
   const PieCout = () => {
@@ -264,23 +268,27 @@ fetchData();
     setUpdatedSeverities(newUpdatedSeverities);
   };
 
-  const handleConfirmButtonClick = (vulnerability,selectedSeverity) => {
 
 
+  const handleConfirmButtonClick = async (vulnerability, selectedSeverity) => {
     if (selectedSeverity) {
-      Swal.fire({
-        title: 'Are you Sure?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {""
+      try {
+        const result = await Swal.fire({
+          title: 'Are you Sure?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+        });
+  
         if (result.isConfirmed) {
-          sendSeverityToAPI(vulnerability, selectedSeverity);
+          await sendSeverityToAPI(vulnerability, selectedSeverity);
         } else {
-          setUpdatedSeverities({ ...updatedSeverities});
+          setUpdatedSeverities({ ...updatedSeverities });
         }
-      });
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       Swal.fire({
         icon: 'info',
@@ -289,9 +297,11 @@ fetchData();
     }
   };
 
-  const sendSeverityToAPI = (vulnerability, newSeverity) => {
-    const token = localStorage.getItem("token");
-    axios.put(
+
+ const sendSeverityToAPI = async (vulnerability, newSeverity) => {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.put(
       `http://127.0.0.1:5000/updateSeverity`,
       {
         project_name_id,
@@ -303,19 +313,17 @@ fetchData();
           Authorization: `Bearer ${token}`,
         },
       }
-    )
-    .then(response => {
-
-    })
-    .catch(error => {
-
-    });
-  };
-  const handleDelete = (iddelete) => {  
-    /// ส่ง token user แบบheaders
-    const token = localStorage.getItem("token")
-  
-    Swal.fire({
+      
+    );
+    await fetchData();
+  } catch (error) {
+    console.error(error);
+  }
+};
+const handleDelete = async (iddelete) => {
+  const token = localStorage.getItem("token");
+  try {
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -323,28 +331,27 @@ fetchData();
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios.delete(`http://127.0.0.1:5000/oneSeverity?project_name_id=${project_name_id}&record=${iddelete}`,{
-          headers:{
-            Authorization:`Bearer ${token}`,
-          },
-        }).then(response => {
-
-  
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success"
-          });
-        }).catch(error => {
-          console.log(error)
-        });
-      }
     });
-  };
-  
 
+    if (result.isConfirmed) {
+      await axios.delete(`http://127.0.0.1:5000/oneSeverity?project_name_id=${project_name_id}&record=${iddelete}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      await fetchData();
+
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your file has been deleted.",
+        icon: "success"
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <div className='dashboardd'>
       <div className='dashboarddd'>
