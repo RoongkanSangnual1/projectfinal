@@ -63,207 +63,237 @@ const SQlinject = (props) => {
     const [OID, setOID] = useState('');
     const [Recommendation,setRecommendation]= useState([])
     const user = localStorage.user;
-
     const token = localStorage.getItem('token')
-    useEffect(() => {
-      const fetchData = () => {
-        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
-            headers:{
-                Authorization: `Bearer ${token}`,
-            },
-
-        })
-        .then(response => {
-          console.log("responseapi",response)
-          // setresponsedata(response)
-          setDelete(response.data[5].Role)
-          // console.log(Delete)
-            seturl_target(response.data[1].url_target[0][0]);
-            setDetails(response.data[1].url_target[0][1]);
-
-            
-            const Index = response.data[2].select_att_sql_DATA
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    let decodedURL1 = decodeURIComponent(data[1]);
-                    let decodedURL2 = decodeURIComponent(data[2]);
-                    return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1, data[0],data[2], ...data];
-                }
-              })
-              .filter(item => item !== null);
-            
-            const IndexXss = response.data[3].select_att_ID_xsssql_DATA
-              .map((data, index) => {
-                try {
-                  let decodedURL = decodeURIComponent(data[0]);
-                  let decodedURL1 = decodeURIComponent(data[1]);
-                  let decodedURL2 = decodeURIComponent(data[2]);
-                  return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                 return null;
-                }
-              })
-              .filter(item => item !== null);
-             
-              // console.log("IndexXss",IndexXss)
-            const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA
-              .map((data, index) => {
-                try {
-                  let decodedURL = decodeURIComponent(data[0]);
-                  let decodedURL1 = decodeURIComponent(data[1]);
-                  let decodedURL2 = decodeURIComponent(data[2]);
-                  return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1, data[0],data[2], ...data];
-                ;
-                }
-              })
-              .filter(item => item !== null);
-
-
-              const IndexSecure= response.data[6].select_att_ID_select_att_secure_DATA
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-              const httponly = response.data[7].select_att_ID_select_att_httponly_DATA
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-              const expire = response.data[8].select_att_ID_select_att_expire_DATA
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-              const samsite = response.data[9].select_att_ID_select_att_samsite_DATA
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-
-              const server = response.data[10].select_att_ID_select_att_server_DATA
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-              const HSTS = response.data[11].select_att_ID_select_att_HSTS_DATA
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-
-              const Sensitive = response.data[13].select_att_ID_sensitive
-              .map((data, index) => {
-                try {
-                  let decodedURL = decodeURIComponent(data[0]);
-                  let decodedURL1 = decodeURIComponent(data[1]);
-                  let decodedURL2 = decodeURIComponent(data[2]);
-                  return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                 return null;
-                }
-              })
-              .filter(item => item !== null);
-             
-
-              const web = response.data[14].select_att_ID_webb
-              .map((data, index) => {
-                try {
-                    let decodedURL = decodeURIComponent(data[0]);
-                    return [index+1, decodedURL, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                  return [index+1,data[0], ...data];
-                }
-              })
-              .filter(item => item !== null);
-             
-
-              const Command = response.data[15].select_att_ID_command_DATA
-              .map((data, index) => {
-                try {
-                  let decodedURL = decodeURIComponent(data[0]);
-                  let decodedURL1 = decodeURIComponent(data[1]);
-                  let decodedURL2 = decodeURIComponent(data[2]);
-                  return [index+1, decodedURL,decodedURL1,decodedURL2, ...data];
-                } catch (error) {
-                  console.error("Error decoding URL:", error);
-                 return null;
-                }
-              })
-              .filter(item => item !== null);
-             
-              setresponsedata([{"SQL Injection":Index},{"Stored Cross Site Scriptng":IndexXss},{"Directory Traversal File Include":Indextraversal},{"Missing Secure Attribute in Cookie Header":IndexSecure},{"Missing HttpOnly Attribute in Cookie Header":httponly},{"Missing Expires Attribute in Cookie Header":expire},{"Missing SameSite Attribute in Cookie Header":samsite},{"Web Server Infomation Leakage through Server header":server},{"Missing HTTP Strict Transport Security Header":HSTS}])
-              setHSTS(HSTS)   
-              setwebb(web)  
-              setsamsite(samsite)
-              setserver(server)
-              // console.log("server,",server)
-              setexpire(expire)
-              sethttponly(httponly)
-              setsecure(IndexSecure)
-              setprojectOneDataXSSSQL(IndexXss);
-            setprojectOneDataSQL(Index);
-            settraversal(Indextraversal)
-            setSensitive(Sensitive)
-            setCommand(Command)
-            // console.log("Sensitive",Sensitive)
-        })
-        .catch(error => {
-            console.error(error);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-     
-  }  
-fetchData();
-}, [project_name_id]);
-
-
-
-
+  
+        setDelete(response.data[5].Role);
+        seturl_target(response.data[1].url_target[0][0]);
+        setDetails(response.data[1].url_target[0][1]);
+  
+        const Index = response.data[2].select_att_sql_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], data[2], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const IndexXss = response.data[3].select_att_ID_xsssql_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return null;
+            }
+          })
+          .filter(item => item !== null);
+  
+        const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], data[2], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const IndexSecure = response.data[6].select_att_ID_select_att_secure_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const httponly = response.data[7].select_att_ID_select_att_httponly_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const expire = response.data[8].select_att_ID_select_att_expire_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const samsite = response.data[9].select_att_ID_select_att_samsite_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const server = response.data[10].select_att_ID_select_att_server_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const HSTS = response.data[11].select_att_ID_select_att_HSTS_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const Sensitive = response.data[13].select_att_ID_sensitive
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return null;
+            }
+          })
+          .filter(item => item !== null);
+  
+        const web = response.data[14].select_att_ID_webb
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+        const Command = response.data[15].select_att_ID_command_DATA
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return null;
+            }
+          })
+          .filter(item => item !== null);
+  
+        setresponsedata([
+          {"SQL Injection": Index},
+          {"Stored Cross Site Scriptng": IndexXss},
+          {"Directory Traversal File Include": Indextraversal},
+          {"Missing Secure Attribute in Cookie Header": IndexSecure},
+          {"Missing HttpOnly Attribute in Cookie Header": httponly},
+          {"Missing Expires Attribute in Cookie Header": expire},
+          {"Missing SameSite Attribute in Cookie Header": samsite},
+          {"Web Server Infomation Leakage through Server header": server},
+          {"Missing HTTP Strict Transport Security Header": HSTS},
+        ]);
+  
+        setHSTS(HSTS);
+        setwebb(web);
+        setsamsite(samsite);
+        setserver(server);
+        setexpire(expire);
+        sethttponly(httponly);
+        setsecure(IndexSecure);
+        setprojectOneDataXSSSQL(IndexXss);
+        setprojectOneDataSQL(Index);
+        settraversal(Indextraversal);
+        setSensitive(Sensitive);
+        setCommand(Command);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    useEffect(() => {
+      fetchData();
+    }, [project_name_id]);
+  
+    const Formsummit = async () => {
+      try {
+        await axios.post(`http://127.0.0.1:5000/addIssue`, {urls, EVIDENCE, Risk, Recommendation, OID, project_name_id},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUrls([]);
+          setEVIDENCE([]);
+          setRisk([]);
+          setRecommendation([]);
+          setOID('');
+        await fetchData();
+      } catch (err) {
+        alert(err.response.data);
+      }
+  
+      setIsModalOpen1(false);
+      setIsModalOpen2(false);
+      setIsModalOpen3(false);
+      setIsModalOpen4(false);
+      setIsModalOpen5(false);
+      setIsModalOpen6(false);
+      setIsModalOpen7(false);
+      setIsModalOpen8(false);
+      setIsModalOpen10(false);
+      setIsModalOpen11(false);
+      setIsModalOpen9(false);
+      setIsModalOpen12(false);
+    };
     const showModal = (OID) => {
       setOID(OID);
       if (OID === 1) {
@@ -340,37 +370,38 @@ fetchData();
 // console.log("web",web)
 
 
-      const Formsummit =()=>{
+    //   const Formsummit =()=>{
       
-        // console.log("OID", OID);
+    //     // console.log("OID", OID);
       
-        axios
-        .post(`http://127.0.0.1:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
-        {
-          headers:{
-              Authorization: `Bearer ${token}`,
-          },
+    //     axios
+    //     .post(`http://127.0.0.1:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
+    //     {
+    //       headers:{
+    //           Authorization: `Bearer ${token}`,
+    //       },
 
-      })
-        .then(response=>{
-            console.log("Formsummit",response)
-        })
-        .catch(err=>{
-            alert(err.response.data)
-        })   
-        setIsModalOpen1(false);
-        setIsModalOpen2(false);
-        setIsModalOpen3(false);
-        setIsModalOpen4(false);
-        setIsModalOpen5(false);
-        setIsModalOpen6(false);
-        setIsModalOpen7(false);
-        setIsModalOpen8(false);
-        setIsModalOpen10(false);
-        setIsModalOpen11(false);
-        setIsModalOpen9(false);
-        setIsModalOpen12(false);
-    }
+    //   })
+    //     .then(response=>{
+    //         console.log("Formsummit",response)
+    //     })
+    //     .catch(err=>{
+    //         alert(err.response.data)
+    //     })   
+    //     fetchData();
+    //     setIsModalOpen1(false);
+    //     setIsModalOpen2(false);
+    //     setIsModalOpen3(false);
+    //     setIsModalOpen4(false);
+    //     setIsModalOpen5(false);
+    //     setIsModalOpen6(false);
+    //     setIsModalOpen7(false);
+    //     setIsModalOpen8(false);
+    //     setIsModalOpen10(false);
+    //     setIsModalOpen11(false);
+    //     setIsModalOpen9(false);
+    //     setIsModalOpen12(false);
+    // }
 
 
 
@@ -381,22 +412,27 @@ fetchData();
       setUpdatedSeverities(newUpdatedSeverities);
     };
 
-    const handleConfirmButtonClick = (vulnerability,selectedSeverity) => {
-      console.log("vulnerability,selectedSeverity",vulnerability,selectedSeverity)
+
+
+    const handleConfirmButtonClick = async (vulnerability, selectedSeverity) => {
       if (selectedSeverity) {
-        Swal.fire({
-          title: 'Are you Sure?',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Confirm',
-          cancelButtonText: 'Cancel',
-        }).then((result) => {""
+        try {
+          const result = await Swal.fire({
+            title: 'Are you Sure?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            cancelButtonText: 'Cancel',
+          });
+  
           if (result.isConfirmed) {
-            sendSeverityToAPI(vulnerability, selectedSeverity);
+            await sendSeverityToAPI(vulnerability, selectedSeverity);
           } else {
-            setUpdatedSeverities({ ...updatedSeverities});
+            setUpdatedSeverities({ ...updatedSeverities });
           }
-        });
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         Swal.fire({
           icon: 'info',
@@ -405,26 +441,25 @@ fetchData();
       }
     };
   
-    const sendSeverityToAPI = (vulnerability, newSeverity) => {
-      axios.put(
-        `http://127.0.0.1:5000/updateSeverityURL`,
-        {
-          project_name_id,
-          vulnerability,
-          newSeverity,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+    const sendSeverityToAPI = async (vulnerability, newSeverity) => {
+      try {
+        await axios.put(
+          `http://127.0.0.1:5000/updateSeverityURL`,
+          {
+            project_name_id,
+            vulnerability,
+            newSeverity,
           },
-        }
-      )
-      .then(response => {
-  
-      })
-      .catch(error => {
-  
-      });
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      await fetchData();
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     const getColorForSeverity = (severity) => {
@@ -446,49 +481,91 @@ fetchData();
        window.location.reload();
       };
 
-
-      const handleDelete = (iddelete) => {  
-        /// ส่ง token user แบบheader
-      
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
+      const handleDelete = async (iddelete) => {
+        try {
+          const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+          });
+    
           if (result.isConfirmed) {
-            axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
-              headers:{
-                Authorization:`Bearer ${token}`,
+            await axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
               },
-            }).then(response => {
-              setserver(server.filter((project=>project[7] !==iddelete )))
-              setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
-              setprojectOneDataXSSSQL(projectOneDataXSSSQL.filter((project=>project[10] !==iddelete)));
-              settraversal(traversal.filter((project=> project[10]!==iddelete)))
-              setHSTS(HSTS.filter((project=>project[7] !==iddelete )))     
-              setsamsite(samsite.filter((project=>project[7] !==iddelete )))
-              setserver(server.filter((project=>project[7] !==iddelete )))
-              setexpire(expire.filter((project=>project[7] !==iddelete )))
-              sethttponly(httponly.filter((project=>project[7] !==iddelete )))
-              setsecure(secure.filter((project=>project[7] !==iddelete )))
-              setwebb(web.filter((project=>project[7] !==iddelete )))
-              setCommand(Command.filter((project=>project[10] !==iddelete)));
-              Swal.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success"
-              });
-            }).catch(error => {
-              console.log(error)
+            });
+            await fetchData();
+            // setserver(server.filter((project=>project[7] !==iddelete )))
+            // setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
+            // setprojectOneDataXSSSQL(projectOneDataXSSSQL.filter((project=>project[10] !==iddelete)));
+            // settraversal(traversal.filter((project=> project[10]!==iddelete)))
+            // setHSTS(HSTS.filter((project=>project[7] !==iddelete )))     
+            // setsamsite(samsite.filter((project=>project[7] !==iddelete )))
+            // setserver(server.filter((project=>project[7] !==iddelete )))
+            // setexpire(expire.filter((project=>project[7] !==iddelete )))
+            // sethttponly(httponly.filter((project=>project[7] !==iddelete )))
+            // setsecure(secure.filter((project=>project[7] !==iddelete )))
+            // setwebb(web.filter((project=>project[7] !==iddelete )))
+            // setCommand(Command.filter((project=>project[10] !==iddelete)));
+            
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+              icon: 'success',
             });
           }
-        });
-          
+        } catch (error) {
+          console.log(error);
+        }
       };
+
+      // const handleDelete = (iddelete) => {  
+      //   /// ส่ง token user แบบheader
+      
+      //   Swal.fire({
+      //     title: "Are you sure?",
+      //     text: "You won't be able to revert this!",
+      //     icon: "warning",
+      //     showCancelButton: true,
+      //     confirmButtonColor: "#3085d6",
+      //     cancelButtonColor: "#d33",
+      //     confirmButtonText: "Yes, delete it!"
+      //   }).then((result) => {
+      //     if (result.isConfirmed) {
+      //       axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
+      //         headers:{
+      //           Authorization:`Bearer ${token}`,
+      //         },
+      //       }).then(response => {
+      //         setserver(server.filter((project=>project[7] !==iddelete )))
+      //         setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
+      //         setprojectOneDataXSSSQL(projectOneDataXSSSQL.filter((project=>project[10] !==iddelete)));
+      //         settraversal(traversal.filter((project=> project[10]!==iddelete)))
+      //         setHSTS(HSTS.filter((project=>project[7] !==iddelete )))     
+      //         setsamsite(samsite.filter((project=>project[7] !==iddelete )))
+      //         setserver(server.filter((project=>project[7] !==iddelete )))
+      //         setexpire(expire.filter((project=>project[7] !==iddelete )))
+      //         sethttponly(httponly.filter((project=>project[7] !==iddelete )))
+      //         setsecure(secure.filter((project=>project[7] !==iddelete )))
+      //         setwebb(web.filter((project=>project[7] !==iddelete )))
+      //         setCommand(Command.filter((project=>project[10] !==iddelete)));
+      //         Swal.fire({
+      //           title: "Deleted!",
+      //           text: "Your file has been deleted.",
+      //           icon: "success"
+      //         });
+      //       }).catch(error => {
+      //         console.log(error)
+      //       });
+      //     }
+      //   });
+          
+      // };
       const memoizedPDF = useMemo(() => {
         return <PDF id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata}></PDF>;
       }, [responsedata]);
