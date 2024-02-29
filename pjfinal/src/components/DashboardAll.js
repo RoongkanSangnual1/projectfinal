@@ -304,8 +304,7 @@ data.forEach(array => {
 });
 
 const finalResult = Object.values(result);
-setAlldata(finalResult)
-console.log(finalResult)
+
 
 
 
@@ -517,8 +516,212 @@ console.log("sumAllHigh:", sumAllMedium);
 console.log("sumAllHigh:", sumAllLow);
 
 
+let sumAll = 0;
+finalResult.forEach((data,index)=> {
+  
+
+  if (data["data SQL Injection"]) {
+    if (data["data SQL Injection"][0] === "High") {
+      sumAll += Math.max((data["data SQL Injection"] || []).length - 1, 0);
+    }
+  }  
+  if (data["data Stored Cross Site Scriptng"]) {
+    if (data["data Stored Cross Site Scriptng"][0] === "High") {
+      sumAll += Math.max((data["data Stored Cross Site Scriptng"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Directory Traversal File Include"]) {
+    if (data["data Directory Traversal File Include"][0] === "High") {
+      sumAll += Math.max((data["data Directory Traversal File Include"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing HTTP Strict Transport Security Header"]) {
+    if (data["data Missing HTTP Strict Transport Security Header"][0] === "High") {
+      sumAll += Math.max((data["data Missing HTTP Strict Transport Security Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing Secure Attribute in Cookie Header"]) {
+    if (data["data Missing Secure Attribute in Cookie Header"][0] === "High") {
+      sumAll += Math.max((data["data Missing Secure Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing HttpOnly Attribute in Cookie Header"]) {
+    if (data["data Missing HttpOnly Attribute in Cookie Header"][0] === "High") {
+      sumAll += Math.max((data["data Missing HttpOnly Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing Expires Attribute in Cookie Header"]) {
+    if (data["data Missing Expires Attribute in Cookie Header"][0] === "High") {
+      sumAll += Math.max((data["data Missing Expires Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing SameSite Attribute in Cookie Header"]) {
+    if (data["data Missing SameSite Attribute in Cookie Header"][0] === "High") {
+      sumAll += Math.max((data["data Missing SameSite Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Web Server Infomation Leakage through Server header"]) {
+    if (data["data Web Server Infomation Leakage through Server header"][0] === "High") {
+      sumAll += Math.max((data["data Web Server Infomation Leakage through Server header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Sensitive File Disclosure"]) {
+    if (data["data Sensitive File Disclosure"][0] === "High") {
+      sumAll += Math.max((data["data Sensitive File Disclosure"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Web Application Framework Infomation Leakage"]) {
+    if (data["data Web Application Framework Infomation Leakage"][0] === "High") {
+      sumAll += Math.max((data["data Web Application Framework Infomation Leakage"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Command Injection"]) {
+    if (data["data Command Injection"][0] === "High") {
+      sumAll += Math.max((data["data Command Injection"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data SQL Injection"]) {
+    if (data["data SQL Injection"][0] === "Medium") {
+      sumAll += Math.max((data["data SQL Injection"] || []).length - 1, 0);
+    }
+  }  
+  if (data["data Stored Cross Site Scriptng"]) {
+    if (data["data Stored Cross Site Scriptng"][0] === "Medium") {
+      sumAll += Math.max((data["data Stored Cross Site Scriptng"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Directory Traversal File Include"]) {
+    if (data["data Directory Traversal File Include"][0] === "Medium") {
+      sumAll += Math.max((data["data Directory Traversal File Include"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing HTTP Strict Transport Security Header"]) {
+    if (data["data Missing HTTP Strict Transport Security Header"][0] === "Medium") {
+      sumAll += Math.max((data["data Missing HTTP Strict Transport Security Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing Secure Attribute in Cookie Header"]) {
+    if (data["data Missing Secure Attribute in Cookie Header"][0] === "Medium") {
+      sumAll += Math.max((data["data Missing Secure Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing HttpOnly Attribute in Cookie Header"]) {
+    if (data["data Missing HttpOnly Attribute in Cookie Header"][0] === "Medium") {
+      sumAll += Math.max((data["data Missing HttpOnly Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing Expires Attribute in Cookie Header"]) {
+    if (data["data Missing Expires Attribute in Cookie Header"][0] === "Medium") {
+      sumAll += Math.max((data["data Missing Expires Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing SameSite Attribute in Cookie Header"]) {
+    if (data["data Missing SameSite Attribute in Cookie Header"][0] === "Medium") {
+      sumAll += Math.max((data["data Missing SameSite Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["Web Server Infomation Leakage through Server header"]) {
+    if (data["Web Server Infomation Leakage through Server header"][0] === "Medium") {
+      sumAll += Math.max((data["data Web Server Infomation Leakage through Server header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Sensitive File Disclosure"]) {
+    if (data["data Sensitive File Disclosure"][0] === "Medium") {
+      sumAll += Math.max((data["data Sensitive File Disclosure"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Web Application Framework Infomation Leakage"]) {
+    if (data["data Web Application Framework Infomation Leakage"][0] === "Medium") {
+      sumAll += Math.max((data["data Web Application Framework Infomation Leakage"] || []).length - 1, 0);
+    }
+  }
 
 
+  if (data["data Command Injection"]) {
+    if (data["data Command Injection"][0] === "Medium") {
+      sumAll += Math.max((data["data Command Injection"] || []).length - 1, 0);
+    }
+  }
+
+
+  if (data["data SQL Injection"]) {
+    if (data["data SQL Injection"][0] === "Low") {
+      sumAll += Math.max((data["data SQL Injection"] || []).length - 1, 0);
+    }
+  }  
+  if (data["data Stored Cross Site Scriptng"]) {
+    if (data["data Stored Cross Site Scriptng"][0] === "Low") {
+      sumAll += Math.max((data["data Stored Cross Site Scriptng"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Directory Traversal File Include"]) {
+    if (data["data Directory Traversal File Include"][0] === "Low") {
+      sumAll += Math.max((data["data Directory Traversal File Include"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing HTTP Strict Transport Security Header"]) {
+    if (data["data Missing HTTP Strict Transport Security Header"][0] === "Low") {
+      sumAll += Math.max((data["data Missing HTTP Strict Transport Security Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing Secure Attribute in Cookie Header"]) {
+    if (data["data Missing Secure Attribute in Cookie Header"][0] === "Low") {
+      sumAll += Math.max((data["data Missing Secure Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing HttpOnly Attribute in Cookie Header"]) {
+    if (data["data Missing HttpOnly Attribute in Cookie Header"][0] === "Low") {
+      sumAll += Math.max((data["data Missing HttpOnly Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing Expires Attribute in Cookie Header"]) {
+    if (data["data Missing Expires Attribute in Cookie Header"][0] === "Low") {
+      sumAll += Math.max((data["data Missing Expires Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Missing SameSite Attribute in Cookie Header"]) {
+    if (data["data Missing SameSite Attribute in Cookie Header"][0] === "Low") {
+      sumAll += Math.max((data["data Missing SameSite Attribute in Cookie Header"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Web Server Infomation Leakage through Server header"]) {
+    if (data["data Web Server Infomation Leakage through Server header"][0] === "Low") {
+      sumAll += Math.max((data["data Web Server Infomation Leakage through Server header"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Sensitive File Disclosure"]) {
+    if (data["data Sensitive File Disclosure"][0] === "Low") {
+      sumAll += Math.max((data["data Sensitive File Disclosure"] || []).length - 1, 0);
+    }
+  }
+
+  if (data["data Web Application Framework Infomation Leakage"]) {
+    if (data["data Web Application Framework Infomation Leakage"][0] === "Low") {
+      sumAll += Math.max((data["data Web Application Framework Infomation Leakage"] || []).length - 1, 0);
+    }
+  }
+  if (data["data Command Injection"]) {
+    if (data["data Command Injection"][0] === "Low") {
+      sumAll += Math.max((data["data Command Injection"] || []).length - 1, 0);
+    }
+  }
+  if (data.PID) {
+    if (!finalResult[index].sums) {
+      finalResult[index].sums = {};
+    }
+  finalResult[index].sums['sum'] = sumAll;
+}});
+setAlldata(finalResult)
+console.log(finalResult)
+console.log("alldata",alldata)
 // console.log("Sum10:", sum10);
 // console.log("Sum8:", sum8);
 // console.log("Sum2:", sum2);
@@ -628,6 +831,7 @@ console.log("sumAllHigh:", sumAllLow);
         <div className='dashboardAll4'>
         <h1 style={{color:'#1B337A'}}>Most vulnerability</h1>
         {alldata
+        .sort((a, b) => b.sums.sum - a.sums.sum)
         .map((data, index) => (
           <Link className="projedit-btn" to={`/myproject/${data.PName}/${data.PID}`}>
           <div className='dashboard4mini' key={index}>
@@ -635,7 +839,8 @@ console.log("sumAllHigh:", sumAllLow);
             <div className='left-content'>
                 <div className="project-link-container">
                   <IoEarth className="earth-icon" />
-                  <p className="project-name">{data.PName}</p>
+                  <p className="project-name">{data.PName} : {data.PTarget} </p>
+                  
                 </div>
             
             </div>
@@ -700,11 +905,11 @@ console.log("sumAllHigh:", sumAllLow);
           </div>
           </Link>
         ))}
-      {alldata.length > visibleCount && (
+      {/* {alldata.length > visibleCount && (
       <>
          <MdOutlineExpandMore className="show-more-btn" onClick={handleShowMore} />
          </>
-      )}
+      )} */}
  
   
 

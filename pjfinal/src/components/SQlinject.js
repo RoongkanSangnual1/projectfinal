@@ -46,6 +46,7 @@ const SQlinject = (props) => {
     const [isModalOpen11, setIsModalOpen11] = useState(false);
     const [isModalOpen12, setIsModalOpen12] = useState(false);
     const [Delete,setDelete] = useState("")
+    const [updatedSeverities, setUpdatedSeverities] = useState({});
     const [urls,setUrls] = useState([])
     const [EVIDENCE,setEVIDENCE] = useState([])
     const [parameter,setparameter]= useState([])
@@ -65,6 +66,7 @@ const SQlinject = (props) => {
 
     const token = localStorage.getItem('token')
     useEffect(() => {
+      const fetchData = () => {
         axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
             headers:{
                 Authorization: `Bearer ${token}`,
@@ -75,7 +77,7 @@ const SQlinject = (props) => {
           console.log("responseapi",response)
           // setresponsedata(response)
           setDelete(response.data[5].Role)
-          console.log(Delete)
+          // console.log(Delete)
             seturl_target(response.data[1].url_target[0][0]);
             setDetails(response.data[1].url_target[0][1]);
 
@@ -108,7 +110,7 @@ const SQlinject = (props) => {
               })
               .filter(item => item !== null);
              
-              console.log("IndexXss",IndexXss)
+              // console.log("IndexXss",IndexXss)
             const Indextraversal = response.data[4].select_att_ID_select_att_traversal_DATA
               .map((data, index) => {
                 try {
@@ -249,25 +251,16 @@ const SQlinject = (props) => {
             settraversal(Indextraversal)
             setSensitive(Sensitive)
             setCommand(Command)
-            console.log("Sensitive",Sensitive)
+            // console.log("Sensitive",Sensitive)
         })
         .catch(error => {
             console.error(error);
         });
-    }, []);
+     
+  }  
+fetchData();
+}, [project_name_id]);
 
-    // useEffect(()=>{
-    //   setresponsedata([{"SQL Injection":projectOneDataSQL},{"Stored Cross Site Scriptng":projectOneDataXSSSQL},{"Directory Traversal File Include":traversal},{"Missing Secure Attribute in Cookie Header":secure},{"Missing HttpOnly Attribute in Cookie Header":httponly},{"Missing Expires Attribute in Cookie Header":expire},{"Missing SameSite Attribute in Cookie Header":samsite},{"Web Server Infomation Leakage through Server header":server},{"Missing HTTP Strict Transport Security Header":HSTS}])
-    //   setHSTS(HSTS)     
-    //   setsamsite(samsite)
-    //   setserver(server)
-    //   setexpire(expire)
-    //   sethttponly(httponly)
-    //   setsecure(secure)
-    //   setprojectOneDataXSSSQL(projectOneDataXSSSQL);
-    // setprojectOneDataSQL(projectOneDataSQL);
-    // settraversal(traversal)
-    // },[HSTS,samsite,server,expire,httponly,secure,projectOneDataXSSSQL,projectOneDataSQL,traversal])
 
 
 
@@ -335,10 +328,21 @@ const SQlinject = (props) => {
     
 
 
+// console.log("projectOneDataSQL",projectOneDataSQL)
+// console.log("projectOneDataXSSSQL",projectOneDataXSSSQL)
+// console.log("traversal",traversal)
+// console.log("secure",secure)
+// console.log("Command",Command)
+// console.log("Sensitive",Sensitive)
+// console.log("expire",expire)
+// console.log("httponly",httponly)
+// console.log("server",server)
+// console.log("web",web)
+
 
       const Formsummit =()=>{
       
-        console.log("OID", OID);
+        // console.log("OID", OID);
       
         axios
         .post(`http://127.0.0.1:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
@@ -349,8 +353,7 @@ const SQlinject = (props) => {
 
       })
         .then(response=>{
-            console.log(response)
-            
+            console.log("Formsummit",response)
         })
         .catch(err=>{
             alert(err.response.data)
@@ -371,7 +374,72 @@ const SQlinject = (props) => {
 
 
 
+    const handleSeverityChange = (e, index, vulnerability) => {
+      console.log("e, index, vulnerability",e, index, vulnerability)
+      const newUpdatedSeverities = { ...updatedSeverities };
+      newUpdatedSeverities[index] = e.target.value;
+      setUpdatedSeverities(newUpdatedSeverities);
+    };
 
+    const handleConfirmButtonClick = (vulnerability,selectedSeverity) => {
+      console.log("vulnerability,selectedSeverity",vulnerability,selectedSeverity)
+      if (selectedSeverity) {
+        Swal.fire({
+          title: 'Are you Sure?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+        }).then((result) => {""
+          if (result.isConfirmed) {
+            sendSeverityToAPI(vulnerability, selectedSeverity);
+          } else {
+            setUpdatedSeverities({ ...updatedSeverities});
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Choices',
+        });
+      }
+    };
+  
+    const sendSeverityToAPI = (vulnerability, newSeverity) => {
+      axios.put(
+        `http://127.0.0.1:5000/updateSeverityURL`,
+        {
+          project_name_id,
+          vulnerability,
+          newSeverity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(response => {
+  
+      })
+      .catch(error => {
+  
+      });
+    };
+
+    const getColorForSeverity = (severity) => {
+      switch (severity) {
+        case 'Low':
+          return '#6F77B1';
+        case 'Medium':
+          return '#FFBB28';
+        case 'High':
+          return '#FF0000';
+        default:
+          return '#000000';
+      }
+    };
+  
 
     
     const refreshData = () => {
@@ -380,8 +448,7 @@ const SQlinject = (props) => {
 
 
       const handleDelete = (iddelete) => {  
-        /// ส่ง token user แบบheaders
-        const token = localStorage.getItem("token")
+        /// ส่ง token user แบบheader
       
         Swal.fire({
           title: "Are you sure?",
@@ -409,7 +476,7 @@ const SQlinject = (props) => {
               sethttponly(httponly.filter((project=>project[7] !==iddelete )))
               setsecure(secure.filter((project=>project[7] !==iddelete )))
               setwebb(web.filter((project=>project[7] !==iddelete )))
-      
+              setCommand(Command.filter((project=>project[10] !==iddelete)));
               Swal.fire({
                 title: "Deleted!",
                 text: "Your file has been deleted.",
@@ -450,6 +517,9 @@ const SQlinject = (props) => {
             </div>
             </div>
             {/* <Table dataSource={projectOneData} columns={columns} /> */}
+
+
+
             <>{
               projectOneDataSQL && projectOneDataSQL.length> 0 ? (
             
@@ -561,7 +631,7 @@ const SQlinject = (props) => {
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
           <p>
-          {OneData[10]}
+          {OneData[11]}
           </p>
         </td>
       </tr>
@@ -573,6 +643,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[12]) }}
+        value={updatedSeverities[index] || OneData[12]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[10])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -748,7 +839,7 @@ const SQlinject = (props) => {
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
           <p>
-          {OneData[10]}
+          {OneData[11]}
           </p>
         </td>
       </tr>
@@ -760,6 +851,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[12]) }}
+        value={updatedSeverities[index] || OneData[12]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[10])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -926,14 +1038,9 @@ const SQlinject = (props) => {
       </tr>
       <tr>
         <td colSpan="2"  style={{ textAlign: 'left' }}>
-          <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
           <p>
-          {OneData[10]}
+          {OneData[11]}
           </p>
         </td>
       </tr>
@@ -945,6 +1052,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[12]) }}
+        value={updatedSeverities[index] || OneData[12]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[10])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -1146,6 +1274,29 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[10]) }}
+        value={updatedSeverities[index] || OneData[10]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[7])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
+    </td>
+  </tr>
+
     </tbody>
   </table>
 </div>
@@ -1339,6 +1490,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[10]) }}
+        value={updatedSeverities[index] || OneData[10]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[7])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -1534,6 +1706,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[10]) }}
+        value={updatedSeverities[index] || OneData[10]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[7])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -1729,6 +1922,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[10]) }}
+        value={updatedSeverities[index] || OneData[10]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[7])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -1925,6 +2139,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[10]) }}
+        value={updatedSeverities[index] || OneData[10]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[7])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -2122,6 +2357,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[10]) }}
+        value={updatedSeverities[index] || OneData[10]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[7])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -2213,7 +2469,7 @@ const SQlinject = (props) => {
           {Delete ==='Advance'&&(
                <Button  style={{backgroundColor:"red"}} onClick={() => showModal(7)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
-            <Modal title="Add URL Stored Cross Site Scriptng" open={isModalOpen7} onOk={Formsummit} onCancel={handleCancel}>
+            <Modal title="Add URL Sensitive File Disclosure" open={isModalOpen7} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
             onFinish={Formsummit}
             labelCol={{
@@ -2312,6 +2568,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[12]) }}
+        value={updatedSeverities[index] || OneData[12]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[10])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -2349,7 +2626,7 @@ const SQlinject = (props) => {
           {Delete ==='Advance'&&(
                <Button  style={{backgroundColor:"#47F777"}} onClick={() => showModal(7)} type="primary" icon={<PlusOutlined   />}>Add to URL Issue </Button>
             )}   
-            <Modal title="Add URL Stored Cross Site Scriptng-" open={isModalOpen7} onOk={Formsummit} onCancel={handleCancel}>
+            <Modal title="Add URL Sensitive File Disclosure" open={isModalOpen7} onOk={Formsummit} onCancel={handleCancel}>
             <Form className='input-container'
             onFinish={Formsummit}
             labelCol={{
@@ -2616,6 +2893,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[10]) }}
+        value={updatedSeverities[index] || OneData[10]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[7])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
@@ -2795,7 +3093,7 @@ const SQlinject = (props) => {
         <td colSpan="2"  style={{ textAlign: 'left' }}>
           <strong  style={{fontSize:"16px"}}>Refferencs:</strong>
           <p>
-          {OneData[10]}
+          {OneData[11]}
           </p>
         </td>
       </tr>
@@ -2807,6 +3105,27 @@ const SQlinject = (props) => {
           </p>
         </td>
       </tr>
+      <tr key={index}>
+      <td colSpan="2"  style={{ textAlign: 'left' }}>
+          <strong  style={{fontSize:"16px"}}>Severity:</strong>
+      <select
+        style={{ color: getColorForSeverity(OneData[12]) }}
+        value={updatedSeverities[index] || OneData[12]}
+        onChange={(e) => handleSeverityChange(e, index, OneData[10])}
+      >
+        <option style={{ color: "#6F77B1" }} value="Low">
+          Low
+        </option>
+        <option style={{ color: "#FFBB28" }} value="Medium">
+          Medium
+        </option>
+        <option style={{ color: "#FF0000" }} value="High">
+          High
+        </option>
+      </select>
+      <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
+    </td>
+  </tr>
     </tbody>
   </table>
 </div>
