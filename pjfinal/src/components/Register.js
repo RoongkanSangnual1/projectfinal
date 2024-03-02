@@ -13,24 +13,33 @@ const Register = () =>{
     const[wrong,setWrong] = useState("")
     const navigate = useNavigate()
 
-    const Formsummit =()=>{
-        if(password !== cpassword){
-            return setWrong("รหัสไม่ตรงกัน")
+    const Formsummit = async () => {
+        if (password !== cpassword) {
+            return Swal.fire({
+                title: "Passwords Error",
+                text: "Passwords don't match",
+                icon: "error",
+              });
         }
-        axios
-        .post(`http://localhost:8000/api/register`,{username,email,password,role})
-        .then(response=>{
-            console.log(response)
+    
+        try {
+            const response = await axios.post(`http://localhost:8000/api/register`, {
+                username,
+                email,
+                password,
+                role
+            });
+    
+            console.log(response);
             Swal.fire(response.data);
-            navigate('/login')
-        })
-        .catch(err=>{
-            console.log(err)
+            navigate('/login');
+        } catch (err) {
+            console.log(err);
             Swal.fire(err.response.data);
-        })
-        console.log(role)
-    }
-
+        }
+    
+        console.log(role);
+    };
 
     return(
         <div className="regis-container">

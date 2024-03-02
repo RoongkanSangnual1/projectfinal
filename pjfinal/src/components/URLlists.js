@@ -21,10 +21,9 @@ const URLlist = (props) => {
     const [Delete,setDelete] = useState("")
         const [isModalOpen, setIsModalOpen] = useState(false);
     const user = localStorage.user;
-
+    const token = localStorage.getItem('token')
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
         axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
             headers:{
                 Authorization: `Bearer ${token}`,
@@ -174,7 +173,6 @@ const handleDelete = (iddelete) => {
 
       const Formsummit =()=>{
 
-        const token = localStorage.getItem('token')
         axios
         .post(`http://127.0.0.1:5000/addurls`,{urls,method,parameter,project_name_id},{
           headers:{

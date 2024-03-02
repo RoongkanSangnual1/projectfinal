@@ -63,6 +63,7 @@ const SQlinject = (props) => {
     const [severitycommand,Setseveritycommand] = useState([]);
     const [severitysensitive,Setseveritysensitive] = useState([]);
     const [severityserver,Setseverityserver] = useState([]);
+    const [owasp_,Setowasp_] = useState([]);
     const [OID, setOID] = useState('');
     const [Recommendation,setRecommendation]= useState([])
     const user = localStorage.user;
@@ -79,7 +80,7 @@ const SQlinject = (props) => {
         setDelete(response.data[5].Role);
         seturl_target(response.data[1].url_target[0][0]);
         setDetails(response.data[1].url_target[0][1]);
-
+        Setowasp_(response.data[16].owasp_)
         if(response.data[2].select_att_sql_DATA[1].length !==0 ){
           SetseveritySQL(response.data[2].select_att_sql_DATA[1][0][0])
             console.log(response.data[2].select_att_sql_DATA[1][0][0])
@@ -293,8 +294,7 @@ const SQlinject = (props) => {
             }
           })
           .filter(item => item !== null);
-  
-
+          console.log(response.data[16].owasp_)
 
         setresponsedata([
           {"SQL Injection": Index},
@@ -306,6 +306,10 @@ const SQlinject = (props) => {
           {"Missing SameSite Attribute in Cookie Header": samsite},
           {"Web Server Infomation Leakage through Server header": server},
           {"Missing HTTP Strict Transport Security Header": HSTS},
+          {"Web Application Framework Infomation Leakage": web},
+          {"Sensitive File Disclosure": Sensitive},
+          {"Command Injection": Command},
+          {"owasp_":response.data[16].owasp_}
         ]);
   
         setHSTS(HSTS);

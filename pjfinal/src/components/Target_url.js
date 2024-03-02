@@ -31,52 +31,36 @@ const Target_url = () => {
     }
 
 
-    const Formsummit = () => {
-
-        
+    const Formsummit = async () => {
         setLoad(true);
         setLoadingButton(true);
-
-        axios.post(`http://127.0.0.1:5000/crawl`, { project_name, url, description },{
-            headers:{
-              Authorization:`Bearer ${token}`,
-            },
-          })
-            .then(res => {
-                console.log(res)
-                setLoad(false);
-                setLoadingButton(false);
-                setProject_name_id(res.data.project_name_id_result);
-                if (res.data.Change) {
-                    console.log(res.data.Change.length)
-                    setProjectChange(res.data.Change);
-                    Swal.fire(res.data.Change);
-                }
-                // else if(project_name_id) {
-
-                // }
-                // else{
-                //     Swal.fire("ไม่สามารถทำการได้");
-                // }
-                // if (res.data && res.data["server error"]) {
-                //     Swal.fire({
-                //       icon: 'error',
-                //       title: 'User Eror',
-                //       // text: "User Eror",
-                //     });
-                //     navigate('/login')
-                //   }
-        
-            })
-            .catch(error => {
-                console.error("Error crawling:", error);
-                if (project_name_id) {
-                } else {
-                    Swal.fire("ไม่สามารถทำการได้");
-                }
+    
+        try {
+            const res = await axios.post(`http://127.0.0.1:5000/crawl`, { project_name, url, description }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
+    
+            console.log(res);
+            setLoad(false);
+            setLoadingButton(false);
+            setProject_name_id(res.data.project_name_id_result);
+    
+            if (res.data.Change) {
+                console.log(res.data.Change.length);
+                setProjectChange(res.data.Change);
+                Swal.fire(res.data.Change);
+            }
+        } catch (error) {
+            console.error("Error crawling:", error);
+    
+            if (project_name_id) {
+            } else {
+                Swal.fire("ไม่สามารถทำการได้");
+            }
+        }
     };
-
     return (
         <div>
             <Navbar />
