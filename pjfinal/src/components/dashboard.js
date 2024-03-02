@@ -5,7 +5,7 @@ import { PieChart, Pie, ResponsiveContainer, Cell } from "recharts";
 import "./Dashboard.css";
 import Swal from "sweetalert2";
 import ClockLoader from "react-spinners/ClockLoader";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import {CheckCircleOutlined} from '@ant-design/icons';
 import {
   Table,
   Button,
@@ -427,7 +427,8 @@ const Dashboard = () => {
       <div className="dashboard-s1">
         <div className="dashboard-s1-b1">
           <h1>Current Issues</h1>
-          <ResponsiveContainer width="100%" height={350}>
+          <ResponsiveContainer width="100%" height={350} alignItems="center">
+            
             <PieChart>
               <Pie
                 data={pieChartData}
@@ -526,96 +527,92 @@ const Dashboard = () => {
               <p style={{ textAlign: "center", font: "16px" }}> Scanning...</p>
             </div>
           ) : (
-            <div
-              style={{
-                marginTop: "20%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <CheckCircleOutlined
-                style={{ fontSize: "80px", color: "#08c" }}
-              />
+            <div style={{
+              marginTop: "20%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+              <CheckCircleOutlined  style={{ fontSize: '80px', color: '#08c'}} />
               <p style={{ textAlign: "center" }}>
                 {" "}
                 complete <br /> Start: {valueTimep} <br /> End:{valueENDpp}{" "}
               </p>
             </div>
+            
           )}
         </div>
       </div>
       <div className="dashboard-s2">
-        <h1>Summary</h1>
-        <div className="Sum">
-          <div className="collapse-content" style={{ overflow: "auto" }}>
-            <table>
-              <thead>
-                <tr>
-                  <th>Vulnerability</th>
-                  <th>Severity</th>
+      <h1>Summary</h1>
+      <div className="Sum">
+        <div className="collapse-content" style={{ overflow: "auto" }}>
+          <table>
+            <thead>
+              <tr>
+                <th>Vulnerability</th>
+                <th>Severity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {owaspData.map((item, index) => (
+                <tr key={index}>
+                  <td style={{ color: getColorForSeverity(item[1]) }}>
+                    {item[0]}
+                  </td>
+                  <td>
+                    <select
+                      style={{ color: getColorForSeverity(item[1]) }}
+                      value={updatedSeverities[index] || item[1]}
+                      onChange={(e) => handleSeverityChange(e, index, item[0])}
+                    >
+                      <option style={{ color: "#6F77B1" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="High">
+                        High
+                      </option>
+                    </select>
+                    <Button
+                      style={{ marginLeft: "20px" }}
+                      onClick={() =>
+                        handleConfirmButtonClick(
+                          item[0],
+                          updatedSeverities[index] || item[1]
+                        )
+                      }
+                    >
+                      Confirm
+                    </Button>
+                    {Delete === "Advance" && (
+                      <Space size="middle">
+                        <Button
+                          type="danger"
+                          icon={
+                            <CloseOutlined
+                              className="close-button"
+                              style={{ color: "red,", marginBottom: "20px" }}
+                            />
+                          }
+                          onClick={() => handleDelete(item[2])}
+                        >
+                          {" "}
+                        </Button>
+                      </Space>
+                    )}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {owaspData.map((item, index) => (
-                  <tr key={index}>
-                    <td style={{ color: getColorForSeverity(item[1]) }}>
-                      {item[0]}
-                    </td>
-                    <td>
-                      <select
-                        style={{ color: getColorForSeverity(item[1]) }}
-                        value={updatedSeverities[index] || item[1]}
-                        onChange={(e) =>
-                          handleSeverityChange(e, index, item[0])
-                        }
-                      >
-                        <option style={{ color: "#6F77B1" }} value="Low">
-                          Low
-                        </option>
-                        <option style={{ color: "#FFBB28" }} value="Medium">
-                          Medium
-                        </option>
-                        <option style={{ color: "#FF0000" }} value="High">
-                          High
-                        </option>
-                      </select>
-                      <Button
-                        style={{ marginLeft: "20px" }}
-                        onClick={() =>
-                          handleConfirmButtonClick(
-                            item[0],
-                            updatedSeverities[index] || item[1]
-                          )
-                        }
-                      >
-                        Confirm
-                      </Button>
-                      {Delete === "Advance" && (
-                        <Space size="middle">
-                          <Button
-                            type="danger"
-                            icon={
-                              <CloseOutlined
-                                className="close-button"
-                                style={{ color: "red,", marginBottom: "20px" }}
-                              />
-                            }
-                            onClick={() => handleDelete(item[2])}
-                          >
-                            {" "}
-                          </Button>
-                        </Space>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+      </div>
+
     </div>
   );
 };
