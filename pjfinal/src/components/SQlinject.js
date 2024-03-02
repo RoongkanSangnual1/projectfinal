@@ -31,6 +31,63 @@ import { useMemo } from "react";
 import TextArea from "antd/es/input/TextArea";
 const SQlinject = (props) => {
   // console.log(props.name);
+  const project_name =props.id
+  const project_name_n = props.name
+    const { project_name_id } = useParams();
+    const [projectOneDataSQL, setprojectOneDataSQL] = useState([]);
+    const [projectOneDataXSSSQL, setprojectOneDataXSSSQL] = useState([]);
+    const [responsedata, setresponsedata] = useState([]);
+    const [traversal,settraversal] = useState([])
+    const [httponly,sethttponly] = useState([])
+    const [expire,setexpire] = useState([])
+    const [samsite,setsamsite] = useState([])
+    const [secure,setsecure] = useState([])
+    const [server,setserver] = useState([])
+    const [web,setwebb] = useState([])
+    const [Sensitive,setSensitive] = useState([])
+    const [HSTS,setHSTS] = useState([])
+    const [Command,setCommand] = useState([])
+    const [Issue,setIssue] = useState([])
+    const [url_target,seturl_target] = useState([])
+    const [Details,setDetails] = useState([])
+    const [isModalOpen1, setIsModalOpen1] = useState(false);
+    const [isModalOpen2, setIsModalOpen2] = useState(false);
+    const [isModalOpen3, setIsModalOpen3] = useState(false);
+    const [isModalOpen4, setIsModalOpen4] = useState(false);
+    const [isModalOpen5, setIsModalOpen5] = useState(false);
+    const [isModalOpen6, setIsModalOpen6] = useState(false);
+    const [isModalOpen7, setIsModalOpen7] = useState(false);
+    const [isModalOpen8, setIsModalOpen8] = useState(false);
+    const [isModalOpen9, setIsModalOpen9] = useState(false);
+    const [isModalOpen10, setIsModalOpen10] = useState(false);
+    const [isModalOpen11, setIsModalOpen11] = useState(false);
+    const [isModalOpen12, setIsModalOpen12] = useState(false);
+    const [Delete,setDelete] = useState("")
+    const [updatedSeverities, setUpdatedSeverities] = useState({});
+    const [urls,setUrls] = useState([])
+    const [EVIDENCE,setEVIDENCE] = useState([])
+    const [parameter,setparameter]= useState([])
+    const [Risk,setRisk] = useState([])
+    const [severitySQL,SetseveritySQL] = useState([]);
+    const [severityXSS,SetseverityXSS] = useState([]);
+    const [severityTraval,SetseverityTraval] = useState([]);
+    const [severitySecure,SetseveritySecure] = useState([]);
+    const [severityhttponly,Setseverityhttponly] = useState([]);
+    const [severitywebb,Setseveritywebb] = useState([]);
+    const [severityexpire,Setseverityexpire] = useState([]);
+    const [severitysamsite,Setseveritysamsite] = useState([]);
+    const [severityHSTS,SetseverityHSTS] = useState([]);
+    const [severitycommand,Setseveritycommand] = useState([]);
+    const [severitysensitive,Setseveritysensitive] = useState([]);
+    const [severityserver,Setseverityserver] = useState([]);
+    const [owasp_,Setowasp_] = useState([]);
+    const [OID, setOID] = useState('');
+    const [Recommendation,setRecommendation]= useState([])
+    const user = localStorage.user;
+    const token = localStorage.getItem('token')
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`, {
   const project_name = props.id;
   const project_name_n = props.name;
   const { project_name_id } = useParams();
@@ -94,6 +151,49 @@ const SQlinject = (props) => {
           },
         }
       );
+
+        console.log(response)
+        setDelete(response.data[5].Role);
+        seturl_target(response.data[1].url_target[0][0]);
+        setDetails(response.data[1].url_target[0][1]);
+        Setowasp_(response.data[16].owasp_)
+        if(response.data[2].select_att_sql_DATA[1].length !==0 ){
+          SetseveritySQL(response.data[2].select_att_sql_DATA[1][0][0])
+            console.log(response.data[2].select_att_sql_DATA[1][0][0])
+        }
+        const Index = response.data[2].select_att_sql_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], data[2], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+
+          
+        if(response.data[3].select_att_ID_xsssql_DATA[1].length !==0 ){
+          SetseverityXSS(response.data[3].select_att_ID_xsssql_DATA[1][0][0])
+            console.log(response.data[3].select_att_ID_xsssql_DATA[1][0][0])
+        }
+        const IndexXss = response.data[3].select_att_ID_xsssql_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return null;
+            }
+          })
+          .filter(item => item !== null);
 
       console.log(response);
       setDelete(response.data[5].Role);
@@ -205,6 +305,130 @@ const SQlinject = (props) => {
               return [index + 1, data[0], ...data];
             }
           })
+          .filter(item => item !== null);
+          if(response.data[8].select_att_ID_select_att_expire_DATA[1].length !==0 ){
+            Setseverityexpire(response.data[8].select_att_ID_select_att_expire_DATA[1][0][0])
+              console.log(response.data[8].select_att_ID_select_att_expire_DATA[1][0][0])
+          }   
+        const expire = response.data[8].select_att_ID_select_att_expire_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+
+          if(response.data[9].select_att_ID_select_att_samsite_DATA[1].length !==0 ){
+            Setseveritysamsite(response.data[9].select_att_ID_select_att_samsite_DATA[1][0][0])
+              console.log(response.data[9].select_att_ID_select_att_samsite_DATA[1][0][0])
+          }   
+        const samsite = response.data[9].select_att_ID_select_att_samsite_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+
+          if(response.data[10].select_att_ID_select_att_server_DATA[1].length !==0 ){
+            Setseverityserver(response.data[10].select_att_ID_select_att_server_DATA[1][0][0])
+              console.log(response.data[10].select_att_ID_select_att_server_DATA[1][0][0])
+          }   
+        const server = response.data[10].select_att_ID_select_att_server_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+
+          if(response.data[11].select_att_ID_select_att_HSTS_DATA[1].length !==0 ){
+            SetseverityHSTS(response.data[11].select_att_ID_select_att_HSTS_DATA[1][0][0])
+              console.log(response.data[11].select_att_ID_select_att_HSTS_DATA[1][0][0])
+          } 
+        const HSTS = response.data[11].select_att_ID_select_att_HSTS_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+
+
+          if(response.data[13].select_att_ID_sensitive[1].length !==0 ){
+            Setseveritysensitive(response.data[13].select_att_ID_sensitive[1][0][0])
+              console.log(response.data[13].select_att_ID_sensitive[1][0][0])
+          } 
+        const Sensitive = response.data[13].select_att_ID_sensitive[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return null;
+            }
+          })
+          .filter(item => item !== null);
+  
+
+          if(response.data[14].select_att_ID_webb[1].length !==0 ){
+            Setseveritywebb(response.data[14].select_att_ID_webb[1][0][0])
+              console.log(response.data[14].select_att_ID_webb[1][0][0])
+          } 
+        const web = response.data[14].select_att_ID_webb[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              return [index + 1, decodedURL, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return [index + 1, data[0], ...data];
+            }
+          })
+          .filter(item => item !== null);
+  
+
+          if(response.data[15].select_att_ID_command_DATA[1].length !==0 ){
+            Setseveritycommand(response.data[15].select_att_ID_command_DATA[1][0][0])
+              console.log(response.data[15].select_att_ID_command_DATA[1][0][0])
+          } 
+        const Command = response.data[15].select_att_ID_command_DATA[0]
+          .map((data, index) => {
+            try {
+              let decodedURL = decodeURIComponent(data[0]);
+              let decodedURL1 = decodeURIComponent(data[1]);
+              let decodedURL2 = decodeURIComponent(data[2]);
+              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
+            } catch (error) {
+              console.error("Error decoding URL:", error);
+              return null;
+            }
+          })
+          .filter(item => item !== null);
+          console.log(response.data[16].owasp_)
           .filter((item) => item !== null);
       if (
         response.data[8].select_att_ID_select_att_expire_DATA[1].length !== 0
@@ -349,6 +573,120 @@ const SQlinject = (props) => {
           }
         })
         .filter((item) => item !== null);
+
+        setresponsedata([
+          {"SQL Injection": Index},
+          {"Stored Cross Site Scriptng": IndexXss},
+          {"Directory Traversal File Include": Indextraversal},
+          {"Missing Secure Attribute in Cookie Header": IndexSecure},
+          {"Missing HttpOnly Attribute in Cookie Header": httponly},
+          {"Missing Expires Attribute in Cookie Header": expire},
+          {"Missing SameSite Attribute in Cookie Header": samsite},
+          {"Web Server Infomation Leakage through Server header": server},
+          {"Missing HTTP Strict Transport Security Header": HSTS},
+          {"Web Application Framework Infomation Leakage": web},
+          {"Sensitive File Disclosure": Sensitive},
+          {"Command Injection": Command},
+          {"owasp_":response.data[16].owasp_}
+        ]);
+  
+        setHSTS(HSTS);
+        setwebb(web);
+        setsamsite(samsite);
+        setserver(server);
+        setexpire(expire);
+        sethttponly(httponly);
+        setsecure(IndexSecure);
+        setprojectOneDataXSSSQL(IndexXss);
+        setprojectOneDataSQL(Index);
+        settraversal(Indextraversal);
+        setSensitive(Sensitive);
+        setCommand(Command);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    useEffect(() => {
+      fetchData();
+    }, [project_name_id]);
+  
+    const Formsummit = async () => {
+      try {
+        await axios.post(`http://127.0.0.1:5000/addIssue`, {urls, EVIDENCE, Risk, Recommendation, OID, project_name_id},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUrls([]);
+          setEVIDENCE([]);
+          setRisk([]);
+          setRecommendation([]);
+          setOID('');
+        await fetchData();
+      } catch (err) {
+        alert(err.response.data);
+      }
+  
+      setIsModalOpen1(false);
+      setIsModalOpen2(false);
+      setIsModalOpen3(false);
+      setIsModalOpen4(false);
+      setIsModalOpen5(false);
+      setIsModalOpen6(false);
+      setIsModalOpen7(false);
+      setIsModalOpen8(false);
+      setIsModalOpen10(false);
+      setIsModalOpen11(false);
+      setIsModalOpen9(false);
+      setIsModalOpen12(false);
+    };
+    const showModal = (OID) => {
+      setOID(OID);
+      if (OID === 1) {
+        setIsModalOpen1(true);
+      } else if (OID === 2) {
+        setIsModalOpen2(true);
+      }
+      else if (OID === 3) {
+        setIsModalOpen3(true);
+      }
+      else if (OID === 4) {
+        setIsModalOpen4(true);
+      }
+      else if (OID === 5) {
+        setIsModalOpen5(true);
+      }
+      else if (OID === 6) {
+        setIsModalOpen6(true);
+      }
+      else if (OID === 7) {
+        setIsModalOpen8(true);
+      }
+      else if (OID === 8) {
+        setIsModalOpen8(true);
+      }
+      else if (OID ===9) {
+        setIsModalOpen9(true);
+      }
+
+      else if (OID === 10) {
+        setIsModalOpen10(true);
+      }
+      else if (OID ===11) {
+        setIsModalOpen11(true);
+      }
+      else if (OID ===12) {
+        setIsModalOpen12(true);
+      }
+
+
+
+    };
+    //   const handleOk = () => {
+    //     setIsModalOpen(false);
+    //   };
 
       setresponsedata([
         { "SQL Injection": Index },

@@ -37,7 +37,7 @@ const ProjectDash = () => {
     const project_name_n = project_name_id.project_name
     const user = localStorage.user;
     const navigate = useNavigate()
-    useEffect(() => {
+
       const fetchData = async () => {
         try {
           const token = localStorage.getItem('token');
@@ -70,7 +70,9 @@ const ProjectDash = () => {
           console.error("Error fetching data", error);
         }
       };
-    
+
+
+      useEffect(() => {
       fetchData(); 
    
     }, [user, project_name, setUrl, setstart, setend, navigate]);
@@ -190,13 +192,20 @@ const handleCopy = () => {
         }
       })
       .then(response => {
-        console.log(response.data.link)
+        console.log(response)
         setLink_(response.data.link)
+        if (response.data && response.data.userError) {
+          Swal.fire({
+            icon: 'error',
+            title: 'This user does not exist.',
+          });
+        }
+        setUershare([])
       })
       
-      // .catch(err=>{
-      //     alert(err.response.data)
-      // })   
+      .catch(err=>{
+          alert(err.response.data)
+      })   
       setIsModalOpen(false);   
   }
 
@@ -260,7 +269,7 @@ const handleCopy = () => {
               span: 5,
             }}
           >
-            user:<Input type="text" className="forminput-control" value={usershare} onChange={(e) => setUershare(e.target.value)} /> <br/>
+            user:<Input type="text" style={{marginRight:"20px"}}className="forminput-control" value={usershare} onChange={(e) => setUershare(e.target.value)} /> <br/>
           </Form>
         </Modal>
       </div>

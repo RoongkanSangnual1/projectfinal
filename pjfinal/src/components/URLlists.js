@@ -9,6 +9,19 @@ import Swal from "sweetalert2";
 import PDF from "./PDF";
 const URLlist = (props) => {
   // console.log(props.name);
+  const project_name =props.id
+  const project_name_n = props.name
+    const { project_name_id } = useParams();
+    const [projectOneData, setProjectOneData] = useState([]);
+    const [urls,setUrls] = useState([])
+    const [method,setmethod] = useState([])
+    const [parameter,setparameter] = useState([])
+    const [url_target,seturl_target] = useState([])
+    const [Details,setDetails] = useState([])
+    const [Delete,setDelete] = useState("")
+        const [isModalOpen, setIsModalOpen] = useState(false);
+    const user = localStorage.user;
+    const token = localStorage.getItem('token')
   const project_name = props.id;
   const project_name_n = props.name;
   const { project_name_id } = useParams();
@@ -22,6 +35,37 @@ const URLlist = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = localStorage.user;
 
+    useEffect(() => {
+        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
+            headers:{
+                Authorization: `Bearer ${token}`,
+            },
+
+        })
+        .then(response => {
+          console.log(response)
+    
+          setDelete(response.data[5].Role)
+            seturl_target(response.data[1].url_target[0][0])
+            setDetails(response.data[1].url_target[0][1])
+            const Index = response.data[0].crawl_data.map((data, index) => {
+                try {
+                    // let decodedURLBase64 = atob(data[0]);
+                    let decodedURL = decodeURIComponent(data[0]);
+                    return [index+1, decodedURL, ...data];
+                } catch (error) {
+                    console.error("Error decoding URL:", error);
+                    return null;
+                }
+            }).filter(item => item !== null);
+            console.log(Index); 
+            setProjectOneData(Index);
+
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }, [user, project_name_id]);
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
@@ -172,6 +216,14 @@ const URLlist = (props) => {
     setIsModalOpen(false);
   };
 
+
+
+      const Formsummit =()=>{
+
+        axios
+        .post(`http://127.0.0.1:5000/addurls`,{urls,method,parameter,project_name_id},{
+          headers:{
+              Authorization: `Bearer ${token}`,
   const Formsummit = () => {
     const token = localStorage.getItem("token");
     axios

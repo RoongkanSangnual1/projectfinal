@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 import asyncio
 import math
 from collections import Counter
-
+import re
 app = Flask(__name__)
 CORS(app)
 
@@ -538,14 +538,92 @@ async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,p
 
 
 async def checkscript(response,payload):
-    try:        
-        if payload.lower() in response.content.decode().lower():
-            return True
-        # no error detected
+    print((payload))
+    payload = str(payload)
+    soup = BeautifulSoup(response.content,'lxml')
+    if payload.lower() in response.content.decode().lower():
+    #check if payload embbed on response content or not
+        if unquote(payload).startswith("<"):
+            print('payload is tag')
+            escaped_payload = re.escape(payload)
+            print(escaped_payload)
+            find_element = None
+            find_taglist = []
+            for tag in soup.find_all():
+                finding = re.search(escaped_payload, str(tag).strip())
+                if finding:
+                    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+                    print(tag)
+                    find_taglist.append(tag)
+                    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            if find_taglist != [] :
+                evidence = find_taglist[-1]
+                print('[+] Found XSS in response body with this evidence '+ str(evidence))
+                return True
+        else:
+            print('payload is not tag')
+            escaped_payload = re.escape(payload)
+            print(escaped_payload)
+            # print('||||||||')
+            # print(soup)
+            find_element = None
+            # check if payload that is not tag is in tag content. if yes means false positive
+            find_taglist1 = []
+            # check if payload that is in tag header or not. if yes check that it in value or not. if in value means false positive
+            find_taglist2 = []
+            for tag in soup.find_all():
+                
+                print('-*-')
+                print(tag)
+                tagheadname = str(tag)
+                tagheadname = tagheadname.replace(" ","")
+                tagheadname = tagheadname.replace(" ","")
+                tagheadname = tagheadname.split('>',1)[0]+'>'
+                ########check in tag content######
+                finding1 = re.search(escaped_payload, str(tag.get_text()).strip())
+                finding2 = re.search(escaped_payload, tagheadname)
+                # finding = soup.find_all(string=payload)
+                if finding1:
+                    print('found payload in tag content')
+                    print('**************************')
+                    print(tag.name)
+                    find_taglist1.append(tag.name)
+                    print('**************************')
+                if finding2:
+                    print('BBBBBBBBBBBBBBBBBb')
+                    # print(tag)
+                    temptagattrs = tag.attrs
+                    tempvalue = temptagattrs.get('value')
+                    if tempvalue != escaped_payload:
+                        print('[+] Not in value -> XSS')
+                        find_taglist2.append(tag)
+                    print('BBBBBBBBBBBBBBBBBb')
+                else:
+                    print('not found in tag content')
+            if find_taglist1 != []:
+                print(find_taglist1)
+                find_element = find_taglist1[-1]
+                # print(find_element)
+                evidences = soup.find_all(find_element)
+                for evidence in evidences:
+                    # evidence_element = BeautifulSoup(evidence,'lxml')
+                    print(evidence.get_text())
+                    x = re.search(escaped_payload,evidence.get_text())
+                    if x:
+                        print(escaped_payload)
+                        print('Yes')
+                        print(evidence)
+                        if escaped_payload.startswith("\""):
+                            print("False Positive!!!!")
+                            
+            if find_taglist2 != []:
+                print(find_taglist2)
+                evidence = find_taglist2[-1]
+                print(evidence)
+                print('[+] Found XSS in tag element with this evidence '+ str(evidence))
+                return True
+    else:
         return False
-    except Exception as e:
-        print(f"checkscript: {e}")
-        return None
     
 
 async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data_):
@@ -1239,7 +1317,7 @@ async def crawl_endpoint():
         values11 = (project_name, scope_url, description_name, user)
         db.execute(insert_query11, values11)
         mysql.connection.commit()
-        # csv_name = f"{project_name}.csv"
+        csv_name = f"{project_name}.csv"
         try:            
             cres = await crawl(scope_url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
         except Exception as e:
@@ -1283,8 +1361,8 @@ async def crawl_endpoint():
         db.execute(queryPTarget, (project_name_id_result,scope_url))
         PTarget = db.fetchall()
         print("PTarget", PTarget[0][1])
-        await HSTS(PTarget)
         try:
+            await HSTS(PTarget)
             await webFramework(PTarget)
         except Exception as e:
             print(f"await webFramework(PTarget): {e}")
@@ -1412,6 +1490,8 @@ async def crawl_endpoint():
                     #     print(vparams)
             else:
                 print('[-] we cannot find command injection')
+  
+  
         try:        
             await run_gobustersensitive(baseURL,project_name,user)
             print("baseURLsensitive",baseURL)
@@ -1923,7 +2003,7 @@ def dashboard():
         db.execute(select_att_ID_command, (project_name_id, '12'))
         select_att_ID_commandd = db.fetchall()
         select_att_ID_command = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_command, (project_name_id, 'Web Application Framework Infomation Leakage'))
+        db.execute(select_att_ID_command, (project_name_id, 'Command Injection'))
         Severity12 = db.fetchall()  
         if Severity12:
             Severity12= Severity12
@@ -2521,6 +2601,8 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
         db.execute(owasp_query, (project_name_id,))
         owasp_ = db.fetchall()
+
+
         if valueTimep and valueENDp and valueTimep[0][0] == valueENDp[0][0]:
             valueENDpp = None
         else:
@@ -2529,7 +2611,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
 
         return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA":[select_att_ID_sql_DATA,owasp11_]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,owasp10_]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,owasp4_]}, 
                        {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,owasp2_]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,owasp3_]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,owasp5_]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,owasp6_]}
-                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]})
+                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]},{"owasp_":owasp_})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})
@@ -3113,8 +3195,6 @@ def payload2():
         print(f"Error: {e}")
 
  # payloadเพิ่มทั้งเพลโลด
-
-
 @app.route("/payload3", methods=['POST'])
 def payload3():
     try:
@@ -3145,8 +3225,6 @@ def payload3():
         return jsonify({"error": str(e)})
 
  # payloadShow
-
-
 @app.route("/payload4", methods=['POST'])
 def payload4():
     try:
@@ -3216,17 +3294,27 @@ def generate_link():
         if usershare not in allowed_users:
             return jsonify({'error': 'User not allowed to share project'}), 403
         db = mysql.connection.cursor()
-        query2 = "SELECT PName FROM project WHERE PID = %s "
-        db.execute(query2, (project_name_id,))
-        project_name = db.fetchall()
-        query3 = "SELECT username FROM project WHERE PID = %s "
-        db.execute(query3, (project_name_id,))
-        username = db.fetchall()
-        payload = {'user_id': usershare, 'project_id': project_name_id,
-                   'project_name': project_name, 'username': username}
-        token = jwt.encode(payload, 'jwtSecret', algorithm='HS256')
-        link = f'http://localhost:3000/edit-project?token={token}'
-        return jsonify({'link': link})
+        query2 = "SELECT username FROM user "
+        db.execute(query2)
+        userall = db.fetchall()
+        print("userall",userall)
+        print("usershare",usershare)
+        userall_values = [user_[0] for user_ in userall]
+        if usershare in userall_values:
+                db = mysql.connection.cursor()
+                query2 = "SELECT PName FROM project WHERE PID = %s "
+                db.execute(query2, (project_name_id,))
+                project_name = db.fetchall()
+                query3 = "SELECT username FROM project WHERE PID = %s "
+                db.execute(query3, (project_name_id,))
+                username = db.fetchall()
+                payload = {'user_id': usershare, 'project_id': project_name_id,
+                        'project_name': project_name, 'username': username}
+                token = jwt.encode(payload, 'jwtSecret', algorithm='HS256')
+                link = f'http://localhost:3000/edit-project?token={token}'
+                return jsonify({'link': link})
+        else:
+            return jsonify({'userError': 'This user does not exist.'})
     except Exception as e:
         print(f"Error: {e}")
 

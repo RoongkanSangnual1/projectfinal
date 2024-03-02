@@ -11,10 +11,9 @@ const Home = () => {
     const [projectdata, setProjectData] = useState([]);
     const [deletee,setDelete] = useState([]);
     const navigate = useNavigate()
-    
+    const token = localStorage.getItem("token")
   
     useEffect(() => {
-      const token = localStorage.getItem("token")
       console.log(token)
         axios.get(`http://127.0.0.1:5000/home`,{
           headers:{
@@ -43,7 +42,7 @@ const Home = () => {
 
     const Deleteprojuct = (id) => {
       // Get the user's token from localStorage
-      const token = localStorage.getItem("token");
+    
     
       // Show a confirmation dialog using SweetAlert
       Swal.fire({

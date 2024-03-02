@@ -3,6 +3,7 @@ import './maindashboard.css';
 import { Card,theme,Collapse,ConfigProvider,Button,Form,Select,Input} from 'antd';
 import { PlusOutlined,RightOutlined,CloseOutlined,FormOutlined } from '@ant-design/icons';
 import { Link,useNavigate} from "react-router-dom";
+import TextArea from 'antd/es/input/TextArea';
 import axios from "axios";
 import { useState,useEffect } from "react";
 import Navbar from "./navbar";
@@ -172,28 +173,29 @@ const Formsummit2 = () => {
     label="Show Payload"
     name="Owasp-Show">
 
-    <Select    value={Owasp} onChange={(value)=>setOwasp(value)} placeholder="โปรดเลือกรายการ" options={[
-     { value: '1', label: 'Web Server Infomation Leakage through Server header' },
-    { value: '2', label: 'Information Leakage through robots.txt' },
-    { value: '3', label: 'Web Application Framework Infomation Leakage' },
+<Select    value={Owasp} onChange={(value)=>setOwasp(value)} placeholder="โปรดเลือกรายการ" options={[
+    //  { value: '1', label: 'Web Server Infomation Leakage through Server header' },
+    // { value: '2', label: 'Missing Secure Attribute in Cookie Header' },
+    // { value: '3', label: 'Missing HttpOnly Attribute in Cookie Header' },
     { value: '4', label: 'Directory Traversal File Include' },
-    { value: '5', label: 'Missing Secure Attribute in Cookie Header' },
-    { value: '6', label: 'Missing HttpOnly Attribute in Cookie Header' },
-    { value: '7', label: 'Missing Expires Attribute in Cookie Header' },
-    { value: '8', label: 'Missing SameSite Attribute in Cookie Header' },
-    { value: '9', label: 'Reflected Cross Site Scripting' },
+    // { value: '5', label: 'Missing Expires Attribute in Cookie Header' },
+    // { value: '6', label: 'Missing SameSite Attribute in Cookie Header' },
+    // { value: '7', label: 'Sensitive File Disclosure' },
+    // { value: '8', label: 'Missing HTTP Strict Transport Security Header' },
+    // { value: '9', label: 'Web Application Framework Infomation Leakage' },
     { value: '10', label: 'Stored Cross Site Scriptng' },
-    { value: '11', label: 'SQL Injection' },
-    { value: '12', label: 'Command Injection' }, 
-    { value: '13', label: 'Missing HTTP Strict Transport Security Header' }, 
-    { value: '14', label: 'Sensitive File Disclosure' },
-    { value: '20', label: 'Common' },  ]}>                             
+    { value: '11', label: 'SQL Injection' }, 
+    { value: '12', label: 'Command Injection' },  
+    // { value: '13', label: 'FUZZ' },   
+    ]}>                    
     </Select>
     </Form.Item>
     <Form.Item>                
     <button  className='btn'type="submit" value="บันทึก">OK</button>
     </Form.Item>
 </Form>
+
+
 
 {pay&& (show)
 }
@@ -206,22 +208,21 @@ const Formsummit2 = () => {
     label="Owasp"
     name="Owasp">
 
-    <Select    value={Owasp} onChange={(value)=>setOwasp(value)} placeholder="โปรดเลือกรายการ" options={[
-     { value: '1', label: 'Web Server Infomation Leakage through Server header' },
-    { value: '2', label: 'Information Leakage through robots.txt' },
-    { value: '3', label: 'Web Application Framework Infomation Leakage' },
+<Select    value={Owasp} onChange={(value)=>setOwasp(value)} placeholder="โปรดเลือกรายการ" options={[
+    //  { value: '1', label: 'Web Server Infomation Leakage through Server header' },
+    // { value: '2', label: 'Missing Secure Attribute in Cookie Header' },
+    // { value: '3', label: 'Missing HttpOnly Attribute in Cookie Header' },
     { value: '4', label: 'Directory Traversal File Include' },
-    { value: '5', label: 'Missing Secure Attribute in Cookie Header' },
-    { value: '6', label: 'Missing HttpOnly Attribute in Cookie Header' },
-    { value: '7', label: 'Missing Expires Attribute in Cookie Header' },
-    { value: '8', label: 'Missing SameSite Attribute in Cookie Header' },
-    { value: '9', label: 'Reflected Cross Site Scripting' },
+    // { value: '5', label: 'Missing Expires Attribute in Cookie Header' },
+    // { value: '6', label: 'Missing SameSite Attribute in Cookie Header' },
+    // { value: '7', label: 'Sensitive File Disclosure' },
+    // { value: '8', label: 'Missing HTTP Strict Transport Security Header' },
+    // { value: '9', label: 'Web Application Framework Infomation Leakage' },
     { value: '10', label: 'Stored Cross Site Scriptng' },
-    { value: '11', label: 'SQL Injection' },
-    { value: '12', label: 'Command Injection' }, 
-    { value: '13', label: 'Missing HTTP Strict Transport Security Header' }, 
-    { value: '14', label: 'Sensitive File Disclosure' },
-    { value: '20', label: 'Common' },  ]}>                             
+    { value: '11', label: 'SQL Injection' }, 
+    { value: '12', label: 'Command Injection' },  
+    // { value: '13', label: 'FUZZ' },   
+    ]}>                              
     </Select>
     </Form.Item>
     <Form.Item>                
@@ -232,10 +233,10 @@ const Formsummit2 = () => {
 
 {pay&& (
         <Form onFinish={Formsummit2} labelCol={{   span: 10, }}>
-<Form.Item  className="select-container" label="Payload" name="Owasp">
+<Form.Item  className="select-container" label="Key" name="Owasp">
 <Select  value={payloadone} onChange={value => setPayloadone(value)} options={options} />
 </Form.Item>
-    <Form.Item  className="select-container" label="Value" name="Osp">
+    <Form.Item  className="select-container"placeholder="EX:<cprips>"  label="Value" name="Osp">
     <Input type="text" className="from-control" value={valuepayload} onChange={(e)=>setvaluepayload(e.target.value)}/>
     </Form.Item>
     <Form.Item>                
@@ -253,22 +254,21 @@ const Formsummit2 = () => {
     label="Owasp-payload"
     name="Owasp2">
 
-    <Select    value={Owasp} onChange={(value)=>setOwasp(value)} placeholder="โปรดเลือกรายการ" options={[
-     { value: '1', label: 'Web Server Infomation Leakage through Server header' },
-    { value: '2', label: 'Information Leakage through robots.txt' },
-    { value: '3', label: 'Web Application Framework Infomation Leakage' },
+<Select    value={Owasp} onChange={(value)=>setOwasp(value)} placeholder="โปรดเลือกรายการ" options={[
+    //  { value: '1', label: 'Web Server Infomation Leakage through Server header' },
+    // { value: '2', label: 'Missing Secure Attribute in Cookie Header' },
+    // { value: '3', label: 'Missing HttpOnly Attribute in Cookie Header' },
     { value: '4', label: 'Directory Traversal File Include' },
-    { value: '5', label: 'Missing Secure Attribute in Cookie Header' },
-    { value: '6', label: 'Missing HttpOnly Attribute in Cookie Header' },
-    { value: '7', label: 'Missing Expires Attribute in Cookie Header' },
-    { value: '8', label: 'Missing SameSite Attribute in Cookie Header' },
-    { value: '9', label: 'Reflected Cross Site Scripting' },
+    // { value: '5', label: 'Missing Expires Attribute in Cookie Header' },
+    // { value: '6', label: 'Missing SameSite Attribute in Cookie Header' },
+    // { value: '7', label: 'Sensitive File Disclosure' },
+    // { value: '8', label: 'Missing HTTP Strict Transport Security Header' },
+    // { value: '9', label: 'Web Application Framework Infomation Leakage' },
     { value: '10', label: 'Stored Cross Site Scriptng' },
-    { value: '11', label: 'SQL Injection' },
-    { value: '12', label: 'Command Injection' }, 
-    { value: '13', label: 'Missing HTTP Strict Transport Security Header' }, 
-    { value: '14', label: 'Sensitive File Disclosure' },
-    { value: '20', label: 'Common' },   ]}>                             
+    { value: '11', label: 'SQL Injection' }, 
+    { value: '12', label: 'Command Injection' },  
+    // { value: '13', label: 'FUZZ' },   
+    ]}>                          
     </Select>
     </Form.Item>
     <Form.Item>                
@@ -279,7 +279,7 @@ const Formsummit2 = () => {
 {pay&& (
         <Form onFinish={FormsummitAll2} labelCol={{   span: 10, }}>
     <Form.Item  className="select-container" label="Payload" name="Osp2">
-    <Input type="text" className="from-control" value={payloadall} onChange={(e)=>setPayloadall(e.target.value)}/>
+    <TextArea placeholder='{"KEY":["Value","Value"","Value"","Value"","Value"","Value"","Value"","Value"]}' type="text" className="from-control" e={payloadall} onChange={(e)=>setPayloadall(e.target.value)}/>
     </Form.Item>
     <Form.Item>                
     <button  className='btn'type="submit" value="บันทึก">OK</button>

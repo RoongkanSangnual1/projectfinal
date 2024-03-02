@@ -290,7 +290,7 @@ const result = {};
 
 data.forEach(array => {
   const [PName, PTarget, Vulname, URL,PID,Severity] = array;
-  if (Vulname === "Stored Cross Site Scriptng" || Vulname === "SQL Injection" || Vulname === "Directory Traversal File Include" || Vulname === "Web Server Infomation Leakage through Server header" || Vulname === "Missing Secure Attribute in Cookie Header" || Vulname === "Missing HttpOnly Attribute in Cookie Header" || Vulname === "Missing Expires Attribute in Cookie Header" || Vulname === "Missing SameSite Attribute in Cookie Header" || Vulname === "Missing HTTP Strict Transport Security Header"|| Vulname === "Sensitive File Disclosure"|| Vulname === "Command Injection") {
+  if (Vulname === "Stored Cross Site Scriptng" || Vulname === "SQL Injection" || Vulname === "Directory Traversal File Include" || Vulname === "Web Server Infomation Leakage through Server header" || Vulname === "Missing Secure Attribute in Cookie Header" || Vulname === "Missing HttpOnly Attribute in Cookie Header" || Vulname === "Missing Expires Attribute in Cookie Header" || Vulname === "Missing SameSite Attribute in Cookie Header" || Vulname === "Missing HTTP Strict Transport Security Header"|| Vulname === "Sensitive File Disclosure"|| Vulname === "Command Injection" || Vulname === "Web Application Framework Infomation Leakage") {
     if (!result[PID]) {
       result[PID] = { PName, PTarget, PID};
     }
@@ -313,7 +313,7 @@ let sumAllMedium = 0;
 let sumAllLow = 0;
 
 finalResult.forEach(data => {
-
+  
   if (data["data SQL Injection"]) {
     if (data["data SQL Injection"][0] === "High") {
       sumAllHigh += Math.max((data["data SQL Injection"] || []).length - 1, 0);
@@ -516,10 +516,11 @@ console.log("sumAllHigh:", sumAllMedium);
 console.log("sumAllHigh:", sumAllLow);
 
 
-let sumAll = 0;
 finalResult.forEach((data,index)=> {
   
-
+let sumAll = 0;
+  console.log((data.PName))
+  console.log(Math.max((data["data SQL Injection"] || []).length - 1, 0))
   if (data["data SQL Injection"]) {
     if (data["data SQL Injection"][0] === "High") {
       sumAll += Math.max((data["data SQL Injection"] || []).length - 1, 0);
@@ -713,12 +714,12 @@ finalResult.forEach((data,index)=> {
       sumAll += Math.max((data["data Command Injection"] || []).length - 1, 0);
     }
   }
-  if (data.PID) {
+
     if (!finalResult[index].sums) {
       finalResult[index].sums = {};
     }
   finalResult[index].sums['sum'] = sumAll;
-}});
+});
 setAlldata(finalResult)
 console.log(finalResult)
 console.log("alldata",alldata)
