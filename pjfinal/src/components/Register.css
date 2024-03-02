@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   align-items: center; 
-  align-content: center;
-  justify-content: center; 
-  width: 400px;
+  /* align-content: center; */
+  /* justify-content: center;  */
+  width: 500px;
   margin: 100px auto; 
   padding: 20px;
   
@@ -35,7 +35,7 @@ font-weight: 500;
 }
 
 .forminput-control{
-  width: 300px;
+  width: 50px;
 }
 
 

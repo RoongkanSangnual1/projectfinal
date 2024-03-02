@@ -46,7 +46,7 @@ const Login = () =>{
             <Form 
             onFinish={Formsummit}
             labelCol={{
-                span: 5,
+                span: 10,
               }}
             >
                 <Form.Item

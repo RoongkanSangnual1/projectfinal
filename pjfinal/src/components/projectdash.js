@@ -1,11 +1,11 @@
 import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 import { Card,Button,Modal,Form,Input} from 'antd';
-import { ShareAltOutlined,FormOutlined } from '@ant-design/icons';
+import { LeftCircleOutlined,ShareAltOutlined,FormOutlined } from '@ant-design/icons';
 import './projectdash.css';
 import Login from './Login';
 import Navbar from './navbar';
-import Dashboard from './Dashboard.js';
+import Dashboard from './dashboard.js';
 import Issues from './Issues';
 import URLlist from './URLlists';
 import { useParams,useNavigate ,Link} from 'react-router-dom';
@@ -97,14 +97,14 @@ useEffect(() => {
   const generateTitleText = () => {
     return (
       <>
-        Name:{project_name_id.project_name}        
-        <Link to={`/myproject/edit/${project_name_n}/${project_name}`} className="projedit-btn" style={{ marginLeft: '50px',color:"blue" }}>
+        Name: {project_name_id.project_name}        
+        {/* <Link to={`/myproject/edit/${project_name_n}/${project_name}`} className="projedit-btn" style={{ marginLeft: '50px',color:"blue" }}>
           <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
-        </Link>
+        </Link> */}
         <br />
-        URL:({url})
+        URL: ({url})
         <br />
-        <>Start:{start}</>
+        <>Start: {start}</>
         <br />
         {start !== end && (<> Complete {end}</>)}
         {showComplete && (
@@ -205,12 +205,21 @@ const handleCopy = () => {
   return (
     <div className='ProjectDash'>
       <Navbar />
+      <div className='ProjectDash-Head'>
+        <LeftCircleOutlined style={{ fontSize: '30px', color: '#064061',marginRight:'80px' }}/>
+        <h2>{project_name_n}</h2>
+      </div>
+      
       <div className="ProjectDashLayout">
+        
         <Card
           style={{
             width: '100%',
           }}
           title={titleText}
+          extra={<Link to={`/myproject/edit/${project_name_n}/${project_name}`} className="projedit-btn" style={{ marginLeft: '50px',color:"blue" }}>
+          <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
+        </Link>}
           tabList={tabList}
           activeTabKey={activeTabKey1}
           onTabChange={onTab1Change}
@@ -241,7 +250,7 @@ const handleCopy = () => {
 
         </PDFDownloadLink> */}
         {/* <PDF id={project_name} name={project_name_n}/> */}
-        <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(850px) scale(1.5)', marginTop: '20px' }} >Share</Button>
+        <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(1000px) scale(1.5)', marginTop: '20px' }} >Share</Button>
         </Card>
   
         <Modal title="SHARE" open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
