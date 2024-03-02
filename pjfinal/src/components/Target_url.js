@@ -93,8 +93,8 @@ const Target_url = () => {
                                 size={30}
                                 aria-label="Loading Spinner"
                                data-testid="loader"
-                                />  <br/>  Crawling...
-                            </>)  : "Crawl"}
+                                />  <br/>  Scanning...
+                            </>)  : "Scan"}
                         </button>
 </Form.Item>
                     </Form>
