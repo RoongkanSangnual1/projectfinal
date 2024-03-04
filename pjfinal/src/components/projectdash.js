@@ -1,6 +1,6 @@
 import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
-import { Card,Button,Modal,Form,Input} from 'antd';
+import { Card,Button,Modal,Form,Input, Descriptions} from 'antd';
 import { LeftCircleOutlined,ShareAltOutlined,FormOutlined } from '@ant-design/icons';
 import './projectdash.css';
 import Login from './Login';
@@ -27,6 +27,7 @@ const ProjectDash = () => {
     const dispatch = useDispatch()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [url,setUrl] = useState("")
+    const [Des,setDes] = useState("")
     const [start,setstart] = useState("")
     const [end,setend] = useState("")
     const [link_, setLink_] = useState("");
@@ -58,6 +59,7 @@ const ProjectDash = () => {
           } else {
             if (response.data[1].url_target[0]) {
               setUrl(response.data[1].url_target[0][0]);
+              setDes(response.data[1].url_target[0][1]);
               setstart(response.data[1].url_target[0][3]);
               setend(response.data[1].url_target[0][4]);
             } else {
@@ -99,16 +101,52 @@ useEffect(() => {
   const generateTitleText = () => {
     return (
       <>
-        Name: {project_name_id.project_name}        
-        {/* <Link to={`/myproject/edit/${project_name_n}/${project_name}`} className="projedit-btn" style={{ marginLeft: '50px',color:"blue" }}>
-          <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
-        </Link> */}
-        <br />
-        URL: ({url})
-        <br />
-        <>Start: {start}</>
-        <br />
-        {start !== end && (<> Complete {end}</>)}
+<p style={{
+  fontSize: '22px',
+  color: 'grey',
+  marginTop: '0px',
+  whiteSpace: 'pre-line',
+  marginBottom: '0',
+  textAlign:"center"
+}}> Name: {project_name_id.project_name}</p>
+
+<p style={{
+  fontSize: '22px',
+  color: 'grey',
+  marginTop: '0px',
+  whiteSpace: 'pre-line',
+  marginBottom: '0',
+  textAlign:"center"
+}}> URL: ({url})</p>
+
+<p className="projdes" style={{
+  fontSize: '15px',
+  color: 'grey',
+  marginTop: '0px',
+  wordWrap: 'break-word',
+  wordBreak: 'break-all',
+  whiteSpace: 'pre-line',
+  marginBottom: '0',
+  maxWidth: '1000px'  
+}}> Descriptions: {Des}</p>
+
+<p style={{
+  fontSize: '15px',
+  color: 'grey',
+  marginTop: '0px',
+  whiteSpace: 'pre-line',
+  marginBottom: '0',
+  textAlign:"center"
+}}> Start: {start}</p>
+
+        {start !== end && (<p style={{
+  fontSize: '15px',
+  color: 'grey',
+  marginTop: '0px',
+  whiteSpace: 'pre-line',
+  marginBottom: '0',
+  textAlign:"center"
+}}>  Complete {end}</p>)}
         {showComplete && (
           <>
             Complete

@@ -148,12 +148,12 @@ const Home = () => {
                                 </div>,
 
                         children: 
-                        <div>
+                        <div >
 
-                        <Link className="projedit-btn" to={`/myproject/${project[1]}/${project[2]}`}>
+                        <Link style={{textAlign:"center"}} className="projedit-btn" to={`/myproject/${project[1]}/${project[2]}`}>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                          <div className="projcollaspe-content">
-                            <p className="projdes" style={{ fontSize: '15px', color: 'grey', marginTop: '0px' }}>{project[0]}</p>
+                          <div className="projcollaspe-content" > 
+                            <p className="projdes" style={{ fontSize: '15px', color: 'grey', marginTop: '0px',whiteSpace: 'pre-line',maxWidth: '1000px'  }}>{project[0]}</p>
                           </div>
                       
                         <Link to={`/myproject/edit/${project[1]}/${project[2]}`} className="projedit-btn" style={{ marginLeft: '650px' }}>

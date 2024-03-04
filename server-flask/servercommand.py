@@ -3587,7 +3587,38 @@ def payload4():
     except Exception as e:
         print(f"Error: {e}")
 
+from flask import jsonify
 
+@app.route("/payload5", methods=['POST'])
+def delete_payload():
+    try:
+        token = request.headers.get('Authorization').split(" ")[1]
+        user = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])['user']
+        admin = user.get('role', None)
+        
+        if (admin == 'Admin'):
+            payload_ = request.json['payloadone']
+            # value_payload = request.json['valuepayload']
+            Owasp = request.json['Owasp']
+            # print(payload_)
+            # print(f'\"{value_payload}\"')
+            print(Owasp)
+            # print(f'\"$.{payload_}\"')
+
+            with mysql.connection.cursor() as db:
+                query = "UPDATE owasp SET payloadlist = JSON_REMOVE(payloadlist, %s) WHERE OID = %s"
+                db.execute(query, (f'$.{payload_}', Owasp))
+
+            mysql.connection.commit()
+            return jsonify({"success": True})
+        else:
+            return jsonify({"login": False})
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)})
+    
+    
 # ยิงjson
 # @app.route("/dashboard", methods=['GET'])
 # def jsonnn():

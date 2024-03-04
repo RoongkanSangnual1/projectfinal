@@ -9,7 +9,7 @@ import EditPrjectDash from "./components/Editprjectall";
 import ProjectDash from "./components/projectdash";
 import DashboardAll from "./components/DashboardAll";
 import Edithome from "./components/Edithome";
-
+import ProjectDashAdmin from "./components/projectdashAdmin";
 
 
 const Router = () =>{
@@ -24,7 +24,7 @@ const Router = () =>{
             <Route path="/Dashboard" element={<DashboardAll/>}></Route>
 
             <Route path="/create" element={<Target_url/>}></Route>
-            <Route path="/Admin" element={<Admin/>}></Route>
+            <Route path="/Admin" element={<ProjectDashAdmin/>}></Route>
             {/* <Route path="/:project_name" element={<Onedata/>}></Route> */}
             <Route path="/myproject/:project_name/:project_name_id" element={<ProjectDash/>}></Route>
             <Route path="/myproject/edit/:project_name/:project_name_id" element={<Edithome/>}></Route>
