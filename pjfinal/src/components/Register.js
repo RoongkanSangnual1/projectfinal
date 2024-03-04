@@ -22,17 +22,35 @@ const Register = () =>{
     
     const Formsummit = async () => {
 
-        if (username.length >= 6) {
+        if (username.length >= 6 ) {
         
         }
         else{
                 return Swal.fire({
                 title: "Username Error",
-                text: "Username must be at least 6 characters long",
+                text: "Password must be at least 6 characters long",
                 icon: "error",
               });
         }
         if (password.length >= 8) {
+
+
+            if (!/[A-Z]/.test(password)) {
+                return Swal.fire({
+                    title: "Passwords Error",
+                    text: "Password must contain at least 1 uppercase letter",
+                    icon: "error",
+                });
+            }
+        
+    
+            if (!/[@#$%^&*()_+={}[\]:;,.?~\\/]/.test(password)) {
+                return Swal.fire({
+                    title: "Passwords Error",
+                    text: "Password must contain at least 1 special character (!/[@#$%^&*()_+={}[\]:;,.?~\\/]",
+                    icon: "error",
+                });
+            }
         
         }
         else{

@@ -9,6 +9,7 @@ import csv
 import base64
 from flask_mysqldb import MySQL
 import json
+from urllib.parse import quote
 import jwt
 import subprocess
 import os
@@ -66,6 +67,45 @@ async def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,vi
                         print(f'Collect.. {response.url} -> {response.status_code} ..is {response.is_redirect} to {re_location}')
                         await checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
                         await get_links(soup,project_name,user,baseURL,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                        
+            else:
+                return "crawl"
+    except Exception as e:
+        print(f"crawl: {e}")
+        return None
+
+async def crawladd(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
+    try:
+        if len(visited_urls) >= 100:
+            return "crawl"
+        
+        else:
+            if url not in visited_urls:
+                print(url,project_name,user,Host,baseURL,)
+                visited_urls.append(url)
+                response = await get_response(url,cookies_data)
+                if response is not None:
+                    if urlparse(response.url).netloc == Host:
+    
+                        re_location = 'None'
+                        soup = BeautifulSoup(response.text, 'lxml')
+                        formlist = await findActForm(soup)
+                        if format != {}:
+                            i = 1
+                            await save_log(response, i,project_name,user,Host,http_log_data,formlist)
+                            i += 1
+                            i = await checkAct(formlist,i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls,visited_post)
+                            
+                        else:
+                            await save_log(response, i,project_name,user,Host,http_log_data)
+                    
+                            i += 1
+                        
+                            
+                        
+                        # print(f'Collect.. {response.url} -> {response.status_code} ..is {response.is_redirect} to {re_location}')
+                        # await checkRedirect(response,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+                        # await get_links(soup,project_name,user,baseURL,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
                         
             else:
                 return "crawl"
@@ -198,6 +238,7 @@ async def save_log(response, i,project_name,user,Host,http_log_data,formlist=Non
         )
         db.execute(insert_query, values)
         mysql.connection.commit()
+        print("save log")
         # http_log[log_key] = http_log_data
         # print(f'{i}-{http_log[log_key]["URL"]}')
         # csv_name = f"{project_name}.csv"
@@ -1607,12 +1648,12 @@ async def crawl_endpoint():
                 print('[-] we cannot find command injection')
   
   
-        # try:        
-        #     await run_gobustersensitive(baseURL,project_name,user)
-        #     print("baseURLsensitive",baseURL)
-        #     await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
-        # except Exception as e:
-        #     print(f"run_gobustersensitive: {e}")
+        try:        
+            await run_gobustersensitive(baseURL,project_name,user)
+            print("baseURLsensitive",baseURL)
+            await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
+        except Exception as e:
+            print(f"run_gobustersensitive: {e}")
                 
 
         db = mysql.connection.cursor()
@@ -2171,7 +2212,7 @@ def check():
 
 
 @app.route("/addurls", methods=['POST'])
-def addurls():
+async def addurls():
     try:
         token_user = request.headers.get('Authorization').split(" ")[1]
         user = jwt.decode(token_user, 'jwtSecret', algorithms=["HS256"])['user']
@@ -2179,27 +2220,209 @@ def addurls():
 
 
         url = request.json['urls']
+        encoded_url = quote(url, safe=':/?=&')
+        print(encoded_url)
         method = request.json['method']
         parameter = request.json['parameter']
         project_name_id = request.json['project_name_id']
-        db = mysql.connection.cursor()
-
+        Host = urlparse(encoded_url).netloc
+        baseURL = urlparse(encoded_url).scheme + '://' + urlparse(encoded_url).netloc
         db = mysql.connection.cursor()
         user_query = "SELECT username FROM project WHERE username = %s AND PID = %s"
         db.execute(user_query, (user_data, project_name_id))
         username = db.fetchall()
         print(username)
-     
+        visited_urls = []
+        cookies_data = {}
+        http_log_data = {}
+        visited_post={}
         if username[0][0] not in user_data:
             return jsonify({'error': 'User Error'}), 403
+        
+        project_name_check = "SELECT PName FROM project WHERE username = %s AND PID=%s"
+        db.execute(project_name_check, (user_data,project_name_id))     
+        project_name_checkk = db.fetchall()
+        print("project_name_checkk",project_name_checkk[0][0])
+        try:
 
-        query = ('INSERT INTO urllist(URL,method,PID,state,status_code) VALUES(%s,%s,%s,%s,%s)')
-        db.execute(query, (url, method, project_name_id, 'c',parameter),)
-        mysql.connection.commit()
-        print(url)
-        print(method)
-        print(parameter)
-        print(project_name_id)
+            # query = ('INSERT INTO urllist(URL,method,PID,state,status_code) VALUES(%s,%s,%s,%s,%s)')
+            # db.execute(query, (url, method, project_name_id, 'c',parameter),)
+            # mysql.connection.commit()
+            cres = await crawladd(encoded_url,project_name_checkk[0][0],user_data,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
+        except Exception as e:
+            print(f"crawl error: {e}")
+        db = mysql.connection.cursor()
+        queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s AND URL= %s"
+        db.execute(queryServer, (project_name_id,encoded_url))
+        Server = db.fetchall()
+        try:   
+            await detect_web_server_leakage(Server)
+            print(f"detect_web_server_leakage(Parget): {encoded_url}")
+        except Exception as e:
+                    print(f"detect_web_server_leakage: {e}")
+        try:  
+             await check_cookie_attributes(Server)
+             print(f"check_cookie_attributes(Parget): {encoded_url}")
+        except Exception as e:
+                    print(f"check_cookie_attributes: {e}")
+        querypathtraversal = "SELECT URL,req_header,PID,URL_ID FROM urllist WHERE PID = %s AND URL= %s"
+        db.execute(querypathtraversal, (project_name_id,encoded_url))
+        pathtraversal = db.fetchall()
+
+        try:
+            await detect_pathtraversal(pathtraversal)
+            print(f"pathtraversal(Parget): {encoded_url}")
+        except Exception as e:
+                    print(f"await detect_pathtraversal(pathtraversal): {e}")
+
+
+        queryPTarget = "SELECT URL,res_header,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s"
+        db.execute(queryPTarget, (project_name_id,encoded_url))
+        PTarget = db.fetchall()
+        print(project_name_id,encoded_url)
+        print("PTarget", PTarget)
+        try:
+            await HSTS(PTarget)
+            await webFramework(PTarget)
+            print(f"await webFramework(PTarget): {encoded_url}")
+        except Exception as e:
+            print(f"await webFramework(PTarget): {e}")
+
+
+        queryPTargethtml = "SELECT URL,res_body,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s"
+        db.execute(queryPTargethtml,(project_name_id,encoded_url))
+        PTarget = db.fetchall()
+        
+        try:       
+            await webFrameworkhtml(PTarget)
+            print(f"webFrameworkhtml: {encoded_url}")
+        except Exception as e:
+            print(f"await webFrameworkhtml(PTarget): {e}")
+        queryURL_data = "SELECT URL , method,req_body FROM urllist WHERE PID = %s AND URL = %s"
+        db.execute(queryURL_data, (project_name_id,encoded_url))
+        URL_data = db.fetchall()
+        print(URL_data)
+        for url_data in URL_data:
+            baseatt_URL = url_data[0]
+            print(f'baseatt_URL',baseatt_URL)
+            select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s "
+            db.execute(select_url_id_query, (project_name_id,encoded_url))
+            select_url_id = db.fetchall()
+            select_url_id_data = select_url_id[0]
+            print(f'select_url_id crawl',select_url_id)
+            Host = urlparse(baseatt_URL).netloc
+            cookies_data_ = {}
+            baseper = len((await get_response(baseatt_URL,cookies_data)).content)
+            print('b:'+str(baseper))
+            # print(baseatt_URL)
+            print(urlparse(baseatt_URL))
+            att_url = urlparse(baseatt_URL).scheme+'://'+urlparse(baseatt_URL).netloc+urlparse(baseatt_URL).path
+            att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+            #parse full query to dictionary
+
+
+            if urlparse(baseatt_URL).query != '' :
+                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                att_params={}
+                #parse full query to dictionary
+                for i in urlparse(baseatt_URL).query.split('&'):
+                    #params=value
+                    # print(i)
+                    att_params.update({i.split('=')[0]: i.split('=')[1]})
+                # print("project_name",project_name)
+                try:
+                    await brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name_checkk[0][0], user_data,cookies_data)
+                except Exception as e:
+                    print(f"brutesql: {e}")
+            # print(vresults)
+            # all_results.extend(vresults)
+            # for vres, vparams in vresults:
+            #     print(vres)
+            #     print(vparams)           
+            else:
+                print('we cannot find sql injection')
+
+            if urlparse(baseatt_URL).query != '' :
+                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                att_params={}
+                att_paramsname = []
+                #parse full query to dictionary
+                for i in urlparse(baseatt_URL).query.split('&'):
+                    #params=value
+                    # print(i)
+                    att_params.update({i.split('=')[0]: i.split('=')[1]})
+                    att_paramsname.append(i.split('=')[0])
+                # print(att_url)
+                print("project_name",project_name_checkk[0][0])
+                try: 
+                    await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name_checkk[0][0], user_data,cookies_data)
+                except Exception as e:
+                    print(f"brutexss: {e}")
+                # if vres and vparams != None:
+                #     print(vres)
+                #     print(vparams)
+            else:
+                print('we cannot find xss injection in this way')
+
+
+            if urlparse(baseatt_URL).query != '' :
+                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                att_params={}
+                att_paramsname = []
+                #parse full query to dictionary
+                for i in urlparse(baseatt_URL).query.split('&'):
+                    #params=value
+                    # print(i)
+                    att_params.update({i.split('=')[0]: i.split('=')[1]})
+                    att_paramsname.append(i.split('=')[0])
+                # print(att_url)
+                print("project_name",project_name_checkk[0][0]) 
+                try:   
+                    await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name_checkk[0][0], user_data,cookies_data)
+                except Exception as e:
+                    print(f"brutepathtraversal: {e}")
+                                    # if vres and vparams != None:
+                #     print(vres)
+                #     print(vparams)
+            else:
+                print('[-] we cannot find path traversal')
+
+
+            if url_data[1] == 'POST':
+                print("url_data[0] POST",url_data[1])
+                if url_data[2] != None :
+                    att_paramsnum = len(url_data[2].split('&'))
+                    att_params={}
+                    att_paramsname = []
+                    #parse full query to dictionary
+                    for i in url_data[2].split('&'):
+                        #params=value
+                        # print(i)
+                        att_params.update({i.split('=')[0]: i.split('=')[1]})
+                        att_paramsname.append(i.split('=')[0])
+                    # print(att_url)
+                    try:      
+                        await brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name_checkk[0][0], user_data,cookies_data,url_data[2])
+                    except Exception as e:
+                        print(f"brutepathtraversal: {e}")
+                    # if vres and vparams != None:
+                    #     print(vres)
+                    #     print(vparams)
+            else:
+                print('[-] we cannot find command injection')
+        try:        
+            await run_gobustersensitive(baseURL,project_name_checkk[0][0], user_data)
+            print("baseURLsensitive",baseURL)
+            await checkTempFuzzsensitive(i,project_name_checkk[0][0], user_data,encoded_url,project_name_id)
+        except Exception as e:
+            print(f"run_gobustersensitive: {e}")
+        # query = ('INSERT INTO urllist(URL,method,PID,state,status_code) VALUES(%s,%s,%s,%s,%s)')
+        # db.execute(query, (url, method, project_name_id, 'c',parameter),)
+        # mysql.connection.commit()
+        # print(url)
+        # print(method)
+        # print(parameter)
+        # print(project_name_id)
         return jsonify("Add URLS สำเร็จ")
     except Exception as e:
         return jsonify({"server error": str(e)})

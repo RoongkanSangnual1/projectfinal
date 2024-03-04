@@ -21,9 +21,8 @@ const URLlist = (props) => {
   const [Delete, setDelete] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = localStorage.user;
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    const token = localStorage.getItem("token");
     axios
       .get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`, {
         headers: {
@@ -116,7 +115,6 @@ const URLlist = (props) => {
   }
 
   const handleDelete = (iddelete) => {
-    const token = localStorage.getItem("token");
 
     Swal.fire({
 
@@ -202,8 +200,22 @@ const URLlist = (props) => {
     setIsModalOpen(false);
   };
 
+
+  function isURL(input) {
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlRegex.test(input);
+}
+
+
   const Formsummit = () => {
-    const token = localStorage.getItem("token");
+    if (!isURL(urls)) {
+      return Swal.fire({
+        title: "url Error",
+        text: "url Error",
+        icon: "error",
+      });
+  }
+
     axios
       .post(
         `http://127.0.0.1:5000/addurls`,
