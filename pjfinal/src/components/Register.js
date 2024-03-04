@@ -13,7 +13,44 @@ const Register = () =>{
     const[wrong,setWrong] = useState("")
     const navigate = useNavigate()
 
+
+
+    const  validateEmail=(email)=>{
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
     const Formsummit = async () => {
+
+        if (username.length >= 6) {
+        
+        }
+        else{
+                return Swal.fire({
+                title: "Username Error",
+                text: "Username must be at least 6 characters long",
+                icon: "error",
+              });
+        }
+        if (password.length >= 8) {
+        
+        }
+        else{
+                return Swal.fire({
+                title: "Passwords Error",
+                text: "Password must be at least 8 characters long",
+                icon: "error",
+              });
+        }
+        if (validateEmail(email)) {
+    
+        } else {
+            return Swal.fire({
+                title: "email Error",
+                text: "email don't match",
+                icon: "error",
+              });
+        }
         if (password !== cpassword) {
             return Swal.fire({
                 title: "Passwords Error",
@@ -21,6 +58,7 @@ const Register = () =>{
                 icon: "error",
               });
         }
+
     
         try {
             const response = await axios.post(`http://localhost:8000/api/register`, {

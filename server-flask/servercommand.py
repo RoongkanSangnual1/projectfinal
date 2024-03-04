@@ -2267,9 +2267,11 @@ def addIssue():
         db.execute(query, (project_name_id,url),)
         url_id = db.fetchall()
         print(f"Selected URL_ID")
-
-        query = ('INSERT INTO att_ps(URL_ID,URL, position, PID, vul_des, vul_Sol, OID, payload,state,vul_name) VALUES(%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)')
-        db.execute(query, (url_id[0][0],url, url, project_name_id, vul_Des, vul_Sol, O_id, payload_,"T",O_name[0]))
+        query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name ,Severity FROM owasp WHERE OID= %s"
+        db.execute(query2, (O_id,))
+        sql2_ = db.fetchall()
+        query = ('INSERT INTO att_ps(URL_ID,URL, position, PID, vul_des, vul_Sol, OID, payload,state,vul_name, Vul_ref, OType) VALUES(%s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s)')
+        db.execute(query, (url_id[0][0],url, url, project_name_id, vul_Des or sql2_[0][0] , vul_Sol or  sql2_[0][1], O_id, payload_,"T",O_name[0],sql2_[0][2],sql2_[0][3]))
         mysql.connection.commit()
         print(f"Inserted into att_ps")
         return jsonify("Add URLS สำเร็จ")

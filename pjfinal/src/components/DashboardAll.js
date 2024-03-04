@@ -256,6 +256,7 @@ const DashboardAll = () => {
   const [High, setHigh] = useState([]);
   const [Medium, setMedium] = useState([]);
   const [Low, setLow] = useState([]);
+  const [Critical, setCritical] = useState([]);
   const [projectOneDataTravel, setProjectOneDataTravel] = useState([]);
   const [time, Settime] = useState([]);
   const user = localStorage.user;
@@ -307,12 +308,82 @@ const DashboardAll = () => {
 
 
 
-
+        let sumAllCritical = 0;
         let sumAllHigh = 0;
         let sumAllMedium = 0;
         let sumAllLow = 0;
 
         finalResult.forEach(data => {
+          if (data["data SQL Injection"]) {
+            if (data["data SQL Injection"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data SQL Injection"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Stored Cross Site Scriptng"]) {
+            if (data["data Stored Cross Site Scriptng"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Stored Cross Site Scriptng"] || []).length - 1, 0);
+            }
+          }
+
+          if (data["data Directory Traversal File Include"]) {
+            if (data["data Directory Traversal File Include"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Directory Traversal File Include"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing HTTP Strict Transport Security Header"]) {
+            if (data["data Missing HTTP Strict Transport Security Header"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Missing HTTP Strict Transport Security Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing Secure Attribute in Cookie Header"]) {
+            if (data["data Missing Secure Attribute in Cookie Header"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Missing Secure Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing HttpOnly Attribute in Cookie Header"]) {
+            if (data["data Missing HttpOnly Attribute in Cookie Header"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Missing HttpOnly Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing Expires Attribute in Cookie Header"]) {
+            if (data["data Missing Expires Attribute in Cookie Header"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Missing Expires Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing SameSite Attribute in Cookie Header"]) {
+            if (data["data Missing SameSite Attribute in Cookie Header"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Missing SameSite Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Web Server Infomation Leakage through Server header"]) {
+            if (data["data Web Server Infomation Leakage through Server header"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Web Server Infomation Leakage through Server header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Sensitive File Disclosure"]) {
+            if (data["data Sensitive File Disclosure"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Sensitive File Disclosure"] || []).length - 1, 0);
+            }
+          }
+
+          if (data["data Web Application Framework Infomation Leakage"]) {
+            if (data["data Web Application Framework Infomation Leakage"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Web Application Framework Infomation Leakage"] || []).length - 1, 0);
+            }
+          }
+
+          if (data["data Command Injection"]) {
+            if (data["data Command Injection"][0] === "Critical") {
+              sumAllCritical += Math.max((data["data Command Injection"] || []).length - 1, 0);
+            }
+          }
+
+
+
+
+
+
+
 
           if (data["data SQL Injection"]) {
             if (data["data SQL Injection"][0] === "High") {
@@ -377,6 +448,10 @@ const DashboardAll = () => {
               sumAllHigh += Math.max((data["data Command Injection"] || []).length - 1, 0);
             }
           }
+
+
+
+
 
           if (data["data SQL Injection"]) {
             if (data["data SQL Injection"][0] === "Medium") {
@@ -511,6 +586,7 @@ const DashboardAll = () => {
         setHigh(sumAllHigh)
         setMedium(sumAllMedium)
         setLow(sumAllLow)
+        setCritical(sumAllCritical)
         console.log("sumAllHigh:", sumAllHigh);
         console.log("sumAllHigh:", sumAllMedium);
         console.log("sumAllHigh:", sumAllLow);
@@ -520,6 +596,75 @@ const DashboardAll = () => {
 
           let sumAll = 0;
           console.log((data.PName))
+          if (data["data SQL Injection"]) {
+            if (data["data SQL Injection"][0] === "Critical") {
+              sumAll += Math.max((data["data SQL Injection"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Stored Cross Site Scriptng"]) {
+            if (data["data Stored Cross Site Scriptng"][0] === "Critical") {
+              sumAll += Math.max((data["data Stored Cross Site Scriptng"] || []).length - 1, 0);
+            }
+          }
+
+          if (data["data Directory Traversal File Include"]) {
+            if (data["data Directory Traversal File Include"][0] === "Critical") {
+              sumAll += Math.max((data["data Directory Traversal File Include"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing HTTP Strict Transport Security Header"]) {
+            if (data["data Missing HTTP Strict Transport Security Header"][0] === "Critical") {
+              sumAll += Math.max((data["data Missing HTTP Strict Transport Security Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing Secure Attribute in Cookie Header"]) {
+            if (data["data Missing Secure Attribute in Cookie Header"][0] === "Critical") {
+              sumAll += Math.max((data["data Missing Secure Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing HttpOnly Attribute in Cookie Header"]) {
+            if (data["data Missing HttpOnly Attribute in Cookie Header"][0] === "Critical") {
+              sumAll += Math.max((data["data Missing HttpOnly Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing Expires Attribute in Cookie Header"]) {
+            if (data["data Missing Expires Attribute in Cookie Header"][0] === "Critical") {
+              sumAll += Math.max((data["data Missing Expires Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Missing SameSite Attribute in Cookie Header"]) {
+            if (data["data Missing SameSite Attribute in Cookie Header"][0] === "Critical") {
+              sumAll += Math.max((data["data Missing SameSite Attribute in Cookie Header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Web Server Infomation Leakage through Server header"]) {
+            if (data["data Web Server Infomation Leakage through Server header"][0] === "Critical") {
+              sumAll += Math.max((data["data Web Server Infomation Leakage through Server header"] || []).length - 1, 0);
+            }
+          }
+          if (data["data Sensitive File Disclosure"]) {
+            if (data["data Sensitive File Disclosure"][0] === "Critical") {
+              sumAll += Math.max((data["data Sensitive File Disclosure"] || []).length - 1, 0);
+            }
+          }
+
+          if (data["data Web Application Framework Infomation Leakage"]) {
+            if (data["data Web Application Framework Infomation Leakage"][0] === "Critical") {
+              sumAll += Math.max((data["data Web Application Framework Infomation Leakage"] || []).length - 1, 0);
+            }
+          }
+
+          if (data["data Command Injection"]) {
+            if (data["data Command Injection"][0] === "Critical") {
+              sumAll += Math.max((data["data Command Injection"] || []).length - 1, 0);
+            }
+          }
+
+
+
+
+
+
           console.log(Math.max((data["data SQL Injection"] || []).length - 1, 0))
           if (data["data SQL Injection"]) {
             if (data["data SQL Injection"][0] === "High") {
@@ -740,6 +885,7 @@ const DashboardAll = () => {
 
   const classifyVulnerabilities = () => {
     const counts = {
+      Critical:Critical,
       high: High,
       medium: Medium,
       low: Low
@@ -751,12 +897,13 @@ const DashboardAll = () => {
 
   const vulnerabilityCounts = classifyVulnerabilities();
   const pieChartData = [
+    { type: 'Critical', value: vulnerabilityCounts.Critical },
     { type: 'High', value: vulnerabilityCounts.high },
     { type: 'Medium', value: vulnerabilityCounts.medium },
     { type: 'Low', value: vulnerabilityCounts.low },
   ];
   const RADIAN = Math.PI / 180;
-  const COLORS = ['#FF0000', '#FFBB28', '#6F77B1 '];
+  const COLORS = ["#FF0000","#FF5100", "#FFBB28", "#6F77B1"];
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -798,7 +945,10 @@ const DashboardAll = () => {
               </ResponsiveContainer>
 
               <div className='highlightAll-container'>
-                <div className='circle-redd'></div>
+              <div className='circle-redd'></div>
+                <p>Critical </p>
+                <p >({Critical})</p>
+                <div className='circle-orangee'></div>
                 <p>High </p>
                 <p >({High})</p>
                 <div className='circle-yelloww'></div>
@@ -847,6 +997,26 @@ const DashboardAll = () => {
 
                     </div>
                     <div className='dashboardAll-s2-proj-b-c2'>
+                    <div className='circle-redminii'>
+                        {/* <p className='circle-text'>{data["data SQL Injection"].length-1 + data["data Stored Cross Site Scriptng"].length-1}</p> */}
+                        <p className='circle-text'>
+                          {
+                            (data["data SQL Injection"] ? (data["data SQL Injection"][0] === "Critical" ? data["data SQL Injection"].length - 1 : 0) : 0) +
+                            (data["data Stored Cross Site Scriptng"] ? (data["data Stored Cross Site Scriptng"][0] === "Critical" ? data["data Stored Cross Site Scriptng"].length - 1 : 0) : 0) +
+                            (data["data Directory Traversal File Include"] ? (data["data Directory Traversal File Include"][0] === "Critical" ? data["data Directory Traversal File Include"].length - 1 : 0) : 0) +
+                            (data["data Missing HTTP Strict Transport Security Header"] ? (data["data Missing HTTP Strict Transport Security Header"][0] === "Critical" ? data["data Missing HTTP Strict Transport Security Header"].length - 1 : 0) : 0) +
+                            (data["data Missing Secure Attribute in Cookie Header"] ? (data["data Missing Secure Attribute in Cookie Header"][0] === "Critical" ? data["data Missing Secure Attribute in Cookie Header"].length - 1 : 0) : 0) +
+                            (data["data Missing HttpOnly Attribute in Cookie Header"] ? (data["data Missing HttpOnly Attribute in Cookie Header"][0] === "Critical" ? data["data Missing HttpOnly Attribute in Cookie Header"].length - 1 : 0) : 0) +
+                            (data["data Missing Expires Attribute in Cookie Header"] ? (data["data Missing Expires Attribute in Cookie Header"][0] === "Critical" ? data["data Missing Expires Attribute in Cookie Header"].length - 1 : 0) : 0) +
+                            (data["data Missing SameSite Attribute in Cookie Header"] ? (data["data Missing SameSite Attribute in Cookie Header"][0] === "Critical" ? data["data Missing SameSite Attribute in Cookie Header"].length - 1 : 0) : 0) +
+                            (data["data Web Server Infomation Leakage through Server header"] ? (data["data Web Server Infomation Leakage through Server header"][0] === "Critical" ? data["data Web Server Infomation Leakage through Server header"].length - 1 : 0) : 0) +
+                            (data["data Sensitive File Disclosure"] ? (data["data Sensitive File Disclosure"][0] === "Critical" ? data["data Sensitive File Disclosure"].length - 1 : 0) : 0) +
+                            (data["data Web Application Framework Infomation Leakage"] ? (data["data Web Application Framework Infomation Leakage"][0] === "Critical" ? data["data Web Application Framework Infomation Leakage"].length - 1 : 0) : 0) +
+                            (data["data Command Injection"] ? (data["data Command Injection"][0] === "Critical" ? data["data Command Injection"].length - 1 : 0) : 0)
+                          }
+                        </p>
+
+                      </div>
                       <div className='circle-redmini'>
                         {/* <p className='circle-text'>{data["data SQL Injection"].length-1 + data["data Stored Cross Site Scriptng"].length-1}</p> */}
                         <p className='circle-text'>

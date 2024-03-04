@@ -306,6 +306,10 @@ const SQlinject = (props) => {
           {"Missing SameSite Attribute in Cookie Header": samsite},
           {"Web Server Infomation Leakage through Server header": server},
           {"Missing HTTP Strict Transport Security Header": HSTS},
+          {"Web Application Framework Infomation Leakage": web},
+          {"Sensitive File Disclosure": Sensitive},
+          {"Command Injection": Command},
+          {"owasp_":response.data[16].owasp_}
         ]);
   
         setHSTS(HSTS);
@@ -535,7 +539,9 @@ const SQlinject = (props) => {
         case 'Medium':
           return '#FFBB28';
         case 'High':
-          return '#FF0000';
+          return '#FF5100';
+          case 'Critical':
+            return '#FF0000';
         default:
           return '#000000';
       }
@@ -800,8 +806,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
@@ -1008,8 +1017,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
@@ -1209,8 +1221,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
@@ -1432,8 +1447,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
@@ -1647,8 +1665,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
@@ -1863,8 +1884,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
@@ -2079,8 +2103,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
@@ -2296,8 +2323,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
@@ -2514,8 +2544,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
@@ -2725,8 +2758,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
@@ -3050,8 +3086,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
@@ -3262,8 +3301,11 @@ const SQlinject = (props) => {
         <option style={{ color: "#FFBB28" }} value="Medium">
           Medium
         </option>
-        <option style={{ color: "#FF0000" }} value="High">
+        <option style={{ color: "#FF5100" }} value="High">
           High
+        </option>
+        <option style={{ color: "#FF0000" }} value="Critical">
+        Critical
         </option>
       </select>
       <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>

@@ -72,7 +72,16 @@
     
   }
   
-
+  .circle-orange {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #FF5100;
+    margin-left:20px;
+   
+    
+  }
   .circle-yellow {
     width: 20px;
     height: 20px;
@@ -203,6 +212,17 @@ td{
   
 }
 
+.circle-orangee {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: #FF5100;
+
+  
+  
+}
 
 .circle-yelloww {
   display: flex;
@@ -289,7 +309,8 @@ td{
   
 }
 
-.circle-redmini {
+
+.circle-redminii {
   width: 45px; 
   height: 40px; 
   border-radius: 70%;
@@ -300,7 +321,16 @@ td{
   justify-content: center;
   margin-right: 15px;
 }
-  
+.circle-redmini {
+  width: 45px; 
+  height: 40px; 
+  border-radius: 70%;
+  background-color: #FF5100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
 .circle-yellowmini {
   width: 45px; 
   height: 40px; 

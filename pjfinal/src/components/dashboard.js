@@ -233,6 +233,19 @@ const Dashboard = () => {
 
   const PieCout = () => {
     const counts = {
+      Critical:
+      (severitySQL === "Critical" ? projectOneDataSQL.length : 0) +
+      (severityXSS === "Critical" ? projectOneDataXSS.length : 0) +
+      (severityTraval === "Critical" ? projectOneDataTravel.length : 0) +
+      (severitysamsite === "Critical" ? samsite.length : 0) +
+      (severitySecure === "Critical" ? secure.length : 0) +
+      (severityserver === "Critical" ? server.length : 0) +
+      (severityhttponly === "Critical" ? httponly.length : 0) +
+      (severityHSTS === "Critical" ? HSTS.length : 0) +
+      (severityexpire === "Critical" ? expire.length : 0) +
+      (severitysensitive === "Critical" ? Sensitive.length : 0) +
+      (severitywebb === "Critical" ? web.length : 0) +
+      (severitycommand === "Critical" ? command.length : 0),
       high:
         (severitySQL === "High" ? projectOneDataSQL.length : 0) +
         (severityXSS === "High" ? projectOneDataXSS.length : 0) +
@@ -277,16 +290,19 @@ const Dashboard = () => {
     return counts;
   };
 
+
   const getColorForSeverity = (severity) => {
     switch (severity) {
-      case "Low":
-        return "#6F77B1";
-      case "Medium":
-        return "#FFBB28";
-      case "High":
-        return "#FF0000";
+      case 'Low':
+        return '#6F77B1';
+      case 'Medium':
+        return '#FFBB28';
+      case 'High':
+        return '#FF5100';
+        case 'Critical':
+          return '#FF0000';
       default:
-        return "#000000";
+        return '#000000';
     }
   };
 
@@ -302,12 +318,13 @@ const Dashboard = () => {
   //   console.log("severityserver",server)
 
   const pieChartData = [
+    { type: "Critical", value: vulnerCounts.Critical },
     { type: "High", value: vulnerCounts.high },
     { type: "Medium", value: vulnerCounts.medium },
     { type: "Low", value: vulnerCounts.low },
   ];
   const RADIAN = Math.PI / 180;
-  const COLORS = ["#FF0000", "#FFBB28", "#6F77B1"];
+  const COLORS = ["#FF0000","#FF5100", "#FFBB28", "#6F77B1"];
   const renderCustomizedLabel = ({
     cx,
     cy,
@@ -450,7 +467,24 @@ const Dashboard = () => {
             </PieChart>
           </ResponsiveContainer>
           <div className="highlight-container">
-            <div className="circle-red"></div>
+          <div className="circle-red"></div>
+            <p>
+            Critical(
+              {(severitySQL === "Critical" ? projectOneDataSQL.length : 0) +
+                (severityXSS === "Critical" ? projectOneDataXSS.length : 0) +
+                (severityTraval === "Critical" ? projectOneDataTravel.length : 0) +
+                (severitysamsite === "Critical" ? samsite.length : 0) +
+                (severitySecure === "Critical" ? secure.length : 0) +
+                (severityserver === "Critical" ? server.length : 0) +
+                (severityhttponly === "Critical" ? httponly.length : 0) +
+                (severityHSTS === "Critical" ? HSTS.length : 0) +
+                (severityexpire === "Critical" ? expire.length : 0) +
+                (severitysensitive === "Critical" ? Sensitive.length : 0) +
+                (severitywebb === "Critical" ? web.length : 0) +
+                (severitycommand === "Critical" ? command.length : 0)}
+              )
+            </p>
+            <div className="circle-orange"></div>
             <p>
               high(
               {(severitySQL === "High" ? projectOneDataSQL.length : 0) +
@@ -567,15 +601,18 @@ const Dashboard = () => {
                       value={updatedSeverities[index] || item[1]}
                       onChange={(e) => handleSeverityChange(e, index, item[0])}
                     >
-                      <option style={{ color: "#6F77B1" }} value="Low">
-                        Low
-                      </option>
-                      <option style={{ color: "#FFBB28" }} value="Medium">
-                        Medium
-                      </option>
-                      <option style={{ color: "#FF0000" }} value="High">
-                        High
-                      </option>
+                <option style={{ color: "#6F77B1" }} value="Low">
+                  Low
+                </option>
+                <option style={{ color: "#FFBB28" }} value="Medium">
+                  Medium
+                </option>
+                <option style={{ color: "#FF5100" }} value="High">
+                  High
+                </option>
+                <option style={{ color: "#FF0000" }} value="Critical">
+                Critical
+                </option>
                     </select>
                     <Button
                       style={{ marginLeft: "20px" }}
