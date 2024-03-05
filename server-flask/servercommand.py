@@ -307,7 +307,8 @@ async def set_cookies(response,cookies_data):
 
 async def get_links(soup,project_name,user,scope_url,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
     try:
-        links = soup.find_all('a', href=True)
+        # links = soup.find_all('a', href=True)
+        links = soup.find_all(href=True)
         for link in links:
             link = link.get('href')
             if link in visited_urls:
@@ -1040,7 +1041,8 @@ async def run_gobuster(url,project_name,user):
             for item in word_list:
                 file.write(item + '\n')
         command = [
-            'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            # 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
             '-r',
@@ -1111,7 +1113,8 @@ async def run_gobustersensitive(url,project_name,user):
             for item in word_list:
                 file.write(item + '\n')
         command = [
-            'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            # 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
             '-r',
@@ -1160,6 +1163,7 @@ async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
                         baseURL = urlparse(scope_url).scheme + '://' + urlparse(scope_url).netloc
                         url = baseURL+x.split()[0]
                         print(url)
+                        print(get_response(url))
                         db = mysql.connection.cursor()
                         insert_query = (
                             "INSERT INTO att_ps (URL_ID, position , PID, OID, URL, state, payload, vul_des, vul_sol, vul_ref, OType, Vul_name,Severity) "
