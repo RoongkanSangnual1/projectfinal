@@ -57,12 +57,11 @@ const Dashboard = () => {
   const [owaspData, setOwaspData] = useState([]);
   const [updatedSeverities, setUpdatedSeverities] = useState({});
   const [Delete, setDelete] = useState("");
-
+  const token = localStorage.getItem("token");
   const user = localStorage.user;
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await axios.get(
         `http://127.0.0.1:5000/dashboard?project_name_id=${project_name_id}`,
         {

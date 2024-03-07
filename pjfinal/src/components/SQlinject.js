@@ -596,48 +596,7 @@ const SQlinject = (props) => {
         }
       };
 
-      // const handleDelete = (iddelete) => {  
-      //   /// ส่ง token user แบบheader
-      
-      //   Swal.fire({
-      //     title: "Are you sure?",
-      //     text: "You won't be able to revert this!",
-      //     icon: "warning",
-      //     showCancelButton: true,
-      //     confirmButtonColor: "#3085d6",
-      //     cancelButtonColor: "#d33",
-      //     confirmButtonText: "Yes, delete it!"
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`,{
-      //         headers:{
-      //           Authorization:`Bearer ${token}`,
-      //         },
-      //       }).then(response => {
-      //         setserver(server.filter((project=>project[7] !==iddelete )))
-      //         setprojectOneDataSQL(projectOneDataSQL.filter((project=>project[10] !==iddelete)))
-      //         setprojectOneDataXSSSQL(projectOneDataXSSSQL.filter((project=>project[10] !==iddelete)));
-      //         settraversal(traversal.filter((project=> project[10]!==iddelete)))
-      //         setHSTS(HSTS.filter((project=>project[7] !==iddelete )))     
-      //         setsamsite(samsite.filter((project=>project[7] !==iddelete )))
-      //         setserver(server.filter((project=>project[7] !==iddelete )))
-      //         setexpire(expire.filter((project=>project[7] !==iddelete )))
-      //         sethttponly(httponly.filter((project=>project[7] !==iddelete )))
-      //         setsecure(secure.filter((project=>project[7] !==iddelete )))
-      //         setwebb(web.filter((project=>project[7] !==iddelete )))
-      //         setCommand(Command.filter((project=>project[10] !==iddelete)));
-      //         Swal.fire({
-      //           title: "Deleted!",
-      //           text: "Your file has been deleted.",
-      //           icon: "success"
-      //         });
-      //       }).catch(error => {
-      //         console.log(error)
-      //       });
-      //     }
-      //   });
-          
-      // };
+
       const memoizedPDF = useMemo(() => {
         return <PDF id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata}></PDF>;
       }, [responsedata]);
@@ -646,26 +605,9 @@ const SQlinject = (props) => {
         <div>
             <div>
               <div className='button-container'>
-            {/* <Button onClick={refreshData} icon={<ReloadOutlined />}>restart</Button>
-            {Delete==='Advance'&&(
-              <Button  onClick={showModal} type="primary" style={{background:'red'} }icon={<PlusOutlined />}>Add to Issue</Button>
-            )}
-            <Modal title="Add Isuues " open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
-            <Form className='input-container'
-            onFinish={Formsummit}
-            labelCol={{
-                span: 5,
-              }}
-            >
-              Issue:<Input type="text" className="forminput-control" value={Issue} onChange={(e)=>setIssue(e.target.value)}/>
-              Location:<Input type="url" className="forminput-control" value={urls} onChange={(e)=>setUrls(e.target.value)}/> <br/>
-              Payload:<Input type="text" className="forminput-control" value={Payload} onChange={(e)=>setPayload(e.target.value)}/><br/>
-                 </Form>
 
-      </Modal> */}
             </div>
             </div>
-            {/* <Table dataSource={projectOneData} columns={columns} /> */}
 
 
 

@@ -215,7 +215,7 @@ const Formsummit2 = () => {
     { value: '4', label: 'Directory Traversal File Include' },
     // { value: '5', label: 'Missing Expires Attribute in Cookie Header' },
     // { value: '6', label: 'Missing SameSite Attribute in Cookie Header' },
-    // { value: '7', label: 'Sensitive File Disclosure' },
+    { value: '7', label: 'Sensitive File Disclosure' },
     // { value: '8', label: 'Missing HTTP Strict Transport Security Header' },
     // { value: '9', label: 'Web Application Framework Infomation Leakage' },
     { value: '10', label: 'Stored Cross Site Scriptng' },

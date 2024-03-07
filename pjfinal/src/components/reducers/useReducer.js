@@ -6,8 +6,10 @@ export function userReducer(state=null,action){
             return action.payload;  
         case "LOGOUT":
             return "555 logout"   
-        case "id":
+         case "email":
                 return action.payload;  
+        case "OTP":
+                return action.payload;         
         default:
             return state;
     }

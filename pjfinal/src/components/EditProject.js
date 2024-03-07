@@ -171,8 +171,19 @@ const handleDelete = (iddelete) => {
       };
 
 
-
+      function isURL(input) {
+        const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+        return urlRegex.test(input);
+    }
+    
       const Formsummit =()=>{
+        if (!isURL(urls)) {
+          return Swal.fire({
+            title: "url Error",
+            text: "url Error",
+            icon: "error",
+          });
+      }
 
         axios
         .post(`http://127.0.0.1:5000/addurlsedit`, { urls, method, parameter, token },

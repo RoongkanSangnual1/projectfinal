@@ -10,7 +10,8 @@ import ProjectDash from "./components/projectdash";
 import DashboardAll from "./components/DashboardAll";
 import Edithome from "./components/Edithome";
 import ProjectDashAdmin from "./components/projectdashAdmin";
-
+// import ForgotPassword from "./components/ForgotPassword";
+import OTPInput from "./components/OTPInput";
 
 const Router = () =>{
     return(
@@ -22,7 +23,7 @@ const Router = () =>{
             <Route path="/home" element={<App/>}></Route>
             <Route path="/login" element={<Login/>}></Route>
             <Route path="/Dashboard" element={<DashboardAll/>}></Route>
-
+            <Route path="/OTP" element={<OTPInput />} />
             <Route path="/create" element={<Target_url/>}></Route>
             <Route path="/Admin" element={<ProjectDashAdmin/>}></Route>
             {/* <Route path="/:project_name" element={<Onedata/>}></Route> */}

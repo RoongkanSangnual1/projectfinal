@@ -11,7 +11,10 @@ const PDF = (props) => {
   console.log("responsedata", props.responsedata);
 
   const data = props.responsedata.filter(item => Object.values(item)[0]?.length !== 0);
-  console.log("data", data);
+  if(data[7]){
+ console.log("data", data[7].owasp_);
+  }
+ 
 
   let body2 = [];
   function getSeverityByKey(key) {
