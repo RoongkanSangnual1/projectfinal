@@ -191,7 +191,7 @@ const PDF = (props) => {
             vulcontenthead = [['ID', 'URL', 'severity']];
             url = vulnerability[2];
             // evidence = vulnerability[3];
-            severity = vulnerability[12];
+            severity = vulnerability[10];
             columnStyles_vulcontent = columnStyles_vulcontent_2;
             return [`${innerIndex + 1}`, url, severity];
           }
@@ -344,7 +344,7 @@ const PDF = (props) => {
         icon={<FaRegFilePdf />}
         onClick={showModal}
         type="primary"
-        style={{ transform: 'translateX(850px) scale(1.5)', marginTop: '20px', background: 'red' }}
+        style={{ transform: 'translateX(850px) scale(1.5)', marginTop: '50px',  marginLeft: '0px',background: 'red' }}
       >
         PDF
       </Button>
