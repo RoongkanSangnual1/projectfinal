@@ -44,10 +44,10 @@ const Register = () =>{
             }
         
     
-            if (!/[@#$%^&*()_+={}[\]:;,.?~\\/]/.test(password)) {
+            if (/![@#$%^&*()_+={}[\]:;,.?~\\/]/.test(password)) {
                 return Swal.fire({
                     title: "Passwords Error",
-                    text: "Password must contain at least 1 special character (!/[@#$%^&*()_+={}[\]:;,.?~\\/]",
+                    text: "Password must contain at least 1 special character (/![@#$%^&*()_+={}[\]:;,.?~\\/]",
                     icon: "error",
                 });
             }

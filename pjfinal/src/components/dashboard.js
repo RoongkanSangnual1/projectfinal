@@ -1,23 +1,9 @@
+// import { PieChart, Pie, ResponsiveContainer, Cell, Tooltip, Label,Legend } from "recharts";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { PieChart, Pie, ResponsiveContainer, Cell } from "recharts";
-import "./Dashboard.css";
 import Swal from "sweetalert2";
-import ClockLoader from "react-spinners/ClockLoader";
-import {CheckCircleOutlined} from '@ant-design/icons';
-import {
-  Table,
-  Button,
-  Modal,
-  Form,
-  Input,
-  Space,
-  Card,
-  theme,
-  Collapse,
-  ConfigProvider,
-} from "antd";
+import { Table,Button,Modal,Form,Input,Space,Card,theme,Collapse,ConfigProvider} from 'antd';
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -25,632 +11,1375 @@ import {
   FormOutlined,
   RightOutlined,
 } from "@ant-design/icons";
+import { Link } from 'react-router-dom';
+import {
+  CartesianGrid,
+  BarChart,
+  Bar,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Rectangle,
+} from "recharts";
+
 
 const Dashboard = () => {
-  const { project_name_id } = useParams();
-  const [projectOneDataSQL, setProjectOneDataSQL] = useState(0);
-  const [severitySQL, SetseveritySQL] = useState([]);
-  const [severityXSS, SetseverityXSS] = useState([]);
-  const [severityTraval, SetseverityTraval] = useState([]);
-  const [severitySecure, SetseveritySecure] = useState([]);
-  const [severityhttponly, Setseverityhttponly] = useState([]);
-  const [severitywebb, Setseveritywebb] = useState([]);
-  const [severityexpire, Setseverityexpire] = useState([]);
-  const [severitysamsite, Setseveritysamsite] = useState([]);
-  const [severityHSTS, SetseverityHSTS] = useState([]);
-  const [severitycommand, Setseveritycommand] = useState([]);
-  const [severitysensitive, Setseveritysensitive] = useState([]);
-  const [severityserver, Setseverityserver] = useState([]);
-  const [projectOneDataXSS, setProjectOneDataXSS] = useState(0);
-  const [projectOneDataTravel, setProjectOneDataTravel] = useState(0);
-  const [httponly, sethttponly] = useState(0);
-  const [Sensitive, setsensitive] = useState(0);
-  const [command, setcommand] = useState(0);
-  const [expire, setexpire] = useState(0);
-  const [web, setwebb] = useState(0);
-  const [samsite, setsamsite] = useState(0);
-  const [secure, setsecure] = useState(0);
-  const [server, setserver] = useState(0);
-  const [HSTS, setHSTS] = useState(0);
-  const [valueENDpp, setvalueENDpp] = useState([]);
-  const [valueTimep, setvalueTimep] = useState([]);
-  const [owaspData, setOwaspData] = useState([]);
-  const [updatedSeverities, setUpdatedSeverities] = useState({});
-  const [Delete, setDelete] = useState("");
   const token = localStorage.getItem("token");
-  const user = localStorage.user;
+  const { project_name_id } = useParams();
+  const [owaspData, setOwaspData] = useState([]);
+  const [isOpen, setIsOpen] = useState(false); 
+  const [data, setData] = useState([]);
+  const [updatedSeverities, setUpdatedSeverities] = useState({});
+  const [openCategory, setOpenCategory] = useState({});
+  const [SeveritySQLCritical, setSeveritySQLCritical] = useState();
+  const [SeveritySQLHigh, setSeveritySQLHigh] = useState();
+  const [SeveritySQLMedium, setSeveritySQLMedium] = useState();
+  const [SeveritySQLLow, setSeveritySQLLow] = useState();
+  const [SeveritySQLUrlCritical, setSeveritySQLUrlCritical] = useState([]);
+  const [SeveritySQLUrlHigh, setSeveritySQLUrlHigh] = useState([]);
+  const [SeveritySQLUrlMedium, setSeveritySQLUrlMedium] = useState([]);
+  const [SeveritySQLUrlLow, setSeveritySQLUrlLow] = useState([]);
+  
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:5000/dashboard?project_name_id=${project_name_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  const [SeverityXSSCritical, setSeverityXSSCritical] = useState();
+  const [SeverityXSSHigh, setSeverityXSSHigh] = useState();
+  const [SeverityXSSMedium, setSeverityXSSMedium] = useState();
+  const [SeverityXSSLow, setSeverityXSSLow] = useState();
+  const [SeverityXSSUrlCritical, setSeverityXSSUrlCritical] = useState([]);
+  const [SeverityXSSUrlHigh, setSeverityXSSUrlHigh] = useState([]);
+  const [SeverityXSSUrlMedium, setSeverityXSSUrlMedium] = useState([]);
+  const [SeverityXSSUrlLow, setSeverityXSSUrlLow] = useState([]);
 
-      if (response.data === "server error") {
-        Swal.fire({
-          icon: "error",
-          title: "User Error",
-        });
+  const [SeverityDirectoryCritical, setSeverityDirectoryCritical] = useState();
+  const [SeverityDirectoryHigh, setSeverityDirectoryHigh] = useState();
+  const [SeverityDirectoryMedium, setSeverityDirectoryMedium] = useState();
+  const [SeverityDirectoryLow, setSeverityDirectoryLow] = useState();
+  const [SeverityDirectoryUrlCritical, setSeverityDirectoryUrlCritical] = useState([]);
+  const [SeverityDirectoryUrlHigh, setSeverityDirectoryUrlHigh] = useState([]);
+  const [SeverityDirectoryUrlMedium, setSeverityDirectoryUrlMedium] = useState([]);
+  const [SeverityDirectoryUrlLow, setSeverityDirectoryUrlLow] = useState([]);
+  
+  const [SeveritySecureCritical, setSeveritySecureCritical] = useState();
+  const [SeveritySecureHigh, setSeveritySecureHigh] = useState();
+  const [SeveritySecureMedium, setSeveritySecureMedium] = useState();
+  const [SeveritySecureLow, setSeveritySecureLow] = useState();
+  const [SeveritySecureUrlCritical, setSeveritySecureUrlCritical] = useState([]);
+  const [SeveritySecureUrlHigh, setSeveritySecureUrlHigh] = useState([]);
+  const [SeveritySecureUrlMedium, setSeveritySecureUrlMedium] = useState([]);
+  const [SeveritySecureUrlLow, setSeveritySecureUrlLow] = useState([]);
+
+  const [SeverityHttponlyCritical, setSeverityHttponlyCritical] = useState();
+  const [SeverityHttponlyHigh, setSeverityHttponlyHigh] = useState();
+  const [SeverityHttponlyMedium, setSeverityHttponlyMedium] = useState();
+  const [SeverityHttponlyLow, setSeverityHttponlyLow] = useState();
+  const [SeverityHttponlyUrlCritical, setSeverityHttponlyUrlCritical] = useState([]);
+  const [SeverityHttponlyUrlHigh, setSeverityHttponlyUrlHigh] = useState([]);
+  const [SeverityHttponlyUrlMedium, setSeverityHttponlyUrlMedium] = useState([]);
+  const [SeverityHttponlyUrlLow, setSeverityHttponlyUrlLow] = useState([]);
+  
+  const [SeverityExpiresCritical, setSeverityExpiresCritical] = useState();
+  const [SeverityExpiresHigh, setSeverityExpiresHigh] = useState();
+  const [SeverityExpiresMedium, setSeverityExpiresMedium] = useState();
+  const [SeverityExpiresLow, setSeverityExpiresLow] = useState();
+  const [SeverityExpiresUrlCritical, setSeverityExpiresUrlCritical] = useState([]);
+  const [SeverityExpiresUrlHigh, setSeverityExpiresUrlHigh] = useState([]);
+  const [SeverityExpiresUrlMedium, setSeverityExpiresUrlMedium] = useState([]);
+  const [SeverityExpiresUrlLow, setSeverityExpiresUrlLow] = useState([]);
+
+    
+  const [SeveritySamesiteCritical, setSeveritySamsiteCritical] = useState();
+  const [SeveritySamesiteHigh, setSeveritySamsiteHigh] = useState();
+  const [SeveritySamesiteMedium, setSeveritySamsiteMedium] = useState();
+  const [SeveritySamesiteLow, setSeveritySamsiteLow] = useState();  
+  const [SeveritySamesiteUrlCritical, setSeveritySamsiteUrlCritical] = useState([]);
+  const [SeveritySamesiteUrlHigh, setSeveritySamsiteUrlHigh] = useState([]);
+  const [SeveritySamesiteUrlMedium, setSeveritySamsiteUrlMedium] = useState([]);
+  const [SeveritySamesiteUrlLow, setSeveritySamsiteUrlLow] = useState([]);
+    
+  const [SeverityServerCritical, setSeverityServerCritical] = useState();
+  const [SeverityServerHigh, setSeverityServerHigh] = useState();
+  const [SeverityServerMedium, setSeverityServerMedium] = useState();
+  const [SeverityServerLow, setSeverityServerLow] = useState();
+  const [SeverityServerUrlCritical, setSeverityServerUrlCritical] = useState([]);
+  const [SeverityServerUrlHigh, setSeverityServerUrlHigh] = useState([]);
+  const [SeverityServerUrlMedium, setSeverityServerUrlMedium] = useState([]);
+  const [SeverityServerUrlLow, setSeverityServerUrlLow] = useState([]);
+
+
+
+  
+      
+  const [SeverityHSTSCritical, setSeverityHSTSCritical] = useState();
+  const [SeverityHSTSHigh, setSeverityHSTSHigh] = useState();
+  const [SeverityHSTSMedium, setSeverityHSTSMedium] = useState();
+  const [SeverityHSTSLow, setSeverityHSTSLow] = useState();
+  const [SeverityHSTSUrlCritical, setSeverityHSTSUrlCritical] = useState();
+  const [SeverityHSTSUrlHigh, setSeverityHSTSUrlHigh] = useState();
+  const [SeverityHSTSUrlMedium, setSeverityHSTSUrlMedium] = useState();
+  const [SeverityHSTSUrlLow, setSeverityHSTSUrlLow] = useState();
+
+        
+
+        
+  const [SeveritySentitiveCritical, setSeveritySentitiveCritical] = useState();
+  const [SeveritySentitiveHigh, setSeveritySentitiveHigh] = useState();
+  const [SeveritySentitiveMedium, setSeveritySentitiveMedium] = useState();
+  const [SeveritySentitiveLow, setSeveritySentitiveLow] = useState();
+  const [SeveritySentitiveUrlCritical, setSeveritySentitiveUrlCritical] = useState();
+  const [SeveritySentitiveUrlHigh, setSeveritySentitiveUrlHigh] = useState();
+  const [SeveritySentitiveUrlMedium, setSeveritySentitiveUrlMedium] = useState();
+  const [SeveritySentitiveUrlLow, setSeveritySentitiveUrlLow] = useState();
+          
+  const [SeverityWebCritical, setSeverityWebCritical] = useState();
+  const [SeverityWebHigh, setSeverityWebHigh] = useState();
+  const [SeverityWebMedium, setSeverityWebMedium] = useState();
+  const [SeverityWebLow, setSeverityWebLow] = useState();
+  const [SeverityWebUrlCritical, setSeverityWebUrlCritical] = useState();
+  const [SeverityWebUrlHigh, setSeverityWebUrlHigh] = useState();
+  const [SeverityWebUrlMedium, setSeverityWebUrlMedium] = useState();
+  const [SeverityWebUrlLow, setSeverityWebUrlLow] = useState();
+
+
+          
+  const [SeverityCommandCritical, setSeverityCommandCritical] = useState();
+  const [SeverityCommandHigh, setSeverityCommandHigh] = useState();
+  const [SeverityCommandMedium, setSeverityCommandMedium] = useState();
+  const [SeverityCommandLow, setSeverityCommandLow] = useState();
+  const [SeverityCommandUrlCritical, setSeverityCommandUrlCritical] = useState();
+  const [SeverityCommandUrlHigh, setSeverityCommandUrlHigh] = useState();
+  const [SeverityCommandUrlMedium, setSeverityCommandUrlMedium] = useState();
+  const [SeverityCommandUrlLow, setSeverityCommandUrlLow] = useState();
+  const [Delete, setDelete] = useState("");
+
+
+  const colors = ['#FF0000', '#FF5100', '#FFBB28', '#6F77B1'];
+
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const response = await axios.get(
+//           `http://127.0.0.1:5000/dashboard?project_name_id=${project_name_id}`,
+//           {
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//             },
+//           }
+//         )
+//         setDelete(response.data[4].Role);
+//         console.log(response.data[9].SeverityServer[3])
+//         if (response.data[1].SeveritySQL[0][0] === 0) {
+//           setSeveritySQLCritical(response.data[1].SeveritySQL[0][0]);
+//         } else {
+//           setSeveritySQLCritical(response.data[1].SeveritySQL[0].length);
+//           setSeveritySQLUrlCritical(response.data[1].SeveritySQL[0]);
+//         }
+
+//         if (response.data[1].SeveritySQL[1][0] === 0) {
+//           setSeveritySQLHigh(response.data[1].SeveritySQL[1][0]);
+//         } else {
+//           setSeveritySQLHigh(response.data[1].SeveritySQL[1].length);
+//           setSeveritySQLUrlHigh(response.data[1].SeveritySQL[1]);
+//         }
+        
+//         if (response.data[1].SeveritySQL[2][0] === 0) {
+//           setSeveritySQLMedium(response.data[1].SeveritySQL[2][0]);
+//         } else {
+//           setSeveritySQLMedium(response.data[1].SeveritySQL[2].length);
+//           setSeveritySQLUrlMedium(response.data[1].SeveritySQL[2]);
+//         }
+        
+//         if (response.data[1].SeveritySQL[3][0] === 0) {
+//           setSeveritySQLLow(response.data[1].SeveritySQL[3][0]);
+//         } else {
+//           setSeveritySQLLow(response.data[1].SeveritySQL[3].length);
+//           setSeveritySQLUrlLow(response.data[1].SeveritySQL[3]);
+//         }
+        
+
+// //-------------------------------------------------------------------------------
+//         if (response.data[2].SeverityXSS[0][0] === 0) {
+//           setSeverityXSSCritical(response.data[2].SeverityXSS[0][0]);
+//         } else {
+//           setSeverityXSSCritical(response.data[2].SeverityXSS[0].length);
+//           setSeverityXSSUrlCritical(response.data[2].SeverityXSS[0]);
+//         }
+
+//         if (response.data[2].SeverityXSS[1][0] === 0) {
+//           setSeverityXSSHigh(response.data[2].SeverityXSS[1][0]);
+//         } else {
+//           setSeverityXSSHigh(response.data[2].SeverityXSS[1].length);
+//           setSeverityXSSUrlHigh(response.data[2].SeverityXSS[1]);
+//         }
+        
+//         if (response.data[2].SeverityXSS[2][0] === 0) {
+//           setSeverityXSSMedium(response.data[2].SeverityXSS[2][0]);
+//         } else {
+//           setSeverityXSSMedium(response.data[2].SeverityXSS[2].length);
+//           setSeverityXSSUrlMedium(response.data[2].SeverityXSS[2]);
+//         }
+//         if (response.data[2].SeverityXSS[3][0] === 0) {
+//           setSeverityXSSLow(response.data[2].SeverityXSS[3][0]);
+//         } else {
+//           setSeverityXSSLow(response.data[2].SeverityXSS[3].length);
+//           setSeverityXSSUrlLow(response.data[2].SeverityXSS[3]);
+//         }        
+
+// //-------------------------------------------------------------------------------
+// if (response.data[3].SeverityDirectory[0][0] === 0) {
+//   setSeverityDirectoryCritical(response.data[3].SeverityDirectory[0][0]);
+// } else {
+//   setSeverityDirectoryCritical(response.data[3].SeverityDirectory[0].length);
+//   setSeverityDirectoryUrlCritical(response.data[3].SeverityDirectory[0]);
+// }
+
+// if (response.data[3].SeverityDirectory[1][0] === 0) {
+//   setSeverityDirectoryHigh(response.data[3].SeverityDirectory[1][0]);
+// } else {
+//   setSeverityDirectoryHigh(response.data[3].SeverityDirectory[1].length);
+//   setSeverityDirectoryUrlHigh(response.data[3].SeverityDirectory[1]);
+// }
+
+// if (response.data[3].SeverityDirectory[2][0] === 0) {
+//   setSeverityDirectoryMedium(response.data[3].SeverityDirectory[2][0]);
+// } else {
+//   setSeverityDirectoryMedium(response.data[3].SeverityDirectory[2].length);
+//   setSeverityDirectoryUrlMedium(response.data[3].SeverityDirectory[2]);
+// }
+
+// if (response.data[3].SeverityDirectory[3][0] === 0) {
+//   setSeverityDirectoryLow(response.data[3].SeverityDirectory[3][0]);
+// } else {
+//   setSeverityDirectoryLow(response.data[3].SeverityDirectory[3].length);
+//   setSeverityDirectoryUrlLow(response.data[3].SeverityDirectory[3]);
+// }
+
+
+
+// //-------------------------------------------------------------------------------
+// if (response.data[5].SeveritySecure[0][0] === 0) {
+//   setSeveritySecureCritical(response.data[5].SeveritySecure[0][0]);
+// } else {
+//   setSeveritySecureCritical(response.data[5].SeveritySecure[0].length);
+//   setSeveritySecureUrlCritical(response.data[5].SeveritySecure[0]);
+// }
+
+// if (response.data[5].SeveritySecure[1][0] === 0) {
+//   setSeveritySecureHigh(response.data[5].SeveritySecure[1][0]);
+// } else {
+//   setSeveritySecureHigh(response.data[5].SeveritySecure[1].length);
+//   setSeveritySecureUrlHigh(response.data[5].SeveritySecure[1]);
+// }
+
+// if (response.data[5].SeveritySecure[2][0] === 0) {
+//   setSeveritySecureMedium(response.data[5].SeveritySecure[2][0]);
+// } else {
+//   setSeveritySecureMedium(response.data[5].SeveritySecure[2].length);
+//   setSeveritySecureUrlMedium(response.data[5].SeveritySecure[2]);
+// }
+
+// if (response.data[5].SeveritySecure[3][0] === 0) {
+//   setSeveritySecureLow(response.data[5].SeveritySecure[3][0]);
+// } else {
+//   setSeveritySecureLow(response.data[5].SeveritySecure[3].length);
+//   setSeveritySecureUrlLow(response.data[5].SeveritySecure[3]);
+// }
+
+// //-------------------------------------------------------------------------------
+// if (response.data[6].SeverityHttponly[0][0] === 0) {
+//   setSeverityHttponlyCritical(response.data[6].SeverityHttponly[0][0]);
+// } else {
+//   setSeverityHttponlyCritical(response.data[6].SeverityHttponly[0].length);
+//   setSeverityHttponlyUrlCritical(response.data[6].SeverityHttponly[0]);
+// }
+
+// if (response.data[6].SeverityHttponly[1][0] === 0) {
+//   setSeverityHttponlyHigh(response.data[6].SeverityHttponly[1][0]);
+// } else {
+//   setSeverityHttponlyHigh(response.data[6].SeverityHttponly[1].length);
+//   setSeverityHttponlyUrlHigh(response.data[6].SeverityHttponly[1]);
+// }
+
+// if (response.data[6].SeverityHttponly[2][0] === 0) {
+//   setSeverityHttponlyMedium(response.data[6].SeverityHttponly[2][0]);
+// } else {
+//   setSeverityHttponlyMedium(response.data[6].SeverityHttponly[2].length);
+//   setSeverityHttponlyUrlMedium(response.data[6].SeverityHttponly[2]);
+// }
+
+// if (response.data[6].SeverityHttponly[3][0] === 0) {
+//   setSeverityHttponlyLow(response.data[6].SeverityHttponly[3][0]);
+// } else {
+//   setSeverityHttponlyLow(response.data[6].SeverityHttponly[3].length);
+//   setSeverityHttponlyUrlLow(response.data[6].SeverityHttponly[3]);
+// }
+
+
+// //-------------------------------------------------------------------------------
+// if (response.data[7].SeverityExpires[0][0] === 0) {
+//   setSeverityExpiresCritical(response.data[7].SeverityExpires[0][0]);
+// } else {
+//   setSeverityExpiresCritical(response.data[7].SeverityExpires[0].length);
+//   setSeverityExpiresUrlCritical(response.data[7].SeverityExpires[0]);
+// }
+
+// if (response.data[7].SeverityExpires[1][0] === 0) {
+//   setSeverityExpiresHigh(response.data[7].SeverityExpires[1][0]);
+// } else {
+//   setSeverityExpiresHigh(response.data[7].SeverityExpires[1].length);
+//   setSeverityExpiresUrlHigh(response.data[7].SeverityExpires[1]);
+// }
+
+// if (response.data[7].SeverityExpires[2][0] === 0) {
+//   setSeverityExpiresMedium(response.data[7].SeverityExpires[2][0]);
+// } else {
+//   setSeverityExpiresMedium(response.data[7].SeverityExpires[2].length);
+//   setSeverityExpiresUrlMedium(response.data[7].SeverityExpires[2]);
+// }
+
+// if (response.data[7].SeverityExpires[3][0] === 0) {
+//   setSeverityExpiresLow(response.data[7].SeverityExpires[3][0]);
+// } else {
+//   setSeverityExpiresLow(response.data[7].SeverityExpires[3].length);
+//   setSeverityExpiresUrlLow(response.data[7].SeverityExpires[3]);
+// }
+
+// //-------------------------------------------------------------------------------
+// if (response.data[8].SeveritySamsite[0][0] === 0) {
+//   setSeveritySamsiteCritical(response.data[8].SeveritySamsite[0][0]);
+// } else {
+//   setSeveritySamsiteCritical(response.data[8].SeveritySamsite[0].length);
+//   setSeveritySamsiteUrlCritical(response.data[8].SeveritySamsite[0]);
+// }
+
+// if (response.data[8].SeveritySamsite[1][0] === 0) {
+//   setSeveritySamsiteHigh(response.data[8].SeveritySamsite[1][0]);
+// } else {
+//   setSeveritySamsiteHigh(response.data[8].SeveritySamsite[1].length);
+//   setSeveritySamsiteUrlHigh(response.data[8].SeveritySamsite[1]);
+// }
+
+// if (response.data[8].SeveritySamsite[2][0] === 0) {
+//   setSeveritySamsiteMedium(response.data[8].SeveritySamsite[2][0]);
+// } else {
+//   setSeveritySamsiteMedium(response.data[8].SeveritySamsite[2].length);
+//   setSeveritySamsiteUrlMedium(response.data[8].SeveritySamsite[2]);
+// }
+
+// if (response.data[8].SeveritySamsite[3][0] === 0) {
+//   setSeveritySamsiteLow(response.data[8].SeveritySamsite[3][0]);
+// } else {
+//   setSeveritySamsiteLow(response.data[8].SeveritySamsite[3].length);
+//   setSeveritySamsiteUrlLow(response.data[8].SeveritySamsite[3]);
+
+  
+// }
+// //-------------------------------------------------------------------------------
+// if (response.data[9].SeverityServer[0][0] === 0) {
+//   setSeverityServerCritical(response.data[9].SeverityServer[0][0]);
+// } else {
+//   setSeverityServerCritical(response.data[9].SeverityServer[0].length);
+//   setSeverityServerUrlCritical(response.data[9].SeverityServer[0]);
+// }
+
+// if (response.data[9].SeverityServer[1][0] === 0) {
+//   setSeverityServerHigh(response.data[9].SeverityServer[1][0]);
+// } else {
+//   setSeverityServerHigh(response.data[9].SeverityServer[1].length);
+//   setSeverityServerUrlHigh(response.data[9].SeverityServer[1]);
+// }
+
+// if (response.data[9].SeverityServer[2][0] === 0) {
+//   setSeverityServerMedium(response.data[9].SeverityServer[2][0]);
+// } else {
+//   setSeverityServerMedium(response.data[9].SeverityServer[2].length);
+//   setSeverityServerUrlMedium(response.data[9].SeverityServer[2]);
+// }
+
+// if (response.data[9].SeverityServer[3][0] === 0) {
+//   setSeverityServerLow(response.data[9].SeverityServer[3][0]);
+// } else {
+//   setSeverityServerLow(response.data[9].SeverityServer[3].length);
+//   setSeverityServerUrlLow(response.data[9].SeverityServer[3]);
+// }
+// //-------------------------------------------------------------------------------
+// if (response.data[10].SeverityHSTS[0][0] === 0) {
+//   setSeverityHSTSCritical(response.data[10].SeverityHSTS[0][0]);
+// } else {
+//   setSeverityHSTSCritical(response.data[10].SeverityHSTS[0].length);
+//   setSeverityHSTSUrlCritical(response.data[10].SeverityHSTS[0]);
+
+// }
+
+// if (response.data[10].SeverityHSTS[1][0] === 0) {
+//   setSeverityHSTSHigh(response.data[10].SeverityHSTS[1][0]);
+// } else {
+//   setSeverityHSTSHigh(response.data[10].SeverityHSTS[1].length);
+//   setSeverityHSTSUrlHigh(response.data[10].SeverityHSTS[1]);
+// }
+
+// if (response.data[10].SeverityHSTS[2][0] === 0) {
+//   setSeverityHSTSMedium(response.data[10].SeverityHSTS[2][0]);
+// } else {
+//   setSeverityHSTSMedium(response.data[10].SeverityHSTS[2].length);
+//   setSeverityHSTSUrlMedium(response.data[10].SeverityHSTS[2]);
+// }
+
+// if (response.data[10].SeverityHSTS[3][0] === 0) {
+//   setSeverityHSTSLow(response.data[10].SeverityHSTS[3][0]);
+// } else {
+//   setSeverityHSTSLow(response.data[10].SeverityHSTS[3].length);
+//   setSeverityHSTSUrlLow(response.data[10].SeverityHSTS[3]);
+// }
+
+// //-------------------------------------------------------------------------------
+// if (response.data[14].SeveritySentitive[0][0] === 0) {
+//   setSeveritySentitiveCritical(response.data[14].SeveritySentitive[0][0]);
+// } else {
+//   setSeveritySentitiveCritical(response.data[14].SeveritySentitive[0].length);
+//   setSeveritySentitiveUrlCritical(response.data[14].SeveritySentitive[0]);
+// }
+
+// if (response.data[14].SeveritySentitive[1][0] === 0) {
+//   setSeveritySentitiveHigh(response.data[14].SeveritySentitive[1][0]);
+// } else {
+//   setSeveritySentitiveHigh(response.data[14].SeveritySentitive[1].length);
+//   setSeveritySentitiveUrlHigh(response.data[14].SeveritySentitive[1]);
+// }
+
+// if (response.data[14].SeveritySentitive[2][0] === 0) {
+//   setSeveritySentitiveMedium(response.data[14].SeveritySentitive[2][0]);
+// } else {
+//   setSeveritySentitiveMedium(response.data[14].SeveritySentitive[2].length);
+//   setSeveritySentitiveUrlMedium(response.data[14].SeveritySentitive[2]);
+// }
+
+// if (response.data[14].SeveritySentitive[3][0] === 0) {
+//   setSeveritySentitiveLow(response.data[14].SeveritySentitive[3][0]);
+// } else {
+//   setSeveritySentitiveLow(response.data[14].SeveritySentitive[3].length);
+//   setSeveritySentitiveUrlLow(response.data[14].SeveritySentitive[3]);
+// }
+
+
+
+// //-------------------------------------------------------------------------------
+// if (response.data[15].SeverityWeb[0][0] === 0) {
+//   setSeverityWebCritical(response.data[15].SeverityWeb[0][0]);
+// } else {
+//   setSeverityWebCritical(response.data[15].SeverityWeb[0].length);
+//   setSeverityWebUrlCritical(response.data[15].SeverityWeb[0]);
+// }
+
+// if (response.data[15].SeverityWeb[1][0] === 0) {
+//   setSeverityWebHigh(response.data[15].SeverityWeb[1][0]);
+// } else {
+//   setSeverityWebHigh(response.data[15].SeveritySentitive[1].length);
+//   setSeverityWebUrlHigh(response.data[15].SeveritySentitive[1]);
+// }
+
+// if (response.data[15].SeverityWeb[2][0] === 0) {
+//   setSeverityWebMedium(response.data[15].SeverityWeb[2][0]);
+// } else {
+//   setSeverityWebMedium(response.data[15].SeverityWeb[2].length);
+//   setSeverityWebUrlMedium(response.data[15].SeverityWeb[2]);
+// }
+
+
+// if (response.data[15].SeverityWeb[3][0] === 0) {
+//   setSeverityWebLow(response.data[15].SeverityWeb[3][0]);
+// } else {
+//   setSeverityWebLow(response.data[15].SeverityWeb[3].length);
+//   setSeverityWebUrlLow(response.data[15].SeverityWeb[3]);
+// }
+
+
+// //-------------------------------------------------------------------------------
+// if (response.data[16].SeverityCommand[0][0] === 0) {
+//   setSeverityCommandCritical(response.data[16].SeverityCommand[0][0]);
+// } else {
+//   setSeverityCommandCritical(response.data[16].SeverityCommand[0].length);
+//   setSeverityCommandUrlCritical(response.data[16].SeverityCommand[0]);
+// }
+
+// if (response.data[16].SeverityCommand[1][0] === 0) {
+//   setSeverityCommandHigh(response.data[16].SeverityCommand[1][0]);
+// } else {
+//   setSeverityCommandHigh(response.data[16].SeverityCommand[1].length);
+//   setSeverityCommandUrlHigh(response.data[16].SeverityCommand[1]);
+// }
+
+// if (response.data[16].SeverityCommand[2][0] === 0) {
+//   setSeverityCommandMedium(response.data[16].SeverityCommand[2][0]);
+// } else {
+//   setSeverityCommandMedium(response.data[16].SeverityCommand[2].length);
+//   setSeverityCommandUrlMedium(response.data[16].SeverityCommand[2]);
+// }
+
+// if (response.data[16].SeverityCommand[3][0] === 0) {
+//   setSeverityCommandLow(response.data[16].SeverityCommand[3][0]);
+// } else {
+//   setSeverityCommandLow(response.data[16].SeverityCommand[3].length);
+//   setSeverityCommandUrlLow(response.data[16].SeverityCommand[3]);
+// }
+// const subCategories = ["Critical", "High", "Medium", "Low"];
+// const data = datanumber.flatMap((category, index) =>
+//   subCategories.map((subCategory) => {
+//     const value = category.c.find((item) => item.name === subCategory)?.c ;
+
+   
+//     if (value !== undefined) {
+//       return {
+//         name: `${category.name}`,
+//         mainCategory: category.name,
+//         subCategory: subCategory,
+//         value: value,
+//         isMainCategory: index === 0,
+//       };
+//     }
+//     return null; 
+//   })
+// );
+
+
+// setData(data.filter((entry) => entry !== null));
+
+
+
+
+// setOwaspData(response.data[13].owasp_);
+
+
+//         if (response.data === "server error") {
+//           Swal.fire({
+//             icon: "error",
+//             title: "User Error",
+//           });
+//         }
+
+//         console.log(response);
+//       } catch (error) {
+//         // Handle error
+//         console.error("Error fetching data:", error);
+//       }
+//     };
+
+//     fetchData();
+//   }, 
+//   [project_name_id, token
+//       ,SeveritySQLCritical,SeveritySQLHigh,SeveritySQLMedium,SeveritySQLLow,
+//       SeverityXSSCritical,SeverityXSSHigh,SeverityXSSMedium,SeverityXSSLow,
+//       SeverityDirectoryCritical,SeverityDirectoryHigh,SeverityDirectoryMedium,SeverityDirectoryLow,
+//       ,SeveritySecureCritical,SeveritySecureHigh,SeveritySecureMedium,SeveritySecureLow
+//       ,SeverityHttponlyCritical,SeverityHttponlyHigh,SeverityHttponlyMedium,SeverityHttponlyLow,
+//       ,SeverityExpiresCritical,SeverityExpiresHigh,SeverityExpiresMedium,SeverityExpiresLow,
+//       SeveritySamesiteCritical,SeveritySamesiteHigh,SeveritySamesiteMedium,SeveritySamesiteLow,
+//       SeverityServerCritical,SeverityServerHigh,SeverityServerMedium,SeverityServerLow,
+//       SeverityHSTSCritical,SeverityHSTSHigh,SeverityHSTSMedium,SeverityHSTSLow,
+//       SeveritySentitiveCritical,SeveritySentitiveHigh,SeveritySentitiveMedium,SeveritySentitiveLow,
+//       SeverityCommandCritical,SeverityCommandHigh,SeverityCommandMedium,SeverityCommandLow,
+//       SeverityWebCritical,SeverityWebHigh,SeverityWebMedium,SeverityWebLow,updatedSeverities]); 
+      
+      
+
+    
+          console.log(owaspData);
+          console.log(SeveritySentitiveHigh);
+          console.log(SeveritySentitiveMedium);
+          console.log(SeveritySentitiveLow);
+          const fetchData = async () => {
+            try {
+              const response = await axios.get(
+                `http://127.0.0.1:5000/dashboard?project_name_id=${project_name_id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              )
+              setDelete(response.data[4].Role);
+              console.log(response.data[9].SeverityServer[3])
+              if (response.data[1].SeveritySQL[0][0] === 0) {
+                setSeveritySQLCritical(response.data[1].SeveritySQL[0][0]);
+              } else {
+                setSeveritySQLCritical(response.data[1].SeveritySQL[0].length);
+                setSeveritySQLUrlCritical(response.data[1].SeveritySQL[0]);
+              }
+      
+              if (response.data[1].SeveritySQL[1][0] === 0) {
+                setSeveritySQLHigh(response.data[1].SeveritySQL[1][0]);
+              } else {
+                setSeveritySQLHigh(response.data[1].SeveritySQL[1].length);
+                setSeveritySQLUrlHigh(response.data[1].SeveritySQL[1]);
+              }
+              
+              if (response.data[1].SeveritySQL[2][0] === 0) {
+                setSeveritySQLMedium(response.data[1].SeveritySQL[2][0]);
+              } else {
+                setSeveritySQLMedium(response.data[1].SeveritySQL[2].length);
+                setSeveritySQLUrlMedium(response.data[1].SeveritySQL[2]);
+              }
+              
+              if (response.data[1].SeveritySQL[3][0] === 0) {
+                setSeveritySQLLow(response.data[1].SeveritySQL[3][0]);
+              } else {
+                setSeveritySQLLow(response.data[1].SeveritySQL[3].length);
+                setSeveritySQLUrlLow(response.data[1].SeveritySQL[3]);
+              }
+              
+      
+      //-------------------------------------------------------------------------------
+              if (response.data[2].SeverityXSS[0][0] === 0) {
+                setSeverityXSSCritical(response.data[2].SeverityXSS[0][0]);
+              } else {
+                setSeverityXSSCritical(response.data[2].SeverityXSS[0].length);
+                setSeverityXSSUrlCritical(response.data[2].SeverityXSS[0]);
+              }
+      
+              if (response.data[2].SeverityXSS[1][0] === 0) {
+                setSeverityXSSHigh(response.data[2].SeverityXSS[1][0]);
+              } else {
+                setSeverityXSSHigh(response.data[2].SeverityXSS[1].length);
+                setSeverityXSSUrlHigh(response.data[2].SeverityXSS[1]);
+              }
+              
+              if (response.data[2].SeverityXSS[2][0] === 0) {
+                setSeverityXSSMedium(response.data[2].SeverityXSS[2][0]);
+              } else {
+                setSeverityXSSMedium(response.data[2].SeverityXSS[2].length);
+                setSeverityXSSUrlMedium(response.data[2].SeverityXSS[2]);
+              }
+              if (response.data[2].SeverityXSS[3][0] === 0) {
+                setSeverityXSSLow(response.data[2].SeverityXSS[3][0]);
+              } else {
+                setSeverityXSSLow(response.data[2].SeverityXSS[3].length);
+                setSeverityXSSUrlLow(response.data[2].SeverityXSS[3]);
+              }        
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[3].SeverityDirectory[0][0] === 0) {
+        setSeverityDirectoryCritical(response.data[3].SeverityDirectory[0][0]);
+      } else {
+        setSeverityDirectoryCritical(response.data[3].SeverityDirectory[0].length);
+        setSeverityDirectoryUrlCritical(response.data[3].SeverityDirectory[0]);
       }
-      console.log(response);
-
-      setDelete(response.data[4].Role);
+      
+      if (response.data[3].SeverityDirectory[1][0] === 0) {
+        setSeverityDirectoryHigh(response.data[3].SeverityDirectory[1][0]);
+      } else {
+        setSeverityDirectoryHigh(response.data[3].SeverityDirectory[1].length);
+        setSeverityDirectoryUrlHigh(response.data[3].SeverityDirectory[1]);
+      }
+      
+      if (response.data[3].SeverityDirectory[2][0] === 0) {
+        setSeverityDirectoryMedium(response.data[3].SeverityDirectory[2][0]);
+      } else {
+        setSeverityDirectoryMedium(response.data[3].SeverityDirectory[2].length);
+        setSeverityDirectoryUrlMedium(response.data[3].SeverityDirectory[2]);
+      }
+      
+      if (response.data[3].SeverityDirectory[3][0] === 0) {
+        setSeverityDirectoryLow(response.data[3].SeverityDirectory[3][0]);
+      } else {
+        setSeverityDirectoryLow(response.data[3].SeverityDirectory[3].length);
+        setSeverityDirectoryUrlLow(response.data[3].SeverityDirectory[3]);
+      }
+      
+      
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[5].SeveritySecure[0][0] === 0) {
+        setSeveritySecureCritical(response.data[5].SeveritySecure[0][0]);
+      } else {
+        setSeveritySecureCritical(response.data[5].SeveritySecure[0].length);
+        setSeveritySecureUrlCritical(response.data[5].SeveritySecure[0]);
+      }
+      
+      if (response.data[5].SeveritySecure[1][0] === 0) {
+        setSeveritySecureHigh(response.data[5].SeveritySecure[1][0]);
+      } else {
+        setSeveritySecureHigh(response.data[5].SeveritySecure[1].length);
+        setSeveritySecureUrlHigh(response.data[5].SeveritySecure[1]);
+      }
+      
+      if (response.data[5].SeveritySecure[2][0] === 0) {
+        setSeveritySecureMedium(response.data[5].SeveritySecure[2][0]);
+      } else {
+        setSeveritySecureMedium(response.data[5].SeveritySecure[2].length);
+        setSeveritySecureUrlMedium(response.data[5].SeveritySecure[2]);
+      }
+      
+      if (response.data[5].SeveritySecure[3][0] === 0) {
+        setSeveritySecureLow(response.data[5].SeveritySecure[3][0]);
+      } else {
+        setSeveritySecureLow(response.data[5].SeveritySecure[3].length);
+        setSeveritySecureUrlLow(response.data[5].SeveritySecure[3]);
+      }
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[6].SeverityHttponly[0][0] === 0) {
+        setSeverityHttponlyCritical(response.data[6].SeverityHttponly[0][0]);
+      } else {
+        setSeverityHttponlyCritical(response.data[6].SeverityHttponly[0].length);
+        setSeverityHttponlyUrlCritical(response.data[6].SeverityHttponly[0]);
+      }
+      
+      if (response.data[6].SeverityHttponly[1][0] === 0) {
+        setSeverityHttponlyHigh(response.data[6].SeverityHttponly[1][0]);
+      } else {
+        setSeverityHttponlyHigh(response.data[6].SeverityHttponly[1].length);
+        setSeverityHttponlyUrlHigh(response.data[6].SeverityHttponly[1]);
+      }
+      
+      if (response.data[6].SeverityHttponly[2][0] === 0) {
+        setSeverityHttponlyMedium(response.data[6].SeverityHttponly[2][0]);
+      } else {
+        setSeverityHttponlyMedium(response.data[6].SeverityHttponly[2].length);
+        setSeverityHttponlyUrlMedium(response.data[6].SeverityHttponly[2]);
+      }
+      
+      if (response.data[6].SeverityHttponly[3][0] === 0) {
+        setSeverityHttponlyLow(response.data[6].SeverityHttponly[3][0]);
+      } else {
+        setSeverityHttponlyLow(response.data[6].SeverityHttponly[3].length);
+        setSeverityHttponlyUrlLow(response.data[6].SeverityHttponly[3]);
+      }
+      
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[7].SeverityExpires[0][0] === 0) {
+        setSeverityExpiresCritical(response.data[7].SeverityExpires[0][0]);
+      } else {
+        setSeverityExpiresCritical(response.data[7].SeverityExpires[0].length);
+        setSeverityExpiresUrlCritical(response.data[7].SeverityExpires[0]);
+      }
+      
+      if (response.data[7].SeverityExpires[1][0] === 0) {
+        setSeverityExpiresHigh(response.data[7].SeverityExpires[1][0]);
+      } else {
+        setSeverityExpiresHigh(response.data[7].SeverityExpires[1].length);
+        setSeverityExpiresUrlHigh(response.data[7].SeverityExpires[1]);
+      }
+      
+      if (response.data[7].SeverityExpires[2][0] === 0) {
+        setSeverityExpiresMedium(response.data[7].SeverityExpires[2][0]);
+      } else {
+        setSeverityExpiresMedium(response.data[7].SeverityExpires[2].length);
+        setSeverityExpiresUrlMedium(response.data[7].SeverityExpires[2]);
+      }
+      
+      if (response.data[7].SeverityExpires[3][0] === 0) {
+        setSeverityExpiresLow(response.data[7].SeverityExpires[3][0]);
+      } else {
+        setSeverityExpiresLow(response.data[7].SeverityExpires[3].length);
+        setSeverityExpiresUrlLow(response.data[7].SeverityExpires[3]);
+      }
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[8].SeveritySamsite[0][0] === 0) {
+        setSeveritySamsiteCritical(response.data[8].SeveritySamsite[0][0]);
+      } else {
+        setSeveritySamsiteCritical(response.data[8].SeveritySamsite[0].length);
+        setSeveritySamsiteUrlCritical(response.data[8].SeveritySamsite[0]);
+      }
+      
+      if (response.data[8].SeveritySamsite[1][0] === 0) {
+        setSeveritySamsiteHigh(response.data[8].SeveritySamsite[1][0]);
+      } else {
+        setSeveritySamsiteHigh(response.data[8].SeveritySamsite[1].length);
+        setSeveritySamsiteUrlHigh(response.data[8].SeveritySamsite[1]);
+      }
+      
+      if (response.data[8].SeveritySamsite[2][0] === 0) {
+        setSeveritySamsiteMedium(response.data[8].SeveritySamsite[2][0]);
+      } else {
+        setSeveritySamsiteMedium(response.data[8].SeveritySamsite[2].length);
+        setSeveritySamsiteUrlMedium(response.data[8].SeveritySamsite[2]);
+      }
+      
+      if (response.data[8].SeveritySamsite[3][0] === 0) {
+        setSeveritySamsiteLow(response.data[8].SeveritySamsite[3][0]);
+      } else {
+        setSeveritySamsiteLow(response.data[8].SeveritySamsite[3].length);
+        setSeveritySamsiteUrlLow(response.data[8].SeveritySamsite[3]);
+      
+        
+      }
+      //-------------------------------------------------------------------------------
+      if (response.data[9].SeverityServer[0][0] === 0) {
+        setSeverityServerCritical(response.data[9].SeverityServer[0][0]);
+      } else {
+        setSeverityServerCritical(response.data[9].SeverityServer[0].length);
+        setSeverityServerUrlCritical(response.data[9].SeverityServer[0]);
+      }
+      
+      if (response.data[9].SeverityServer[1][0] === 0) {
+        setSeverityServerHigh(response.data[9].SeverityServer[1][0]);
+      } else {
+        setSeverityServerHigh(response.data[9].SeverityServer[1].length);
+        setSeverityServerUrlHigh(response.data[9].SeverityServer[1]);
+      }
+      
+      if (response.data[9].SeverityServer[2][0] === 0) {
+        setSeverityServerMedium(response.data[9].SeverityServer[2][0]);
+      } else {
+        setSeverityServerMedium(response.data[9].SeverityServer[2].length);
+        setSeverityServerUrlMedium(response.data[9].SeverityServer[2]);
+      }
+      
+      if (response.data[9].SeverityServer[3][0] === 0) {
+        setSeverityServerLow(response.data[9].SeverityServer[3][0]);
+      } else {
+        setSeverityServerLow(response.data[9].SeverityServer[3].length);
+        setSeverityServerUrlLow(response.data[9].SeverityServer[3]);
+      }
+      //-------------------------------------------------------------------------------
+      if (response.data[10].SeverityHSTS[0][0] === 0) {
+        setSeverityHSTSCritical(response.data[10].SeverityHSTS[0][0]);
+      } else {
+        setSeverityHSTSCritical(response.data[10].SeverityHSTS[0].length);
+        setSeverityHSTSUrlCritical(response.data[10].SeverityHSTS[0]);
+      
+      }
+      
+      if (response.data[10].SeverityHSTS[1][0] === 0) {
+        setSeverityHSTSHigh(response.data[10].SeverityHSTS[1][0]);
+      } else {
+        setSeverityHSTSHigh(response.data[10].SeverityHSTS[1].length);
+        setSeverityHSTSUrlHigh(response.data[10].SeverityHSTS[1]);
+      }
+      
+      if (response.data[10].SeverityHSTS[2][0] === 0) {
+        setSeverityHSTSMedium(response.data[10].SeverityHSTS[2][0]);
+      } else {
+        setSeverityHSTSMedium(response.data[10].SeverityHSTS[2].length);
+        setSeverityHSTSUrlMedium(response.data[10].SeverityHSTS[2]);
+      }
+      
+      if (response.data[10].SeverityHSTS[3][0] === 0) {
+        setSeverityHSTSLow(response.data[10].SeverityHSTS[3][0]);
+      } else {
+        setSeverityHSTSLow(response.data[10].SeverityHSTS[3].length);
+        setSeverityHSTSUrlLow(response.data[10].SeverityHSTS[3]);
+      }
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[14].SeveritySentitive[0][0] === 0) {
+        setSeveritySentitiveCritical(response.data[14].SeveritySentitive[0][0]);
+      } else {
+        setSeveritySentitiveCritical(response.data[14].SeveritySentitive[0].length);
+        setSeveritySentitiveUrlCritical(response.data[14].SeveritySentitive[0]);
+      }
+      
+      if (response.data[14].SeveritySentitive[1][0] === 0) {
+        setSeveritySentitiveHigh(response.data[14].SeveritySentitive[1][0]);
+      } else {
+        setSeveritySentitiveHigh(response.data[14].SeveritySentitive[1].length);
+        setSeveritySentitiveUrlHigh(response.data[14].SeveritySentitive[1]);
+      }
+      
+      if (response.data[14].SeveritySentitive[2][0] === 0) {
+        setSeveritySentitiveMedium(response.data[14].SeveritySentitive[2][0]);
+      } else {
+        setSeveritySentitiveMedium(response.data[14].SeveritySentitive[2].length);
+        setSeveritySentitiveUrlMedium(response.data[14].SeveritySentitive[2]);
+      }
+      
+      if (response.data[14].SeveritySentitive[3][0] === 0) {
+        setSeveritySentitiveLow(response.data[14].SeveritySentitive[3][0]);
+      } else {
+        setSeveritySentitiveLow(response.data[14].SeveritySentitive[3].length);
+        setSeveritySentitiveUrlLow(response.data[14].SeveritySentitive[3]);
+      }
+      
+      
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[15].SeverityWeb[0][0] === 0) {
+        setSeverityWebCritical(response.data[15].SeverityWeb[0][0]);
+      } else {
+        setSeverityWebCritical(response.data[15].SeverityWeb[0].length);
+        setSeverityWebUrlCritical(response.data[15].SeverityWeb[0]);
+      }
+      
+      if (response.data[15].SeverityWeb[1][0] === 0) {
+        setSeverityWebHigh(response.data[15].SeverityWeb[1][0]);
+      } else {
+        setSeverityWebHigh(response.data[15].SeveritySentitive[1].length);
+        setSeverityWebUrlHigh(response.data[15].SeveritySentitive[1]);
+      }
+      
+      if (response.data[15].SeverityWeb[2][0] === 0) {
+        setSeverityWebMedium(response.data[15].SeverityWeb[2][0]);
+      } else {
+        setSeverityWebMedium(response.data[15].SeverityWeb[2].length);
+        setSeverityWebUrlMedium(response.data[15].SeverityWeb[2]);
+      }
+      
+      
+      if (response.data[15].SeverityWeb[3][0] === 0) {
+        setSeverityWebLow(response.data[15].SeverityWeb[3][0]);
+      } else {
+        setSeverityWebLow(response.data[15].SeverityWeb[3].length);
+        setSeverityWebUrlLow(response.data[15].SeverityWeb[3]);
+      }
+      
+      
+      //-------------------------------------------------------------------------------
+      if (response.data[16].SeverityCommand[0][0] === 0) {
+        setSeverityCommandCritical(response.data[16].SeverityCommand[0][0]);
+      } else {
+        setSeverityCommandCritical(response.data[16].SeverityCommand[0].length);
+        setSeverityCommandUrlCritical(response.data[16].SeverityCommand[0]);
+      }
+      
+      if (response.data[16].SeverityCommand[1][0] === 0) {
+        setSeverityCommandHigh(response.data[16].SeverityCommand[1][0]);
+      } else {
+        setSeverityCommandHigh(response.data[16].SeverityCommand[1].length);
+        setSeverityCommandUrlHigh(response.data[16].SeverityCommand[1]);
+      }
+      
+      if (response.data[16].SeverityCommand[2][0] === 0) {
+        setSeverityCommandMedium(response.data[16].SeverityCommand[2][0]);
+      } else {
+        setSeverityCommandMedium(response.data[16].SeverityCommand[2].length);
+        setSeverityCommandUrlMedium(response.data[16].SeverityCommand[2]);
+      }
+      
+      if (response.data[16].SeverityCommand[3][0] === 0) {
+        setSeverityCommandLow(response.data[16].SeverityCommand[3][0]);
+      } else {
+        setSeverityCommandLow(response.data[16].SeverityCommand[3].length);
+        setSeverityCommandUrlLow(response.data[16].SeverityCommand[3]);
+      }
+      const subCategories = ["Critical", "High", "Medium", "Low"];
+      const data = datanumber.flatMap((category, index) =>
+        subCategories.map((subCategory) => {
+          const value = category.c.find((item) => item.name === subCategory)?.c ;
+      
+         
+          if (value !== undefined) {
+            return {
+              name: `${category.name}`,
+              mainCategory: category.name,
+              subCategory: subCategory,
+              value: value,
+              isMainCategory: index === 0,
+            };
+          }
+          return null; 
+        })
+      );
+      
+      
+      setData(data.filter((entry) => entry !== null));
+      
+      
+      
+      
       setOwaspData(response.data[13].owasp_);
-      setvalueENDpp(response.data[11].valueENDpp);
-      setvalueTimep(response.data[12].valueTimep[0]);
+      
+      
+              if (response.data === "server error") {
+                Swal.fire({
+                  icon: "error",
+                  title: "User Error",
+                });
+              }
+      
+              console.log(response);
+            } catch (error) {
+              // Handle error
+              console.error("Error fetching data:", error);
+            }
+          };
+          
+          
+          useEffect(()=>{
+            fetchData();
+          },[])
+  const datanumber = [
+    { name: "SQL Injection",
+     c: [
+      { name: "Critical", c: SeveritySQLCritical,url:SeveritySQLUrlCritical },
+      { name: "High", c: SeveritySQLHigh ,url:SeveritySQLUrlHigh},
+      { name: "Medium", c:SeveritySQLMedium ,url:SeveritySQLUrlMedium},
+      { name: "Low", c: SeveritySQLLow ,url:SeveritySQLUrlLow},
+    ]},
+    { name: "Reflected Cross Site Scripting",
+    c: [
+      { name: "Critical", c: SeverityXSSCritical,url:SeverityXSSUrlCritical },
+      { name: "High", c: SeverityXSSHigh ,url:SeverityXSSUrlHigh},
+      { name: "Medium", c: SeverityXSSMedium ,url:SeverityXSSUrlMedium},
+      { name: "Low", c: SeverityXSSLow ,url: SeverityXSSUrlLow},
+    ]},
+    { name: "Directory Traversal File Include",
+    c: [
+      { name: "Critical", c: SeverityDirectoryCritical ,url:SeverityDirectoryUrlCritical},
+      { name: "High", c: SeverityDirectoryHigh ,url:SeverityDirectoryUrlHigh},
+      { name: "Medium", c: SeverityDirectoryMedium ,url:SeverityDirectoryUrlMedium},
+      { name: "Low", c: SeverityDirectoryLow ,url:SeverityDirectoryUrlLow},
+    ]},
+    { name: "Sensitive File Disclosure",
+    c: [
+      { name: "Critical", c: SeveritySentitiveCritical ,url:SeveritySentitiveUrlCritical},
+      { name: "High", c: SeveritySentitiveHigh,url:SeveritySentitiveUrlHigh},
+      { name: "Medium", c: SeveritySentitiveMedium,url:SeveritySentitiveUrlMedium},
+      { name: "Low", c: SeveritySentitiveLow,url: SeveritySentitiveUrlLow},
+    ]},
+    { name: "Missing HTTP Strict Transport Security Header",
+    c: [
+      { name: "Critical", c: SeverityHSTSCritical ,url:SeverityHSTSUrlCritical},
+      { name: "High", c: SeverityHSTSHigh ,url: SeverityHSTSUrlHigh},
+      { name: "Medium", c: SeverityHSTSMedium ,url:SeverityHSTSUrlMedium},
+      { name: "Low", c: SeverityHSTSLow ,url:SeverityHSTSUrlLow },
+    ]},
+    { name: "Missing Secure Attribute in Cookie Header",
+    c: [
+      { name: "Critical", c: SeveritySecureCritical,url:SeveritySecureUrlCritical },
+      { name: "High", c: SeveritySecureHigh,url: SeveritySecureUrlHigh},
+      { name: "Medium", c: SeveritySecureMedium,url:SeveritySecureUrlMedium},
+      { name: "Low", c: SeveritySecureLow,url:SeveritySecureUrlLow}
+    ]},
+    { name: "Missing HttpOnly Attribute in Cookie Header",
+    c: [
+      { name: "Critical", c: SeverityHttponlyCritical,url:SeverityHttponlyUrlCritical },
+      { name: "High", c: SeverityHttponlyHigh,url:SeverityHttponlyUrlHigh },
+      { name: "Medium", c: SeverityHttponlyMedium ,url:SeverityHttponlyUrlMedium},
+      { name: "Low", c: SeverityHttponlyLow ,url:SeverityHttponlyUrlLow},
+    ]},
+    { name: "Missing Expires Attribute in Cookie Header",
+    c: [
+      { name: "Critical", c: SeverityExpiresCritical ,url:SeverityExpiresUrlCritical},
+      { name: "High", c: SeverityExpiresHigh,url:SeverityExpiresUrlHigh},
+      { name: "Medium", c: SeverityExpiresMedium,url:SeverityExpiresUrlMedium },
+      { name: "Low", c: SeverityExpiresLow,url:SeverityExpiresUrlLow },
+    ]},
+    { name: "Missing SameSite Attribute in Cookie Header",
+    c: [
+      { name: "Critical", c: SeveritySamesiteCritical,url: SeveritySamesiteUrlCritical},
+      { name: "High", c: SeveritySamesiteHigh,url: SeveritySamesiteUrlHigh},
+      { name: "Medium", c: SeveritySamesiteMedium ,url:SeveritySamesiteUrlMedium},
+      { name: "Low", c:SeveritySamesiteLow,url:SeveritySamesiteUrlLow },
+    ]},
+    { name: "Web Server Information Leakage through Server header",
+    c: [
+      { name: "Critical", c: SeverityServerCritical,url:SeverityServerUrlCritical },
+      { name: "High", c: SeverityServerHigh,url:SeverityServerUrlHigh  },
+      { name: "Medium", c: SeverityServerMedium,url:SeverityServerUrlMedium  },
+      { name: "Low", c: SeverityServerLow ,url:SeverityServerUrlLow },
+    ]},
+    { name: "Web Application Framework Information Leakage",
+    c: [
+      { name: "Critical", c: SeverityWebCritical,url:SeverityWebUrlCritical},
+      { name: "High", c: SeverityWebHigh,url: SeverityWebUrlHigh},
+      { name: "Medium", c: SeverityWebMedium,url:SeverityWebUrlMedium},
+      { name: "Low", c: SeverityWebLow,url:SeverityWebUrlLow },
+    ]},
+    { name: "Command Injection",
+    c: [
+      { name: "Critical", c: SeverityCommandCritical,url:SeverityCommandUrlCritical},
+      { name: "High", c: SeverityCommandHigh ,url:SeverityCommandUrlHigh},
+      { name: "Medium", c: SeverityCommandMedium ,url:SeverityCommandUrlMedium},
+      { name: "Low", c: SeverityCommandLow ,url:SeverityCommandUrlLow},
+    ]},
 
-      setsamsite(
-        response.data[8].select_att_ID_select_att_samsite_DATA[0].filter(
-          (item) => item !== null
-        )
-      );
-      Setseveritysamsite(
-        response.data[8].select_att_ID_select_att_samsite_DATA[1][0][0]
-      );
-
-      if (response.data[8].select_att_ID_select_att_samsite_DATA[1][0]) {
-        setsamsite(
-          response.data[8].select_att_ID_select_att_samsite_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        Setseveritysamsite(
-          response.data[8].select_att_ID_select_att_samsite_DATA[1][0][0]
-        );
-      }
-      if (response.data[5].select_att_ID_select_att_secure_DATA[1][0]) {
-        setsecure(
-          response.data[5].select_att_ID_select_att_secure_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        SetseveritySecure(
-          response.data[5].select_att_ID_select_att_secure_DATA[1][0][0]
-        );
-      }
-
-      if (response.data[9].select_att_ID_select_att_server_DATA[1][0]) {
-        setserver(
-          response.data[9].select_att_ID_select_att_server_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        Setseverityserver(
-          response.data[9].select_att_ID_select_att_server_DATA[1][0][0]
-        );
-      }
-
-      if (response.data[14].select_att_ID_Sentitive[1][0]) {
-        setsensitive(
-          response.data[14].select_att_ID_Sentitive[0].filter(
-            (item) => item !== null
-          )
-        );
-        Setseveritysensitive(
-          response.data[14].select_att_ID_Sentitive[1][0][0]
-        );
-      }
-
-      if (response.data[10].select_att_ID_select_att_HSTS_DATA[1][0]) {
-        setHSTS(
-          response.data[10].select_att_ID_select_att_HSTS_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        SetseverityHSTS(
-          response.data[10].select_att_ID_select_att_HSTS_DATA[1][0][0]
-        );
-      }
-
-      if (response.data[1].select_att_sql_DATA[1][0]) {
-        setProjectOneDataSQL(
-          response.data[1].select_att_sql_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        SetseveritySQL(response.data[1].select_att_sql_DATA[1][0][0]);
-      }
-
-      if (response.data[2].select_att_ID_xsssql_DATA[1][0]) {
-        setProjectOneDataXSS(
-          response.data[2].select_att_ID_xsssql_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        SetseverityXSS(response.data[2].select_att_ID_xsssql_DATA[1][0][0]);
-      }
-
-      if (response.data[3].select_att_ID_select_att_traversal_DATA[1][0]) {
-        setProjectOneDataTravel(
-          response.data[3].select_att_ID_select_att_traversal_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        SetseverityTraval(
-          response.data[3].select_att_ID_select_att_traversal_DATA[1][0][0]
-        );
-      }
-
-      if (response.data[6].select_att_ID_select_att_httponly_DATA[1][0]) {
-        sethttponly(
-          response.data[6].select_att_ID_select_att_httponly_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        Setseverityhttponly(
-          response.data[6].select_att_ID_select_att_httponly_DATA[1][0][0]
-        );
-      }
-
-      if (response.data[7].select_att_ID_select_att_expire_DATA[1][0]) {
-        setexpire(
-          response.data[7].select_att_ID_select_att_expire_DATA[0].filter(
-            (item) => item !== null
-          )
-        );
-        Setseverityexpire(
-          response.data[7].select_att_ID_select_att_expire_DATA[1][0][0]
-        );
-      }
-
-      if (response.data[15].select_att_ID_webb[1][0]) {
-        setwebb(
-          response.data[15].select_att_ID_webb[0].filter(
-            (item) => item !== null
-          )
-        );
-        Setseveritywebb(response.data[15].select_att_ID_webb[1][0][0]);
-      }
-      if (response.data[16].select_att_ID_commandd[1][0]) {
-        setcommand(
-          response.data[16].select_att_ID_commandd[0].filter(
-            (item) => item !== null
-          )
-        );
-        Setseveritycommand(response.data[16].select_att_ID_commandd[1][0][0]);
-      }
-      //   setsensitive(response.data[14].select_att_ID_Sentitive[0].filter(item=> item !== null));
-      //   Setseveritysensitive(response.data[14].select_att_ID_Sentitive[1][0][0]);
-      //   setHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[0].filter(item=> item !== null));
-      //     // console.log(response)
-      //   console.log(response.data[10].select_att_ID_select_att_HSTS_DATA[0])
-      //   console.log("dsd",response.data[10].select_att_ID_select_att_HSTS_DATA[1][0][0])
-      //   SetseverityHSTS(response.data[10].select_att_ID_select_att_HSTS_DATA[1][0][0]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [project_name_id]);
-
-  const PieCout = () => {
-    const counts = {
-      Critical:
-      (severitySQL === "Critical" ? projectOneDataSQL.length : 0) +
-      (severityXSS === "Critical" ? projectOneDataXSS.length : 0) +
-      (severityTraval === "Critical" ? projectOneDataTravel.length : 0) +
-      (severitysamsite === "Critical" ? samsite.length : 0) +
-      (severitySecure === "Critical" ? secure.length : 0) +
-      (severityserver === "Critical" ? server.length : 0) +
-      (severityhttponly === "Critical" ? httponly.length : 0) +
-      (severityHSTS === "Critical" ? HSTS.length : 0) +
-      (severityexpire === "Critical" ? expire.length : 0) +
-      (severitysensitive === "Critical" ? Sensitive.length : 0) +
-      (severitywebb === "Critical" ? web.length : 0) +
-      (severitycommand === "Critical" ? command.length : 0),
-      high:
-        (severitySQL === "High" ? projectOneDataSQL.length : 0) +
-        (severityXSS === "High" ? projectOneDataXSS.length : 0) +
-        (severityTraval === "High" ? projectOneDataTravel.length : 0) +
-        (severitysamsite === "High" ? samsite.length : 0) +
-        (severitySecure === "High" ? secure.length : 0) +
-        (severityserver === "High" ? server.length : 0) +
-        (severityhttponly === "High" ? httponly.length : 0) +
-        (severityHSTS === "High" ? HSTS.length : 0) +
-        (severityexpire === "High" ? expire.length : 0) +
-        (severitysensitive === "High" ? Sensitive.length : 0) +
-        (severitywebb === "High" ? web.length : 0) +
-        (severitycommand === "High" ? command.length : 0),
-      medium:
-        (severitySQL === "Medium" ? projectOneDataSQL.length : 0) +
-        (severityXSS === "Medium" ? projectOneDataXSS.length : 0) +
-        (severityTraval === "Medium" ? projectOneDataTravel.length : 0) +
-        (severitysamsite === "Medium" ? samsite.length : 0) +
-        (severitySecure === "Medium" ? secure.length : 0) +
-        (severityserver === "Medium" ? server.length : 0) +
-        (severityhttponly === "Medium" ? httponly.length : 0) +
-        (severityHSTS === "Medium" ? HSTS.length : 0) +
-        (severityexpire === "Medium" ? expire.length : 0) +
-        (severitysensitive === "Medium" ? Sensitive.length : 0) +
-        (severitywebb === "Medium" ? web.length : 0) +
-        (severitycommand === "Medium" ? command.length : 0),
-      low:
-        (severitySQL === "Low" ? projectOneDataSQL.length : 0) +
-        (severityXSS === "Low" ? projectOneDataXSS.length : 0) +
-        (severityTraval === "Low" ? projectOneDataTravel.length : 0) +
-        (severitysamsite === "Low" ? samsite.length : 0) +
-        (severitySecure === "Low" ? secure.length : 0) +
-        (severityserver === "Low" ? server.length : 0) +
-        (severityhttponly === "Low" ? httponly.length : 0) +
-        (severityHSTS === "Low" ? HSTS.length : 0) +
-        (severityexpire === "Low" ? expire.length : 0) +
-        (severitysensitive === "Low" ? Sensitive.length : 0) +
-        (severitywebb === "Low" ? web.length : 0) +
-        (severitycommand === "Low" ? command.length : 0),
-    };
-
-    return counts;
-  };
-
-
-  const getColorForSeverity = (severity) => {
-    switch (severity) {
-      case 'Low':
-        return '#6F77B1';
-      case 'Medium':
-        return '#FFBB28';
-      case 'High':
-        return '#FF5100';
-        case 'Critical':
-          return '#FF0000';
-      default:
-        return '#000000';
-    }
-  };
-
-  const vulnerCounts = PieCout();
-  //     console.log("severitySQL",projectOneDataSQL)
-  //   console.log("severityXSS",projectOneDataXSS)
-  //   console.log("severityexpire",expire)
-  //     console.log("severityTraval",projectOneDataTravel)
-  //   console.log("severitySecure",secure)
-  //   console.log("severityhttponly",httponly)
-  //   console.log("severitysamsite",samsite)
-  //   console.log("severitHSTS",HSTS)
-  //   console.log("severityserver",server)
-
-  const pieChartData = [
-    { type: "Critical", value: vulnerCounts.Critical },
-    { type: "High", value: vulnerCounts.high },
-    { type: "Medium", value: vulnerCounts.medium },
-    { type: "Low", value: vulnerCounts.low },
+    
   ];
-  const RADIAN = Math.PI / 180;
-  const COLORS = ["#FF0000","#FF5100", "#FFBB28", "#6F77B1"];
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
 
-  const handleSeverityChange = (e, index, vulnerability) => {
-    const newUpdatedSeverities = { ...updatedSeverities };
-    newUpdatedSeverities[index] = e.target.value;
-    setUpdatedSeverities(newUpdatedSeverities);
-  };
-
-  const handleConfirmButtonClick = async (vulnerability, selectedSeverity) => {
-    if (selectedSeverity) {
-      try {
-        const result = await Swal.fire({
-          title: "Are you Sure?",
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonText: "Confirm",
-          cancelButtonText: "Cancel",
-        });
-
-        if (result.isConfirmed) {
-          await sendSeverityToAPI(vulnerability, selectedSeverity);
+  // console.log(SeverityServerUrlLow);
+  
+  const transformedData = datanumber.reduce((acc, category) => {
+    category.c.forEach((subCategory, subIndex) => {
+        const key = `${category.name}`;
+        const existingEntry = acc.find((entry) => entry.name === key);
+         console.log("subCategory.url",subCategory.url)
+        if (existingEntry) {
+            existingEntry[`value_${subCategory.name.toLowerCase()}`] = subCategory.c;
+            // existingEntry[`url_${subCategory.name.toLowerCase()}`] = subCategory.url; 
         } else {
-          setUpdatedSeverities({ ...updatedSeverities });
+            const newEntry = {
+                name: key,
+                [`value_${subCategory.name.toLowerCase()}`]: subCategory.c,
+                // [`url_${subCategory.name.toLowerCase()}`]: subCategory.url, 
+            };
+            acc.push(newEntry);
         }
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      Swal.fire({
-        icon: "info",
-        title: "Choices",
-      });
-    }
-  };
+    });
 
-  const sendSeverityToAPI = async (vulnerability, newSeverity) => {
-    const token = localStorage.getItem("token");
-    try {
-      await axios.put(
-        `http://127.0.0.1:5000/updateSeverity`,
-        {
-          project_name_id,
-          vulnerability,
-          newSeverity,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      await fetchData();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const handleDelete = async (iddelete) => {
-    const token = localStorage.getItem("token");
+    return acc;
+  }, []);
+ 
+const toggleCategory = (categoryName) => {
+  setOpenCategory(prevState => ({
+      ...prevState,
+      [categoryName]: !prevState[categoryName]
+  }));
+};
+
+
+const handleConfirmButtonClick = async (vulnerability, selectedSeverity) => {
+  
+  if (selectedSeverity) {
     try {
       const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
+        title: "Are you Sure?",
+        icon: "question",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Confirm",
+        cancelButtonText: "Cancel",
       });
 
       if (result.isConfirmed) {
-        await axios.delete(
-          `http://127.0.0.1:5000/oneSeverity?project_name_id=${project_name_id}&record=${iddelete}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        await fetchData();
-
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
-        });
+        await sendSeverityToAPI(vulnerability, selectedSeverity);
+      } else {
+        setUpdatedSeverities({ ...updatedSeverities });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
-  };
-  return (
-    <div className="dashboardd">
-      <div className="dashboard-s1">
-        <div className="dashboard-s1-b1">
-          <h1>Current Issues</h1>
-          <ResponsiveContainer width="100%" height={350} alignItems="center">
-            
-            <PieChart>
-              <Pie
-                data={pieChartData}
-                cx="47%"
-                cy="35%"
-                labelLine={false}
-                label={renderCustomizedLabel}
-                outerRadius={120}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {pieChartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="highlight-container">
-          <div className="circle-red"></div>
-            <p>
-            Critical(
-              {(severitySQL === "Critical" ? projectOneDataSQL.length : 0) +
-                (severityXSS === "Critical" ? projectOneDataXSS.length : 0) +
-                (severityTraval === "Critical" ? projectOneDataTravel.length : 0) +
-                (severitysamsite === "Critical" ? samsite.length : 0) +
-                (severitySecure === "Critical" ? secure.length : 0) +
-                (severityserver === "Critical" ? server.length : 0) +
-                (severityhttponly === "Critical" ? httponly.length : 0) +
-                (severityHSTS === "Critical" ? HSTS.length : 0) +
-                (severityexpire === "Critical" ? expire.length : 0) +
-                (severitysensitive === "Critical" ? Sensitive.length : 0) +
-                (severitywebb === "Critical" ? web.length : 0) +
-                (severitycommand === "Critical" ? command.length : 0)}
-              )
-            </p>
-            <div className="circle-orange"></div>
-            <p>
-              high(
-              {(severitySQL === "High" ? projectOneDataSQL.length : 0) +
-                (severityXSS === "High" ? projectOneDataXSS.length : 0) +
-                (severityTraval === "High" ? projectOneDataTravel.length : 0) +
-                (severitysamsite === "High" ? samsite.length : 0) +
-                (severitySecure === "High" ? secure.length : 0) +
-                (severityserver === "High" ? server.length : 0) +
-                (severityhttponly === "High" ? httponly.length : 0) +
-                (severityHSTS === "High" ? HSTS.length : 0) +
-                (severityexpire === "High" ? expire.length : 0) +
-                (severitysensitive === "High" ? Sensitive.length : 0) +
-                (severitywebb === "High" ? web.length : 0) +
-                (severitycommand === "High" ? command.length : 0)}
-              )
-            </p>
-            <div className="circle-yellow"></div>
-            <p>
-              medium (
-              {(severitySQL === "Medium" ? projectOneDataSQL.length : 0) +
-                (severityXSS === "Medium" ? projectOneDataXSS.length : 0) +
-                (severityTraval === "Medium"
-                  ? projectOneDataTravel.length
-                  : 0) +
-                (severitysamsite === "Medium" ? samsite.length : 0) +
-                (severitySecure === "Medium" ? secure.length : 0) +
-                (severityserver === "Medium" ? server.length : 0) +
-                (severityhttponly === "Medium" ? httponly.length : 0) +
-                (severityHSTS === "Medium" ? HSTS.length : 0) +
-                (severityexpire === "Medium" ? expire.length : 0) +
-                (severitysensitive === "Medium" ? Sensitive.length : 0) +
-                (severitywebb === "Medium" ? web.length : 0) +
-                (severitycommand === "Medium" ? command.length : 0)}
-              )
-            </p>
-            <div className="circle-blue"></div>
-            <p>
-              low(
-              {(severitySQL === "Low" ? projectOneDataSQL.length : 0) +
-                (severityXSS === "Low" ? projectOneDataXSS.length : 0) +
-                (severityTraval === "Low" ? projectOneDataTravel.length : 0) +
-                (severitysamsite === "Low" ? samsite.length : 0) +
-                (severitySecure === "Low" ? secure.length : 0) +
-                (severityserver === "Low" ? server.length : 0) +
-                (severityhttponly === "Low" ? httponly.length : 0) +
-                (severityHSTS === "Low" ? HSTS.length : 0) +
-                (severityexpire === "Low" ? expire.length : 0) +
-                (severitysensitive === "Low" ? Sensitive.length : 0) +
-                (severitywebb === "Low" ? web.length : 0) +
-                (severitycommand === "Low" ? command.length : 0)}
-              )
-            </p>
-          </div>
-        </div>
-
-        <div className="dashboard-s1-b2">
-          <h1>Current Process</h1>
-          {valueENDpp === null ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ClockLoader
-                color={"#36d7b7"}
-                loading={true}
-                size={280}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-              <p style={{ textAlign: "center", font: "16px" }}> Scanning...</p>
-            </div>
-          ) : (
-            <div style={{
-              marginTop: "20%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}>
-              <CheckCircleOutlined  style={{ fontSize: '80px', color: '#08c'}} />
-              <p style={{ textAlign: "center" }}>
-                {" "}
-                complete <br /> Start: {valueTimep} <br /> End:{valueENDpp}{" "}
-              </p>
-            </div>
-            
-          )}
-        </div>
-      </div>
-      <div className="dashboard-s2">
-      <h1>Summary</h1>
-      <div className="Sum">
-        <div className="collapse-content" style={{ overflow: "auto" }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Vulnerability</th>
-                <th>Severity</th>
-              </tr>
-            </thead>
-            <tbody>
-              {owaspData.map((item, index) => (
-                <tr key={index}>
-                  <td style={{ color: getColorForSeverity(item[1]) }}>
-                    {item[0]}
-                  </td>
-                  <td>
-                    <select
-                      style={{ color: getColorForSeverity(item[1]) }}
-                      value={updatedSeverities[index] || item[1]}
-                      onChange={(e) => handleSeverityChange(e, index, item[0])}
-                    >
-                <option style={{ color: "#6F77B1" }} value="Low">
-                  Low
-                </option>
-                <option style={{ color: "#FFBB28" }} value="Medium">
-                  Medium
-                </option>
-                <option style={{ color: "#FF5100" }} value="High">
-                  High
-                </option>
-                <option style={{ color: "#FF0000" }} value="Critical">
-                Critical
-                </option>
-                    </select>
-                    <Button
-                      style={{ marginLeft: "20px" }}
-                      onClick={() =>
-                        handleConfirmButtonClick(
-                          item[0],
-                          updatedSeverities[index] || item[1]
-                        )
-                      }
-                    >
-                      Confirm
-                    </Button>
-                    {Delete === "Advance" && (
-                      <Space size="middle">
-                        <Button
-                          type="danger"
-                          icon={
-                            <CloseOutlined
-                              className="close-button"
-                              style={{ color: "red,", marginBottom: "20px" }}
-                            />
-                          }
-                          onClick={() => handleDelete(item[2])}
-                        >
-                          {" "}
-                        </Button>
-                      </Space>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      </div>
-
-    </div>
-  );
+  } else {
+    Swal.fire({
+      icon: "info",
+      title: "Choices",
+    });
+  }
 };
+const sendSeverityToAPI = async (vulnerability, newSeverity) => {
+  try {
+
+    await axios.put(
+      `http://127.0.0.1:5000/updateSeverity`,
+      {
+        project_name_id,
+        vulnerability,
+        newSeverity,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    fetchData();
+  } catch (error) {
+    console.error(error);
+  }
+};
+const getColorForSeverity = (severity) => {
+  switch (severity) {
+    case 'Low':
+      return '#6F77B1';
+    case 'Medium':
+      return '#FFBB28';
+    case 'High':
+      return '#FF5100';
+      case 'Critical':
+        return '#FF0000';
+    default:
+      return '#23b842';
+  }
+};
+
+const handleSeverityChange = (e, index, vulnerability) => {
+  const newUpdatedSeverities = { ...updatedSeverities };
+  newUpdatedSeverities[index] = e.target.value;
+  setUpdatedSeverities(newUpdatedSeverities);
+};
+
+const handleDelete = async (iddelete) => {
+  try {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      await axios.delete(
+        `http://127.0.0.1:5000/oneSeverity?project_name_id=${project_name_id}&record=${iddelete}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchData();
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your file has been deleted.",
+        icon: "success",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+  const subCategories = ["Critical", "High", "Medium", "Low"]
+  return (
+    <div>
+      <ResponsiveContainer width={1700} height={500}>
+        <BarChart data={transformedData} style={{ fontSize: "12px" }}>
+          {subCategories.map((subCategory, index) => (
+            <Bar
+              key={`bar-${subCategory}-${index}`}
+              dataKey={`value_${subCategory.toLowerCase()}`}
+              fill={colors[index % colors.length]}
+              label={{ position: "top" }}
+            />
+          ))}
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+    
+          <Tooltip />
+          {/* <Legend
+  verticalAlign="bottom"
+  height={36}
+  formatter={(value) => `${value}`}
+  content={() => {
+    return (
+      <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+        {datanumber.map((category, index) => (
+          <div key={`legend-${index}`} style={{ margin: "10px", marginLeft: "10px", flexBasis: "40%", border: "1px solid #ccc", padding: "10px" }}>
+            <Button style={{ marginRight: "10px" }} onClick={() => toggleCategory(category.name)}>{category.name}</Button>
+            <div>
+              {category.c.map((subCategory, subIndex) => (
+                <div key={`legend-sub-${subIndex}`} style={{ marginRight: "20px" }}>
+                  {subCategory.c !== 0 && (
+                    <span style={{ color: colors[subIndex % colors.length] }}>
+                      
+                      <br/>{subCategory.name} ({subCategory.c})<br/>
+                      {openCategory[category.name] && (
+                        subCategory.url.map((url, urlIndex) => (
+                          <span key={`url-${urlIndex}`}> - {decodeURIComponent(url[1])} <br/></span>
+                        ))
+                      )}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }}
+  style={{ margin: "auto" }}
+/> */}
+        </BarChart>
+      </ResponsiveContainer>
+  
+      {/* Summary */}
+      <div className="dashboard-s2" style={{ marginTop: "50px"}}>
+  <h1 style={{ width: "50%" ,  margin: "0 auto" }}>Summary</h1>
+  <div>
+    <div className="collapse-content">
+      <table style={{ width: "50%" , border: "1px solid #ccc",  margin: "0 auto" }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: "left" }}>Vulnerability</th>
+            <th style={{ textAlign: "left" }}>Severity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {owaspData.map((item, index) => (
+            <tr key={index}>
+              <td style={{ color: getColorForSeverity(item[1]), textAlign: "left" }}>
+                {index+1}. {item[0]}
+              </td>
+              <td style={{ textAlign: "left" }}>
+                <select
+                  style={{ color: getColorForSeverity(item[1]) }}
+                  value={updatedSeverities[index] || item[1]}
+                  onChange={(e) => handleSeverityChange(e, index, item[0])}
+                >
+                   <option style={{ color: "#6F77B1" }} value="Low">
+                    Low
+                  </option>
+                  <option style={{ color: "#FFBB28" }} value="Medium">
+                    Medium
+                  </option>
+                  <option style={{ color: "#FF5100" }} value="High">
+                    High
+                  </option>
+                  <option style={{ color: "#FF0000" }} value="Critical">
+                    Critical
+                  </option>
+                </select>
+                <Button
+                  style={{ marginLeft: "20px" }}
+                  onClick={() =>
+                    handleConfirmButtonClick(
+                      item[0],
+                      updatedSeverities[index] || item[1]
+                    )
+                  }
+                >
+                  Confirm
+                </Button>
+                {Delete === "Advance" && (
+                  <Space size="middle">
+                    <Button
+                      type="danger"
+                      icon={
+                        <CloseOutlined
+                          className="close-button"
+                          style={{ color: "red,", marginBottom: "20px" }}
+                        />
+                      }
+                      onClick={() => handleDelete(item[2])}
+                    >
+                      {" "}
+                    </Button>
+                  </Space>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+        {datanumber.map((category, index) => (
+          <div key={`legend-${index}`} style={{ margin: "10px", marginLeft: "10px", flexBasis: "40%", border: "1px solid #ccc", padding: "10px" }}>
+            <Button style={{ marginRight: "10px" }} onClick={() => toggleCategory(category.name)}>{category.name}</Button>
+            <div>
+              {category.c.map((subCategory, subIndex) => (
+                <div key={`legend-sub-${subIndex}`} style={{ marginRight: "20px" }}>
+                  {subCategory.c !== 0 && (
+                    <span style={{ color: colors[subIndex % colors.length] }}>
+                      
+                      <br/>{subCategory.name} ({subCategory.c})<br/>
+                      {openCategory[category.name] && (
+                    <>
+                      {subCategory.url.map((url, urlIndex) => (
+                        <span key={`url-${urlIndex}`}> - {decodeURIComponent(url[1])} <br/></span>
+                      ))}
+            
+                    </>
+                  )}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+</div>
+  );
+  
+                        }
 
 export default Dashboard;

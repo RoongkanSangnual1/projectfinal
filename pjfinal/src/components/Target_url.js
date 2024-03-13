@@ -52,12 +52,22 @@ const Target_url = () => {
                 setProjectChange(res.data.Change);
                 Swal.fire(res.data.Change);
             }
+            else if(res.data["server error"])
+            {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'crawling Error',
+                  });
+            }
         } catch (error) {
             console.error("Error crawling:", error);
     
             if (project_name_id) {
             } else {
-                Swal.fire("ไม่สามารถทำการได้");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'crawling Error',
+                  });
             }
         }
     };

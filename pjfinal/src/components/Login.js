@@ -42,7 +42,8 @@ const Login = () => {
         .catch(console.log);
       return;
     }
-    return alert("Please enter your email");
+
+    return   Swal.fire("Please enter your email"); 
   };
 
   const showModal = () => {
@@ -63,8 +64,9 @@ const Login = () => {
     console.log("OTPemail", OTPemail);
     console.log("OTP", OTP);
     if (parseInt(OTPemail) === OTP) {
-      console.log("ถูกกก");
       setResetPasswordVisible(true);
+      setOTP('');
+      setOTPemail('');
     } else {
       Swal.fire("OTP ผิดพลาด");
     }
@@ -127,6 +129,8 @@ const Login = () => {
           localStorage.setItem('token', response.data.token);
           localStorage.setItem('user', response.data.username);
           navigate('/home');
+          setOTPemail('')
+          setOTP('');
         }
       })
       .catch(err => {

@@ -591,6 +591,8 @@ setresponsedata3(responsedata2)
       return (
         <div>
           <div className="button-container">
+            
+          {memoizedPDF}
           {Delete === "Advance" && (
             <div>
                 <Button type="primary" shape="round" icon={<ShareAltOutlined />} style={{ marginRight: "10px" }}>

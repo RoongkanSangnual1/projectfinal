@@ -1012,7 +1012,7 @@ async def detect_pathtraversal(pathtraversal):
                         # print(f"PID[2]", Server_data[2])
                         # print(f"URL_ID[3]", Server_data[3])
                         Server_word = line
-                        if Server_data[1].find(Server_word) != -1:
+                        if Server_word.lower() in Server_data[1].lower():                        
                             print("พบ detect word listpathraversal")
                             db = mysql.connection.cursor()
                             insert_query = (
@@ -1042,7 +1042,7 @@ async def run_gobuster(url,project_name,user):
                 file.write(item + '\n')
         command = [
             # 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
-            'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
+             'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
             '-r',
@@ -1089,7 +1089,12 @@ async def checkTempFuzz(i,project_name,user,baseURL,Host,cookies_data,http_log_d
                                 print("responsefuzz",response)
                                 await save_log(response, i,project_name,user,Host,http_log_data)
                                 i = i+1
-
+                if os.path.exists(file_path):
+                            try: 
+                                os.remove(file_path)
+                                print(f"{file_path}  deleted.")
+                            except IOError as e:
+                                print(f"Error reading file: {e}")
             except IOError as e:
                 print(f"Error reading file: {e}")
         else:
@@ -1113,8 +1118,7 @@ async def run_gobustersensitive(url,project_name,user):
             for item in word_list:
                 file.write(item + '\n')
         command = [
-            # 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
-            'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
+           'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
             '-r',
@@ -1173,7 +1177,7 @@ async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
                         baseURL = urlparse(scope_url).scheme + '://' + urlparse(scope_url).netloc
                         url = baseURL+x.split()[0]
                         print(url)
-                        print(get_response(url))
+                        # print(get_response(url))
                         db = mysql.connection.cursor()
                         insert_query = (
                             "INSERT INTO att_ps (URL_ID, position , PID, OID, URL, state, payload, vul_des, vul_sol, vul_ref, OType, Vul_name,Severity) "
@@ -1191,7 +1195,12 @@ async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
                         #         print("responsefuzz",response)
                         #         await save_log(response, i,project_name,user,Host,http_log_data)
                         #         i = i+1
-
+                if os.path.exists(file_path):
+                            try: 
+                                os.remove(file_path)
+                                print(f"{file_path}  deleted.")
+                            except IOError as e:
+                                print(f"Error reading file: {e}")
             except IOError as e:
                 print(f"Error reading file: {e}")
         else:
@@ -1240,9 +1249,9 @@ async def HSTS(PTarget):
             # HSTS_word = ["Strict-Transport-Security", "includeSubDomains", "preload", "max-age"]
             HSTS_word = ["Strict-Transport-Security", "includeSubDomains"]
 
-            if HSTS_word[0] in HSTS_data[1]:
+            if HSTS_word[0].lower() in HSTS_data[1].lower():
                 print("Strict-Transport-Security")
-            elif HSTS_word[1] in HSTS_data[1]:
+            elif HSTS_word[1].lower() in HSTS_data[1].lower() :
                 print("includeSubDomains")
             # elif HSTS_word[2] in HSTS_data[1]:
             #     print("preload")
@@ -1290,16 +1299,19 @@ async def webFramework(PTarget):
         with open(wordlist_path, 'r') as file:
             for payload in file:
 
-                detected_payload = payload
+                detected_payload = payload.strip() 
                 for HSTS_data in PTarget:
-                    if detected_payload in HSTS_data[1]:
+                    print(HSTS_data[1],detected_payload)
+                    if detected_payload.lower() in str(HSTS_data[1]).lower():
                         print(f"Detected web framework: {detected_payload}")
+                    # if HSTS_data[1].find(detected_payload) != -1:
+                    #     print(f"Detected web framework: {detected_payload}")
 
                         db = mysql.connection.cursor()
                         insert_query = (
-                                "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity ) VALUES (%s,%s, %s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                                "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity,payload ) VALUES (%s,%s,%s, %s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
                                 )
-                        values = (HSTS_data[3],HSTS_data[2],'9',HSTS_data[0],'T',HSTS_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                        values = (HSTS_data[3],HSTS_data[2],'9',HSTS_data[0],'T',HSTS_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5],detected_payload)
                         db.execute(insert_query, values)
                         mysql.connection.commit()
                     else:
@@ -1334,19 +1346,20 @@ async def webFrameworkhtml(PTarget):
                 detected_payload = payload.strip()
                 for HSTS_data in PTarget:
                     encoded_data = HSTS_data[1]
-                    print("detected_payload",detected_payload)
+                    # print("detected_payload",detected_payload)
                     try:
                         decoded_data = base64.b64decode(encoded_data).decode('utf-8')
-                        if detected_payload in decoded_data:
-
-                            
-                            # print(f"Detected web framework: {detected_payload}")
+                        # print(detected_payload.lower() )
+                        # print(decoded_data.lower())
+                        if detected_payload.lower() in decoded_data.lower():
+                            # print("detected_payload",detected_payload)
+                            print(f"Detected web framework: {detected_payload}")
 
                             db = mysql.connection.cursor()
                             insert_query = (
-                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity ) VALUES (%s,%s, %s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
+                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,res_header,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity ,payload) VALUES (%s,%s,%s, %s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s)"
                                     )
-                            values = (HSTS_data[3],HSTS_data[2],'9',HSTS_data[0],'T',HSTS_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                            values = (HSTS_data[3],HSTS_data[2],'9',HSTS_data[0],'T',HSTS_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5],detected_payload)
                             db.execute(insert_query, values)
                             mysql.connection.commit()
                             break  
@@ -2019,7 +2032,7 @@ def DashboardAll():
 
 
 @app.route("/dashboard", methods=['GET'])
-def dashboard():
+async def dashboard():
     try:
         token = request.headers.get('Authorization').split(' ')[1]
         user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
@@ -2044,143 +2057,579 @@ def dashboard():
         url_target = db.fetchall()
 
         # print(url_target)
-        select_att_ID_sql = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_sql, (project_name_id, '11'))
-        select_att_ID_sql_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'SQL Injection'))
-        Severity11 = db.fetchall()
-        if Severity11:
-            Severity11= Severity11
+        # select_att_ID_sql = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, '11'))
+        # select_att_ID_sql_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'SQL Injection'))
+        # Severity11 = db.fetchall()
+        # if Severity11:
+        #     Severity11= Severity11
+        # else:
+        #     Severity11= [0] 
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySQL, (project_name_id, 'SQL Injection','Critical'))
+        SeveritySQLdata = db.fetchall()
+        if SeveritySQLdata:
+             SeveritySQLdataCritical= SeveritySQLdata
         else:
-            Severity11= [0] 
+            SeveritySQLdataCritical= [0] 
 
-        select_att_ID_sql = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_sql, (project_name_id, '10'))
-        select_att_ID_xsssql_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Stored Cross Site Scriptng'))
-        Severity10 = db.fetchall()
-        if Severity10:
-            Severity10 = Severity10
+
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySQL, (project_name_id, 'SQL Injection','High'))
+        SeveritySQLdata = db.fetchall()
+        if SeveritySQLdata:
+             SeveritySQLdataHigh= SeveritySQLdata
         else:
-            Severity10 = [0]            
+            SeveritySQLdataHigh= [0] 
 
-        select_att_ID_traversal = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_traversal, (project_name_id, '4'))
-        select_att_ID_select_att_traversal_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Directory Traversal File Include'))
-        Severity4 = db.fetchall()  
-        if Severity4:
-            Severity4 = Severity4
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySQL, (project_name_id, 'SQL Injection','Medium'))
+        SeveritySQLdata = db.fetchall()
+        if SeveritySQLdata:
+             SeveritySQLdataMedium= SeveritySQLdata
         else:
-            Severity4 = [0]
+            SeveritySQLdataMedium= [0] 
 
-
-        select_att_ID_secure = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_secure, (project_name_id, '2'))
-        select_att_ID_select_att_secure_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Missing Secure Attribute in Cookie Header'))
-        Severity2 = db.fetchall()  
-        if Severity2:
-            Severity2 = Severity2
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySQL, (project_name_id, 'SQL Injection','Low'))
+        SeveritySQLdata = db.fetchall()
+        if SeveritySQLdata:
+             SeveritySQLdataLow= SeveritySQLdata
         else:
-            Severity2 = [0]
+            SeveritySQLdataLow= [0] 
 
 
-        select_att_ID_httponly = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_httponly, (project_name_id, '3'))
-        select_att_ID_select_att_httponly_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Missing HttpOnly Attribute in Cookie Header'))
-        Severity3 = db.fetchall()  
-        if Severity3:
-            Severity3 = Severity3
+
+
+        # select_att_ID_sql = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, '10'))
+        # select_att_ID_xsssql_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Stored Cross Site Scriptng'))
+        # Severity10 = db.fetchall()
+        # if Severity10:
+        #     Severity10 = Severity10
+        # else:
+        #     Severity10 = [0]
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityXSS, (project_name_id, 'Reflected Cross Site Scripting','Critical'))
+        SeverityXSSdata = db.fetchall()
+        if SeverityXSSdata:
+             SeverityXSSdataCritical= SeverityXSSdata
         else:
-            Severity3 = [0]
+            SeverityXSSdataCritical= [0] 
 
 
-        select_att_ID_expire = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_expire, (project_name_id, '5'))
-        select_att_ID_select_att_expire_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Missing Expires Attribute in Cookie Header'))
-        Severity5 = db.fetchall()  
-        if Severity5:
-            Severity5 = Severity5
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityXSS, (project_name_id, 'Reflected Cross Site Scripting','High'))
+        SeverityXSSdata = db.fetchall()
+        if SeverityXSSdata:
+             SeverityXSSdataHigh= SeverityXSSdata
         else:
-            Severity4 = [0]
+            SeverityXSSdataHigh= [0] 
+
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityXSS, (project_name_id, 'Stored Cross Site Scriptng','Medium'))
+        SeverityXSSdata = db.fetchall()
+        if SeverityXSSdata:
+             SeverityXSSdataMedium= SeverityXSSdata
+        else:
+            SeverityXSSdataMedium= [0] 
+
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityXSS, (project_name_id, 'Stored Cross Site Scriptng','Low'))
+        SeverityXSSdata = db.fetchall()
+        if SeverityXSSdata:
+             SeverityXSSdataLow= SeverityXSSdata
+        else:
+            SeverityXSSdataLow= [0] 
 
 
 
-        select_att_ID_samsite = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_samsite, (project_name_id, '6'))
-        select_att_ID_select_att_samsite_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Missing SameSite Attribute in Cookie Header'))
-        Severity6 = db.fetchall()  
-        if Severity6:
-            Severity6 = Severity6
-        else:
-            Severity6 = [0]
-    
-        select_att_ID_Server = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_Server, (project_name_id, '1'))
-        select_att_ID_select_att_server_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Web Server Infomation Leakage through Server header'))
-        Severity1 = db.fetchall()  
-        if Severity1:
-            Severity1= Severity1
-        else:
-            Severity1= [0]
-    
-        select_att_ID_Server = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
-        db.execute(select_att_ID_Server, (project_name_id, '8'))
-        select_att_ID_select_att_HSTS_DATA = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Missing HTTP Strict Transport Security Header'))
-        Severity8 = db.fetchall()  
-        if Severity8:
-            Severity8= Severity8
-        else:
-            Severity8= [0]
-   
 
-        select_att_ID_Sentitive = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
-        db.execute(select_att_ID_Sentitive, (project_name_id, '7'))
-        select_att_ID_Sentitive = db.fetchall()
-        select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_sql, (project_name_id, 'Sensitive File Disclosure'))
-        Severity7 = db.fetchall()  
-        if Severity7:
-            Severity7= Severity7
-        else:
-            Severity7= [0]
+            
 
-        select_att_ID_web="SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
-        db.execute(select_att_ID_web, (project_name_id, '9'))
-        select_att_ID_webb = db.fetchall()
-        select_att_ID_web = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_web, (project_name_id, 'Web Application Framework Infomation Leakage'))
-        Severity9 = db.fetchall()  
-        if Severity9:
-            Severity9= Severity9
+        # select_att_ID_traversal = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_traversal, (project_name_id, '4'))
+        # select_att_ID_select_att_traversal_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Directory Traversal File Include'))
+        # Severity4 = db.fetchall()  
+        # if Severity4:
+        #     Severity4 = Severity4
+        # else:
+        #     Severity4 = [0]
+        SeverityDirectory = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityDirectory, (project_name_id, 'Directory Traversal File Include','Critical'))
+        SeverityDirectorydata = db.fetchall()
+        if SeverityDirectorydata:
+             SeverityDirectorydataCritical= SeverityDirectorydata
         else:
-            Severity9= [0]
+            SeverityDirectorydataCritical= [0] 
+        print(SeverityDirectorydataCritical)
 
-        select_att_ID_command="SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
-        db.execute(select_att_ID_command, (project_name_id, '12'))
-        select_att_ID_commandd = db.fetchall()
-        select_att_ID_command = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
-        db.execute(select_att_ID_command, (project_name_id, 'Command Injection'))
-        Severity12 = db.fetchall()  
-        if Severity12:
-            Severity12= Severity12
+        SeverityDirectory = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityDirectory, (project_name_id, 'Directory Traversal File Include','High'))
+        SeverityDirectorydata = db.fetchall()
+        if SeverityDirectorydata:
+             SeverityDirectorydataHigh= SeverityDirectorydata
         else:
-            Severity12= [0]
+            SeverityDirectorydataHigh= [0] 
+        print(project_name_id,SeverityDirectorydataHigh)
+
+        SeverityDirectory = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityDirectory, (project_name_id, 'Directory Traversal File Include','Medium'))
+        SeverityDirectorydata = db.fetchall()
+        if SeverityDirectorydata:
+             SeverityDirectorydataMedium= SeverityDirectorydata
+        else:
+            SeverityDirectorydataMedium= [0] 
+        print(SeverityDirectorydataMedium)
+
+        SeverityDirectory = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityDirectory, (project_name_id, 'Directory Traversal File Include','Low'))
+        SeverityDirectorydata = db.fetchall()
+        if SeverityDirectorydata:
+             SeverityDirectorydataLow= SeverityDirectorydata
+        else:
+            SeverityDirectorydataLow= [0] 
+        print(SeverityDirectorydataLow)
+
+
+
+
+
+
+
+
+        # select_att_ID_secure = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_secure, (project_name_id, '2'))
+        # select_att_ID_select_att_secure_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Missing Secure Attribute in Cookie Header'))
+        # Severity2 = db.fetchall()  
+        # if Severity2:
+        #     Severity2 = Severity2
+        # else:
+        #     Severity2 = [0]
+        SeveritySecure = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySecure, (project_name_id, 'Missing Secure Attribute in Cookie Header','Critical'))
+        SeveritySecuredata = db.fetchall()
+        if SeveritySecuredata:
+             SeveritySecuredataCritical= SeveritySecuredata
+        else:
+            SeveritySecuredataCritical= [0] 
+
+
+        SeveritySecure = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySecure, (project_name_id, 'Missing Secure Attribute in Cookie Header','High'))
+        SeveritySecuredata = db.fetchall()
+        if SeveritySecuredata:
+             SeveritySecuredataHigh= SeveritySecuredata
+        else:
+            SeveritySecuredataHigh= [0] 
+
+        SeveritySecure = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySecure, (project_name_id, 'Missing Secure Attribute in Cookie Header','Medium'))
+        SeveritySecuredata = db.fetchall()
+        if SeveritySecuredata:
+              SeveritySecuredataMedium= SeveritySecuredata
+        else:
+             SeveritySecuredataMedium= [0] 
+
+        SeveritySecure = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySecure, (project_name_id, 'Missing Secure Attribute in Cookie Header','Low'))
+        SeveritySecuredata = db.fetchall()
+        if SeveritySecuredata:
+             SeveritySecuredataLow= SeveritySecuredata
+        else:
+             SeveritySecuredataLow= [0]
+
+
+
+        # select_att_ID_httponly = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_httponly, (project_name_id, '3'))
+        # select_att_ID_select_att_httponly_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Missing HttpOnly Attribute in Cookie Header'))
+        # Severity3 = db.fetchall()  
+        # if Severity3:
+        #     Severity3 = Severity3
+        # else:
+        #     Severity3 = [0]
+        SeverityHttponly = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHttponly, (project_name_id, 'Missing HttpOnly Attribute in Cookie Header','Critical'))
+        SeverityHttponlydata = db.fetchall()
+        if SeverityHttponlydata:
+             SeverityHttponlydataCritical= SeverityHttponlydata
+        else:
+            SeverityHttponlydataCritical= [0] 
+
+
+        SeverityHttponly = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHttponly, (project_name_id, 'Missing HttpOnly Attribute in Cookie Header','High'))
+        SeverityHttponlydata = db.fetchall()
+        if SeverityHttponlydata:
+             SeverityHttponlydataHigh= SeverityHttponlydata
+        else:
+            SeverityHttponlydataHigh= [0] 
+
+        SeverityHttponly = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHttponly, (project_name_id, 'Missing HttpOnly Attribute in Cookie Header','Medium'))
+        SeverityHttponlydata = db.fetchall()
+        if SeverityHttponlydata:
+              SeverityHttponlydataMedium= SeverityHttponlydata
+        else:
+             SeverityHttponlydataMedium= [0] 
+
+        SeverityHttponly = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHttponly, (project_name_id, 'Missing HttpOnly Attribute in Cookie Header','Low'))
+        SeverityHttponlydata = db.fetchall()
+        if SeverityHttponlydata:
+             SeverityHttponlydataLow= SeverityHttponlydata
+        else:
+             SeverityHttponlydataLow= [0]
+
+
+
+
+
+        # select_att_ID_expire = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_expire, (project_name_id, '5'))
+        # select_att_ID_select_att_expire_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Missing Expires Attribute in Cookie Header'))
+        # Severity5 = db.fetchall()  
+        # if Severity5:
+        #     Severity5 = Severity5
+        # else:
+        #     Severity4 = [0]
+        SeverityExpires = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityExpires, (project_name_id, 'Missing Expires Attribute in Cookie Header','Critical'))
+        SeverityExpiresdata = db.fetchall()
+        if SeverityExpiresdata:
+             SeverityExpiresdataCritical= SeverityExpiresdata
+        else:
+            SeverityExpiresdataCritical= [0] 
+
+
+        SeverityExpires = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityExpires, (project_name_id, 'Missing Expires Attribute in Cookie Header','High'))
+        SeverityExpiresdata = db.fetchall()
+        if SeverityExpiresdata:
+             SeverityExpiresdataHigh= SeverityExpiresdata
+        else:
+            SeverityExpiresdataHigh= [0] 
+
+        SeverityExpires = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityExpires, (project_name_id, 'Missing Expires Attribute in Cookie Header','Medium'))
+        SeverityExpiresdata = db.fetchall()
+        if SeverityExpiresdata:
+              SeverityExpiresdataMedium= SeverityExpiresdata
+        else:
+             SeverityExpiresdataMedium= [0] 
+
+        SeverityExpires = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityExpires, (project_name_id, 'Missing Expires Attribute in Cookie Header','Low'))
+        SeverityExpiresdata = db.fetchall()
+        if SeverityExpiresdata:
+             SeverityExpiresdataLow= SeverityExpiresdata
+        else:
+             SeverityExpiresdataLow= [0]
+
+
+
+
+
+        # select_att_ID_samsite = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_samsite, (project_name_id, '6'))
+        # select_att_ID_select_att_samsite_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Missing SameSite Attribute in Cookie Header'))
+        # Severity6 = db.fetchall()  
+        # if Severity6:
+        #     Severity6 = Severity6
+        # else:
+        #     Severity6 = [0]
+        SeveritySamesite = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySamesite, (project_name_id, 'Missing SameSite Attribute in Cookie Header','Critical'))
+        SeveritySamesitedata = db.fetchall()
+        if SeveritySamesitedata:
+             SeveritySamesitedataCritical= SeveritySamesitedata
+        else:
+            SeveritySamesitedataCritical= [0] 
+
+
+        SeveritySamesite= "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySamesite, (project_name_id, 'Missing SameSite Attribute in Cookie Header','High'))
+        SeveritySamesitedata = db.fetchall()
+        if SeveritySamesitedata:
+             SeveritySamesitedataHigh= SeveritySamesitedata
+        else:
+            SeveritySamesitedataHigh= [0] 
+
+        SeveritySamesite = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySamesite, (project_name_id, 'Missing SameSite Attribute in Cookie Header','Medium'))
+        SeveritySamesitedata = db.fetchall()
+        if SeveritySamesitedata:
+              SeveritySamesitedataMedium= SeveritySamesitedata
+        else:
+             SeveritySamesitedataMedium= [0] 
+
+        SeveritySamesite = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySamesite, (project_name_id, 'Missing SameSite Attribute in Cookie Header','Low'))
+        SeveritySamesitedata = db.fetchall()
+        if SeveritySamesitedata:
+             SeveritySamesitedataLow= SeveritySamesitedata
+        else:
+             SeveritySamesitedataLow= [0]
+
+
+             
+
+        # select_att_ID_Server = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_Server, (project_name_id, '1'))
+        # select_att_ID_select_att_server_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Web Server Infomation Leakage through Server header'))
+        # Severity1 = db.fetchall()  
+        # if Severity1:
+        #     Severity1= Severity1
+        # else:
+        #     Severity1= [0]
+        SeverityServer = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityServer, (project_name_id, 'Web Server Infomation Leakage through Server header','Critical'))
+        SeverityServerdata = db.fetchall()
+        if SeverityServerdata:
+             SeverityServerdataCritical= SeverityServerdata
+        else:
+            SeverityServerdataCritical= [0] 
+
+
+        SeverityServer= "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityServer, (project_name_id, 'Web Server Infomation Leakage through Server header','High'))
+        SeverityServerdata = db.fetchall()
+        if SeverityServerdata:
+             SeverityServerdataHigh= SeverityServerdata
+        else:
+            SeverityServerdataHigh= [0] 
+
+        SeverityServer = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityServer, (project_name_id, 'Web Server Infomation Leakage through Server header','Medium'))
+        SeverityServerdata = db.fetchall()
+        if SeverityServerdata:
+              SeverityServerdataMedium= SeverityServerdata
+        else:
+             SeverityServerdataMedium= [0] 
+
+        SeverityServer = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityServer, (project_name_id, 'Web Server Infomation Leakage through Server header','Low'))
+        SeverityServerdata = db.fetchall()
+        if SeverityServerdata:
+             SeverityServerdataLow= SeverityServerdata
+        else:
+             SeverityServerdataLow= [0]
+
+
+
+
+
+
+        # select_att_ID_Server = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+        # db.execute(select_att_ID_Server, (project_name_id, '8'))
+        # select_att_ID_select_att_HSTS_DATA = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Missing HTTP Strict Transport Security Header'))
+        # Severity8 = db.fetchall()  
+        # if Severity8:
+        #     Severity8= Severity8
+        # else:
+        #     Severity8= [0]
+        SeverityHSTS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHSTS, (project_name_id, 'Missing HTTP Strict Transport Security Header','Critical'))
+        SeverityHSTSdata = db.fetchall()
+        if SeverityHSTSdata:
+             SeverityHSTSdataCritical= SeverityHSTSdata
+        else:
+            SeverityHSTSdataCritical= [0] 
+
+
+        SeverityHSTS= "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHSTS, (project_name_id, 'Missing HTTP Strict Transport Security Header','High'))
+        SeverityHSTSdata = db.fetchall()
+        if SeverityHSTSdata:
+             SeverityHSTSdataHigh= SeverityHSTSdata
+        else:
+            SeverityHSTSdataHigh= [0] 
+
+        SeverityHSTS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHSTS, (project_name_id, 'Missing HTTP Strict Transport Security Header','Medium'))
+        SeverityHSTSdata = db.fetchall()
+        if SeverityHSTSdata:
+              SeverityHSTSdataMedium= SeverityHSTSdata
+        else:
+             SeverityHSTSdataMedium= [0] 
+
+        SeverityHSTS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityHSTS, (project_name_id, 'Missing HTTP Strict Transport Security Header','Low'))
+        SeverityHSTSdata = db.fetchall()
+        if SeverityHSTSdata:
+             SeverityHSTSdataLow= SeverityHSTSdata
+        else:
+             SeverityHSTSdataLow= [0]
+
+
+
+
+
+        # select_att_ID_Sentitive = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
+        # db.execute(select_att_ID_Sentitive, (project_name_id, '7'))
+        # select_att_ID_Sentitive = db.fetchall()
+        # select_att_ID_sql = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_sql, (project_name_id, 'Sensitive File Disclosure'))
+        # Severity7 = db.fetchall()  
+        # if Severity7:
+        #     Severity7= Severity7
+        # else:
+        #     Severity7= [0]
+        SeveritySensitive = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySensitive, (project_name_id, 'Sensitive File Disclosure','Critical'))
+        SeveritySensitivedata = db.fetchall()
+        if SeveritySensitivedata:
+             SeveritySensitivedataCritical= SeveritySensitivedata
+        else:
+            SeveritySensitivedataCritical= [0] 
+
+
+        SeveritySensitive= "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySensitive, (project_name_id, 'Sensitive File Disclosure','High'))
+        SeveritySensitivedata = db.fetchall()
+        if SeveritySensitivedata:
+             SeveritySensitivedataHigh= SeveritySensitivedata
+        else:
+            SeveritySensitivedataHigh= [0] 
+
+        SeveritySensitive = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySensitive, (project_name_id, 'Sensitive File Disclosure','Medium'))
+        SeveritySensitivedata = db.fetchall()
+        if SeveritySensitivedata:
+              SeveritySensitivedataMedium= SeveritySensitivedata
+        else:
+             SeveritySensitivedataMedium= [0] 
+
+        SeveritySensitive = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeveritySensitive, (project_name_id, 'Sensitive File Disclosure','Low'))
+        SeveritySensitivedata = db.fetchall()
+        if SeveritySensitivedata:
+             SeveritySensitivedataLow= SeveritySensitivedata
+        else:
+             SeveritySensitivedataLow= [0]
+
+
+
+        # select_att_ID_web="SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
+        # db.execute(select_att_ID_web, (project_name_id, '9'))
+        # select_att_ID_webb = db.fetchall()
+        # select_att_ID_web = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_web, (project_name_id, 'Web Application Framework Infomation Leakage'))
+        # Severity9 = db.fetchall()  
+        # if Severity9:
+        #     Severity9= Severity9
+        # else:
+        #     Severity9= [0]
+        SeverityWeb = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityWeb, (project_name_id, 'Web Application Framework Infomation Leakage','Critical'))
+        SeverityWebdata = db.fetchall()
+        if SeverityWebdata:
+             SeverityWebdataCritical= SeverityWebdata
+        else:
+            SeverityWebdataCritical= [0] 
+
+
+        SeverityWeb= "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityWeb, (project_name_id, 'Web Application Framework Infomation Leakage','High'))
+        SeverityWebdata = db.fetchall()
+        if SeverityWebdata:
+             SeverityWebdataHigh= SeverityWebdata
+        else:
+            SeverityWebdataHigh= [0] 
+
+        SeverityWeb = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityWeb, (project_name_id, 'Web Application Framework Infomation Leakage','Medium'))
+        SeverityWebdata = db.fetchall()
+        if SeverityWebdata:
+              SeverityWebdataMedium= SeverityWebdata
+        else:
+             SeverityWebdataMedium= [0] 
+
+        SeverityWeb = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute( SeverityWeb, (project_name_id, 'Web Application Framework Infomation Leakage','Low'))
+        SeverityWebdata = db.fetchall()
+        if SeverityWebdata:
+             SeverityWebdataLow= SeverityWebdata
+        else:
+             SeverityWebdataLow= [0]
+
+
+
+
+        # select_att_ID_command="SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s"
+        # db.execute(select_att_ID_command, (project_name_id, '12'))
+        # select_att_ID_commandd = db.fetchall()
+        # select_att_ID_command = "SELECT Severity FROM owasp WHERE PID = %s AND  Vul_name = %s "
+        # db.execute(select_att_ID_command, (project_name_id, 'Command Injection'))
+        # Severity12 = db.fetchall()  
+        # if Severity12:
+        #     Severity12= Severity12
+        # else:
+        #     Severity12= [0]
+        SeverityCommand = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityCommand, (project_name_id, 'Command Injection','Critical'))
+        SeverityCommanddata = db.fetchall()
+        if SeverityCommanddata:
+             SeverityCommanddataCritical= SeverityCommanddata
+        else:
+            SeverityCommanddataCritical= [0] 
+
+
+        SeverityCommand= "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityCommand, (project_name_id, 'Command Injection','High'))
+        SeverityCommanddata = db.fetchall()
+        if SeverityCommanddata:
+             SeverityCommanddataHigh= SeverityCommanddata
+        else:
+            SeverityCommanddataHigh= [0] 
+
+        SeverityCommand = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute(SeverityCommand, (project_name_id, 'Command Injection','Medium'))
+        SeverityCommanddata = db.fetchall()
+        if SeverityCommanddata:
+              SeverityCommanddataMedium= SeverityCommanddata
+        else:
+             SeverityCommanddataMedium= [0] 
+
+        SeverityCommand = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        db.execute( SeverityCommand, (project_name_id, 'Command Injection','Low'))
+        SeverityCommanddata = db.fetchall()
+        if SeverityCommanddata:
+             SeverityCommanddataLow= SeverityCommanddata
+        else:
+             SeverityCommanddataLow= [0]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
         db.execute(owasp_query, (project_name_id,))
@@ -2198,8 +2647,21 @@ def dashboard():
         else:
             valueENDpp = valueENDp
 
-        return jsonify({"url_target": url_target}, {"select_att_sql_DATA": [select_att_ID_sql_DATA,Severity11]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,Severity10]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,Severity4]}, {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,Severity2]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,Severity3]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,Severity5]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,Severity6]}
-                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,Severity1]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,Severity8]},{"valueENDpp":valueENDpp},{"valueTimep":valueTimep},{"owasp_":owasp_}, {"select_att_ID_Sentitive": [select_att_ID_Sentitive,Severity7]}, {"select_att_ID_webb": [select_att_ID_webb,Severity9]}, {"select_att_ID_commandd": [select_att_ID_commandd,Severity12]})
+        return jsonify({"url_target": url_target},
+                        {"SeveritySQL": [SeveritySQLdataCritical,SeveritySQLdataHigh,SeveritySQLdataMedium,SeveritySQLdataLow]},
+                          {"SeverityXSS": [SeverityXSSdataCritical,SeverityXSSdataHigh,SeverityXSSdataMedium,SeverityXSSdataLow]},
+                            {"SeverityDirectory":[SeverityDirectorydataCritical,SeverityDirectorydataHigh,SeverityDirectorydataMedium,SeverityDirectorydataLow]},
+                              {"Role": Role},
+                              {"SeveritySecure":[SeveritySecuredataCritical,SeveritySecuredataHigh,SeveritySecuredataMedium,SeveritySecuredataLow]},
+                              {"SeverityHttponly":[SeverityHttponlydataCritical,SeverityHttponlydataHigh,SeverityHttponlydataMedium,SeverityHttponlydataLow]},
+                              {"SeverityExpires":[SeverityExpiresdataCritical,SeverityExpiresdataHigh,SeverityExpiresdataMedium,SeverityExpiresdataLow]},
+                              {"SeveritySamsite":[SeveritySamesitedataCritical,SeveritySamesitedataHigh,SeveritySamesitedataMedium,SeveritySamesitedataLow]}
+                       ,{"SeverityServer":[SeverityServerdataCritical,SeverityServerdataHigh,SeverityServerdataMedium,SeverityServerdataLow]},
+                       {"SeverityHSTS":[SeverityHSTSdataCritical,SeverityHSTSdataHigh,SeverityHSTSdataMedium,SeverityHSTSdataLow]},
+                       {"valueENDpp":valueENDpp},{"valueTimep":valueTimep},{"owasp_":owasp_},
+                         {"SeveritySentitive":[SeveritySensitivedataCritical,SeveritySensitivedataHigh,SeveritySensitivedataMedium,SeveritySensitivedataLow]},
+                           {"SeverityWeb": [SeverityWebdataCritical,SeverityWebdataHigh,SeverityWebdataMedium,SeverityWebdataLow]},
+                             {"SeverityCommand": [SeverityCommanddataCritical,SeverityCommanddataHigh,SeverityCommanddataMedium,SeverityCommanddataLow]})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})
@@ -2424,12 +2886,12 @@ async def addurls():
                     #     print(vparams)
             else:
                 print('[-] we cannot find command injection')
-        try:        
-            await run_gobustersensitive(baseURL,project_name_checkk[0][0], user_data)
-            print("baseURLsensitive",baseURL)
-            await checkTempFuzzsensitive(i,project_name_checkk[0][0], user_data,encoded_url,project_name_id)
-        except Exception as e:
-            print(f"run_gobustersensitive: {e}")
+        # try:        
+        #     await run_gobustersensitive(baseURL,project_name_checkk[0][0], user_data)
+        #     print("baseURLsensitive",baseURL)
+        #     await checkTempFuzzsensitive(i,project_name_checkk[0][0], user_data,encoded_url,project_name_id)
+        # except Exception as e:
+        #     print(f"run_gobustersensitive: {e}")
         # query = ('INSERT INTO urllist(URL,method,PID,state,status_code) VALUES(%s,%s,%s,%s,%s)')
         # db.execute(query, (url, method, project_name_id, 'c',parameter),)
         # mysql.connection.commit()
@@ -2839,12 +3301,12 @@ async def addurlsedit():
                     #     print(vparams)
             else:
                 print('[-] we cannot find command injection')
-        try:        
-            await run_gobustersensitive(baseURL,project_name_checkk[0][0], project_name_checkk[0][1])
-            print("baseURLsensitive",baseURL)
-            await checkTempFuzzsensitive(i,project_name_checkk[0][0], project_name_checkk[0][1],encoded_url,project_name_id)
-        except Exception as e:
-            print(f"run_gobustersensitive: {e}")
+        # try:        
+        #     await run_gobustersensitive(baseURL,project_name_checkk[0][0], project_name_checkk[0][1])
+        #     print("baseURLsensitive",baseURL)
+        #     await checkTempFuzzsensitive(i,project_name_checkk[0][0], project_name_checkk[0][1],encoded_url,project_name_id)
+        # except Exception as e:
+        #     print(f"run_gobustersensitive: {e}")
         # query = ('INSERT INTO urllist(URL,method,PID,state,status_code) VALUES(%s,%s,%s,%s,%s)')
         # db.execute(query, (url, method, project_name_id, 'c',parameter),)
         # mysql.connection.commit()
@@ -3195,7 +3657,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         else:
             owasp7_ = [0]
             
-        select_att_ID_web = "SELECT URL , payload,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_web = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
         db.execute(select_att_ID_web, (project_name_id, '9'))
         select_att_ID_webb = db.fetchall()
         if select_att_ID_webb:

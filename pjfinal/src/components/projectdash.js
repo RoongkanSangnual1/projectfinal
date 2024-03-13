@@ -12,6 +12,7 @@ import { useParams,useNavigate ,Link} from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import SQlinject from './SQlinject';
 
+
 import PDF from './PDF';
 
   
@@ -20,7 +21,6 @@ import Swal from 'sweetalert2'
     
     
 const ProjectDash = () => {
-    const [activeTabKey1, setActiveTabKey1] = useState('tab1');
     const [usershare,setUershare] = useState([])
     const project_name_id = useParams()
     const [showComplete, setShowComplete] = useState(false);
@@ -37,6 +37,7 @@ const ProjectDash = () => {
     const project_name = project_name_id.project_name_id
     const project_name_n = project_name_id.project_name
     const user = localStorage.user;
+    const [activeTabKey1, setActiveTabKey1] = useState('tab1');
     const navigate = useNavigate()
 
       const fetchData = async () => {
@@ -167,26 +168,26 @@ useEffect(() => {
     const tabList = [
       {
         key: 'tab1',
-        tab: 'Dashboard',
+        tab: 'Scan URLs',
       },
       // {
       //   key: 'tab2',
       //   tab: 'Issues',
       // },
       {
-          key: 'tab3',
-          tab: 'Scan URLs',
+          key: 'tab4',
+          tab: 'Issues',
       },
       {
-        key: 'tab4',
-        tab: 'Issues',
+        key: 'tab5',
+        tab: 'Dashboard',
     },
     ];
   const contentList = {
-  tab1: <p><Dashboard/></p>,
+  tab1: <p><URLlist id={project_name} name={project_name_n} /> </p>,
   // tab2: <p><Issues/></p>,
-  tab3: <URLlist id={project_name} name={project_name_n} />,
-  tab4: <SQlinject id={project_name} name={project_name_n} />
+  tab4: <SQlinject id={project_name} name={project_name_n} />,
+  tab5:<Dashboard id={project_name} name={project_name_n}/>
   };
     
     dispatch({
@@ -250,68 +251,64 @@ const handleCopy = () => {
       
 
   return (
-    <div className='ProjectDash'>
+
+        <div className={activeTabKey1 === 'tab5' ? 'ProjectDashh' : 'ProjectDash'}>
       <Navbar />
       <div className='ProjectDash-Head'>
-        <LeftCircleOutlined style={{ fontSize: '30px', color: '#064061',marginRight:'80px' }}/>
+        <LeftCircleOutlined style={{ fontSize: '30px', color: '#064061', marginRight: '80px' }}/>
         <h2>{project_name_n}</h2>
       </div>
       
-      <div className="ProjectDashLayout">
-        
-        <Card
-          style={{
-            width: '100%',
-          }}
-          title={titleText}
-          extra={<Link to={`/myproject/edit/${project_name_n}/${project_name}`} className="projedit-btn" style={{ marginLeft: '50px',color:"blue" }}>
-          <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
-        </Link>}
-          tabList={tabList}
-          activeTabKey={activeTabKey1}
-          onTabChange={onTab1Change}
-        >
-          {contentList[activeTabKey1]}
-          {link_ && (
-          <div >
-            <p >{link_}</p>
-
-            <Button type="primary" style={{ transform: 'translateX(850px) scale(0.8)', marginTop: '20px' }} onClick={handleCopy}>
-              Copy Link
-            </Button>
-          </div>
-        )}
-        {/* <PDFDownloadLink 
-        document={
-          <Document>
-           <Page size="A4" style={styles.page}>
-            <View style={styles.section}>
-             <Text>Section #1</Text>
-           </View>
-          <View style={styles.section}>
-        <Text>Section #2</Text>
-      </View>
-    </Page>
-  </Document>
-        }>
-
-        </PDFDownloadLink> */}
-        {/* <PDF id={project_name} name={project_name_n}/> */}
-        <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(1000px) scale(1.5)', marginTop: '20px' }} >Share</Button>
-        </Card>
+      <div className={activeTabKey1 === 'tab5' ? 'ProjectDashLayoutt' : 'ProjectDashLayout'}>
+        {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab4' ||activeTabKey1 === 'tab5') && (
+          <> 
+            <Card
+              style={{
+                width: '100%',
+              }}
+              title={titleText}
+              extra={<Link to={`/myproject/edit/${project_name_n}/${project_name}`} className="projedit-btn" style={{ marginLeft: '50px', color:"blue" }}>
+                <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
+              </Link>}
+              tabList={tabList}
+              activeTabKey={activeTabKey1}
+              onTabChange={onTab1Change}
+            >
+              {contentList[activeTabKey1]}
   
-        <Modal title="SHARE" open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
-          <Form className='input-container'
-            onFinish={Formsummit}
-            labelCol={{
-              span: 5,
-            }}
-          >
-            user:<Input type="text" style={{marginRight:"20px"}}className="forminput-control" value={usershare} onChange={(e) => setUershare(e.target.value)} /> <br/>
-          </Form>
-        </Modal>
+              {link_ && (
+                <div>
+                  <p>{link_}</p>
+                  <Button type="primary" style={{ transform: 'translateX(850px) scale(0.8)', marginTop: '20px' }} onClick={handleCopy}>
+                    Copy Link
+                  </Button>
+                </div>
+              )}
+
+              {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab4') &&(
+                <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(1000px) scale(1.5)', marginTop: '20px', marginLeft: '35px' }}>
+                Share
+              </Button>
+              )}
+  
+              
+            </Card>
+  
+            <Modal title="SHARE" open={isModalOpen} onOk={Formsummit} onCancel={handleCancel}>
+              <Form className='input-container'
+                onFinish={Formsummit}
+                labelCol={{
+                  span: 5,
+                }}
+              >
+                user:<Input type="text" style={{ marginRight:"20px" }} className="forminput-control" value={usershare} onChange={(e) => setUershare(e.target.value)} /> <br/>
+              </Form>
+            </Modal>
+          </>
+        )}
       </div>
     </div>
   );
+  
 };
 export default ProjectDash;

@@ -15,11 +15,27 @@
     background-color: #efefef;
     padding-bottom: 10px;
 }
+.ProjectDashh{
+    background-color: #ffff;
+    padding-bottom: 10px;
+}
 .ProjectDashLayout{
     width: 1200px;
     height: max-content;
     border-radius: 20px;
     /* box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); */
+    align-items: center;
+    align-content: center;
+
+    margin: 20px auto;
+}
+
+.ProjectDashLayoutt{
+    width: 1800px;
+    height: 1200px;
+
+    border-radius: 20px;
+    /* box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.); */
     align-items: center;
     align-content: center;
 
