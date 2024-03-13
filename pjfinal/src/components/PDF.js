@@ -8,18 +8,13 @@ import { fontBold } from "./THSarabunNew_Bold-bold"
 const PDF = (props) => {
   const token = localStorage.getItem('token');
   const name_id = props.id;
-
-  console.log("responsedata", props.responsedata);
-
+  console.log(props)
+  // console.log("newResData:", responsedata2);
+  // console.log("oldResData:", responsedata);
   const data = props.responsedata.filter(item => Object.values(item)[0]?.length !== 0);
+  console.log("DATAAAA", data);
   let datalength = data.length;
-  const owaspfounddata = data[datalength - 1];
-  console.log("realdata", data);
-  console.log("realdatalength", datalength);
-  if (data[6]) {
-    console.log("dataowasp_", data[6].owasp_);
-  }
-  console.log(owaspfounddata)
+  
 
   let body2 = [];
   function getSeverityByKey(key) {
@@ -58,11 +53,9 @@ const PDF = (props) => {
     const severity = getSeverityByKey(key);
     console.log("key", key);
     console.log("severity", severity);
-    if (key !== "owasp_") {
-      body2.push([`${index + 1}`, key, severity, ...Object.values(item)[0]]);
+    body2.push([`${index + 1}`, key, severity, ...Object.values(item)[0]]);
     }
-
-  });
+    );
   // owaspfounddata.forEach((item, index) => {
   //   const key = item[0];
   //   const severity = getSeverityByKey(key); 
@@ -72,7 +65,9 @@ const PDF = (props) => {
   // });
 
   console.log("body2", body2)
-  const doc = new jsPDF();
+  const doc = new jsPDF({
+    format: 'a4' // Specify A4 size
+  });
   doc.addFileToVFS("MyFont.ttf", font);
   doc.addFileToVFS("MyFontBold.ttf", fontBold);
   doc.addFont("MyFont.ttf", "MyFont", "normal");
@@ -83,15 +78,26 @@ const PDF = (props) => {
     doc.setFontSize(20);
     doc.setTextColor("blue");
     doc.setFont("MyFont", "bold");
-    doc.text(`Penetration Testing Report of ${props.name}`, 14, 10);
+    //25.4mm = 1 inch 
+
+    doc.text(`Penetration Testing Report of ${props.name}`, 25.4, 25.4);
     doc.setFontSize(16);
 
-    doc.text(`Vulnerability Targets`, 14, 17);
+    doc.text(`Vulnerability Targets`, 25.4, 32.4);
 
     let content = {
-      startY: 20,
+      startY: 35.4,
       head: [['Target Site', 'Details']],
-      body: [[` ${props.url_target}`, ` ${props.Details}`]]
+      body: [[` ${props.url_target}`, ` ${props.Details}`]],
+      margin: { left: 25.4 },
+      columnStyles: {
+        0: {
+          cellWidth: 70,
+        },
+        1: {
+          cellWidth: 89,
+        }
+      }
       // theme: 'grid'
     };
     let content1 = {
@@ -100,26 +106,43 @@ const PDF = (props) => {
     }
 
     let content2 = {
-      startY: 45,
+      startY: 60.4,
       head: [['ID', 'Vulnerability Details', 'Severity']],
       body: body2,
+      margin: { left: 25.4 },
+      columnStyles: {
+        0: {
+          cellWidth: 20,
+        },
+        1: {
+          cellWidth: 119,
+        },
+        2: {
+          cellWidth: 20,
+        }
+      }
     };
 
     doc.autoTable(content);
 
     doc.setFontSize(16);
-    doc.text(`Vulnerability Issues`, 14, 42);
+    doc.text(`Vulnerability Issues`, 25.4, 57.4);
     doc.autoTable(content2);
+    const maxWidth = doc.internal.pageSize.getWidth();
+    const maxHeight = doc.internal.pageSize.getHeight();
 
+    console.log("Max Width:", maxWidth, "points");
+    console.log("Max Height:", maxHeight, "points");
 
     // doc.save(`Penetration Testing ${props.name}`);
 
     data.forEach((item, index) => {
       const key = Object.keys(item)[0];
+      
+      console.log('KEY',key)
       let vulnerabilities;
-      if (key !== 'owasp_') {
-        vulnerabilities = Object.values(item)[0];
-      }
+      vulnerabilities = Object.values(item)[0];
+      console.log('vulnerabilities',vulnerabilities)
       if (vulnerabilities && Array.isArray(vulnerabilities)) {
         console.log("vulnerabilities", vulnerabilities);
 
@@ -130,17 +153,18 @@ const PDF = (props) => {
         doc.setFontSize(16);
         doc.setFont("MyFont", "bold");
         doc.setTextColor("blue");
-        doc.text(`${key}`, 14, 15);
+        doc.text(`${index+1}. ${key}`, 25.4, 25.4);
         doc.setFont("MyFont", "normal");
         doc.setTextColor("black");
         let vulcontenthead = [['ID', 'URL', 'Parameters', 'Severity']];
-        let columnStyles_vulcontent;
+        
         let columnStyles_vulcontent_1 = {
+          //159.2
           0: {
             cellWidth: 20,
           },
           1: {
-            cellWidth: 100,
+            cellWidth: 79,
           },
           2: {
             cellWidth: 40,
@@ -154,12 +178,13 @@ const PDF = (props) => {
             cellWidth: 20,
           },
           1: {
-            cellWidth: 100,
+            cellWidth: 79,
           },
           2: {
             cellWidth: 60,
           },
         };
+        let columnStyles_vulcontent = columnStyles_vulcontent_2;
         let vulcontentbody = vulnerabilities.map((vulnerability, innerIndex) => {
           let url, evidence, severity;
           /* เดี๋ยวแก้เป็นพารามิเตอร์ */
@@ -177,9 +202,10 @@ const PDF = (props) => {
             severity = vulnerability[12];
             columnStyles_vulcontent = columnStyles_vulcontent_1;
             return [`${innerIndex + 1}`, url, evidence, severity];
-          } */else if (key === "Sensitive File Disclosure") {
+          } */
+          else if (key === "Sensitive File Disclosure") {
             vulcontenthead = [['ID', 'URL', 'severity']];
-            url = vulnerability[3];
+            url = vulnerability[2];
             severity = vulnerability[12];
             columnStyles_vulcontent = columnStyles_vulcontent_2;
             return [`${innerIndex + 1}`, url, severity];
@@ -191,7 +217,7 @@ const PDF = (props) => {
             vulcontenthead = [['ID', 'URL', 'severity']];
             url = vulnerability[2];
             // evidence = vulnerability[3];
-            severity = vulnerability[12];
+            severity = vulnerability[10];
             columnStyles_vulcontent = columnStyles_vulcontent_2;
             return [`${innerIndex + 1}`, url, severity];
           }
@@ -200,9 +226,10 @@ const PDF = (props) => {
         });
         // vulcontentbody = vulcontentbody.filter(entry => entry !== null);
         let vulcontent = {
-          startY: 20,
+          startY: 30.4,
           head: vulcontenthead,
           body: vulcontentbody,
+          margin: { left: 25.4 },
           columnStyles: columnStyles_vulcontent
         };
         /* create summary table of each vulnerability */
@@ -234,17 +261,17 @@ const PDF = (props) => {
         doc.setFontSize(12);
 
         // แยกข้อความและเก็บไว้ในอาร์เรย์
-        const detailsLines = doc.splitTextToSize(`Vulnerability description \n${details}`, 180);
-        const evidenceLines = doc.splitTextToSize(`Evidence \n${Evidence}`, 180);
-        const solutionsLines = doc.splitTextToSize(`Solutions \n${Solutions}`, 180);
-        const wstgLines = doc.splitTextToSize(`WSTG-ID \n${owasp}`, 180);
-        const referenceLines = doc.splitTextToSize(`References \n${reference}`, 180);
+        const detailsLines = doc.splitTextToSize(`Vulnerability description \n${details}`, 159.2);
+        const evidenceLines = doc.splitTextToSize(`Evidence \n${Evidence}`, 159.2);
+        const solutionsLines = doc.splitTextToSize(`Solutions \n${Solutions}`, 159.2);
+        const wstgLines = doc.splitTextToSize(`WSTG-ID \n${owasp}`, 159.2);
+        const referenceLines = doc.splitTextToSize(`References \n${reference}`, 159.2);
         console.log("detailsLines", detailsLines)
 
         // แสดงแต่ละบรรทัด
         // let offsetY = 15;
         let currentY = doc.autoTable.previous.finalY;
-        currentY += 25
+        currentY += 10
 
         detailsLines.forEach((line, index) => {
           console.log(line)
@@ -258,7 +285,7 @@ const PDF = (props) => {
             currentY += 5
           }
 
-          doc.text(line, 14, currentY);
+          doc.text(line, 25.4, currentY);
           currentY = CheckCurrentY(currentY)
           console.log(line)
 
@@ -276,7 +303,7 @@ const PDF = (props) => {
             currentY += 5
           }
 
-          doc.text(line, 14, currentY);
+          doc.text(line, 25.4, currentY);
           currentY = CheckCurrentY(currentY)
           // console.log(line)
         });
@@ -292,7 +319,7 @@ const PDF = (props) => {
             currentY += 5
           }
 
-          doc.text(line, 14, currentY);
+          doc.text(line,25.4, currentY);
           currentY = CheckCurrentY(currentY)
         });
 
@@ -307,7 +334,7 @@ const PDF = (props) => {
             currentY += 5
           }
 
-          doc.text(line, 14, currentY);
+          doc.text(line, 25.4, currentY);
           currentY = CheckCurrentY(currentY)
         });
         referenceLines.forEach((line, index) => {
@@ -320,7 +347,7 @@ const PDF = (props) => {
             doc.setFontSize(12)
             currentY += 5
           }
-          doc.text(line, 14, currentY);
+          doc.text(line, 25.4, currentY);
           currentY = CheckCurrentY(currentY)
         });
         console.log('currentY: ' + currentY)
@@ -340,14 +367,15 @@ const PDF = (props) => {
 
   return (
     <div>
-      <Button
-        icon={<FaRegFilePdf />}
-        onClick={showModal}
+      <Button 
         type="primary"
-        style={{ transform: 'translateX(850px) scale(1.5)', marginTop: '20px', background: 'red' }}
+        shape="round" 
+        onClick={showModal}
+        icon={<FaRegFilePdf />}
       >
-        PDF
+        Export as PDF
       </Button>
+
     </div>
   );
 };

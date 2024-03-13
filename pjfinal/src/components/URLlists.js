@@ -7,6 +7,7 @@ import { PlusOutlined, ReloadOutlined, CloseOutlined,ToTopOutlined } from "@ant-
 import "./maindashboard.css";
 import Swal from "sweetalert2";
 import PDF from "./PDF";
+import { CSVLink } from "react-csv";
 const URLlist = (props) => {
   // console.log(props.name);
   const project_name = props.id;
@@ -113,7 +114,15 @@ const URLlist = (props) => {
       ),
     });
   }
-
+  const csvData = [
+    ["No.", "URL", "METHOD", "Status"],
+    ...projectOneData.map((data) => [
+      data[0],  // Index
+      data[1],  // URL
+      data[3],  // Method
+      data[4]   // Status
+    ]),
+  ];
   const handleDelete = (iddelete) => {
 
     Swal.fire({
@@ -204,7 +213,8 @@ const URLlist = (props) => {
   function isURL(input) {
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
     return urlRegex.test(input);
-}
+  }
+  
 
 
   const Formsummit = () => {
@@ -237,7 +247,8 @@ const URLlist = (props) => {
   const refreshData = () => {
     window.location.reload();
   };
-
+  
+  console.log(projectOneData)
   return (
     <div>
       <div>
@@ -247,16 +258,18 @@ const URLlist = (props) => {
             icon={<ReloadOutlined />}
             style={{ marginRight: "10px" }}
           >
-            restart
+            rescan
           </Button>
           {Delete === "Advance" && (
             <div>
                 <Button onClick={showModal} type="primary" shape="round" icon={<PlusOutlined />} style={{ marginRight: "10px" }}>
-                Add to URLs
+                  Add to URLs
                 </Button>
                 <Button type="primary" shape="round" icon={<ToTopOutlined />}>
-                Export as CSV
-            </Button>
+                  <CSVLink filename={`${props.name}-urllist.csv`} data={csvData}>
+                    Export as CSV
+                  </CSVLink>
+                </Button>
           </div>
           )}
         </div>
@@ -300,6 +313,7 @@ const URLlist = (props) => {
         </Modal>
       </div>
       <Table dataSource={projectOneData} columns={columns} />
+      
       {/* <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} ></PDF> */}
     </div>
   );
