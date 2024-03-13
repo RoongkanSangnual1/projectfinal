@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import { Table,Button,Modal,Form,Input,Space,Card,theme,Collapse,ConfigProvider } from 'antd';
 import './URLlist.css'
-import {PlusOutlined,ReloadOutlined,CloseOutlined,FormOutlined,RightOutlined} from '@ant-design/icons';
+import {PlusOutlined,ReloadOutlined,CloseOutlined,FormOutlined,RightOutlined,ToTopOutlined,ShareAltOutlined} from '@ant-design/icons';
 import { Link} from "react-router-dom";
 import { CgDanger } from "react-icons/cg";
 import Highlighter from 'react-highlight-words';
@@ -584,11 +584,25 @@ setresponsedata3(responsedata2)
 
 
       const memoizedPDF = useMemo(() => {
-        return <PDF id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata}></PDF>;
-      }, [responsedata]);
-        
-
+        return <PDF id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata3}></PDF>;
+      }, [responsedata3]);
+      // console.log('Res2',responsedata2)  
+      // console.log('Res3',responsedata3) 
       return (
+        <div>
+          <div className="button-container">
+          {Delete === "Advance" && (
+            <div>
+                <Button type="primary" shape="round" icon={<ShareAltOutlined />} style={{ marginRight: "10px" }}>
+                  Share
+                </Button>
+            </div>
+          )}
+          {/* <Button type="primary" shape="round" icon={<ToTopOutlined />}>
+            Export as PDF
+          </Button> */}
+          {memoizedPDF}
+        </div>
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           {responsedata3.map((item, index) => {
             const itemCount = item[Object.keys(item)[0]].length;
@@ -1013,7 +1027,7 @@ setresponsedata3(responsedata2)
                                   </Modal>
                                 </div>
                               )}
-      
+        
       
       
       {Object.keys(item)[0] === "Missing SameSite Attribute in Cookie Header" && (
@@ -3078,10 +3092,10 @@ setresponsedata3(responsedata2)
 
  
       
-{memoizedPDF}
+
     </div>
 
-    
+    </div> 
   );
 }
 

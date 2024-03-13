@@ -54,10 +54,7 @@ const Startpage = () => {
                         <h1>Referring to OWASP Web Security Testing Guide for testing guidance</h1>
                     </div>
                 </div>
-                <div>
-                <h3 >3</h3>
-                <h3>3</h3>
-                </div>
+                
             </Carousel>
             <Button onClick={() => navigate('/login')} className='CButton'>Get Started</Button> 
         </div>
