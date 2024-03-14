@@ -1496,8 +1496,8 @@ async def crawl_endpoint():
                
 
 
-        insert_query11 = ('INSERT INTO project(PName,PTarget,PDes,username,EndTime,statecrawl) VALUES(%s, %s, %s, %s, NULL ,%s )')
-        values11 = (project_name, scope_url, description_name, user,0)
+        insert_query11 = ('INSERT INTO project(PName,PTarget,PDes,username,EndTime) VALUES(%s, %s, %s, %s, NULL )')
+        values11 = (project_name, scope_url, description_name, user)
         db.execute(insert_query11, values11)
         mysql.connection.commit()
         csv_name = f"{project_name}.csv"
@@ -1509,8 +1509,7 @@ async def crawl_endpoint():
         db = mysql.connection.cursor()
         select_project_name_id_query = "SELECT PID FROM project WHERE PName = %s AND  username = %s"
         db.execute(select_project_name_id_query, (project_name, user))             
-        project_name_id_result = db.fetchall() 
-
+        project_name_id_result = db.fetchall()   
 
         try:   
             print(project_name_id_result[0][0])
@@ -1519,12 +1518,6 @@ async def crawl_endpoint():
             await checkTempFuzz(i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls)
         except Exception as e:
                     print(f"run_gobuster: {e}")
-
-        select_insert_crawl = ('UPDATE project SET statecrawl = %s WHERE PID = %s')
-        db.execute(select_insert_crawl, (1,project_name_id_result,))
-        mysql.connection.commit()
-
-        
         db = mysql.connection.cursor()
         queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s"
         db.execute(queryServer, (project_name_id_result))
@@ -1916,7 +1909,7 @@ async def crawl_endpoint():
         mysql.connection.commit()
 
 
-        return {"project_name_id_result":project_name_id_result}
+        return {"project_name_id_result":project_name_id_result }
     except Exception as e:
         return jsonify({"server error": str(e)})
 
@@ -1946,11 +1939,6 @@ def savee():
         db.execute(EndTime_query, (PID,))
         mysql.connection.commit()
         # print(project_data)
-        
-        select_insert_crawl = ('UPDATE project SET statecrawl = %s WHERE PID = %s')
-        db.execute(select_insert_crawl, (1,PID,))
-        mysql.connection.commit()
-
 
         return jsonify({"project_data"})
     except Exception as e:
@@ -2079,7 +2067,7 @@ async def dashboard():
         #     Severity11= Severity11
         # else:
         #     Severity11= [0] 
-        SeveritySQL = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeveritySQL, (project_name_id, 'SQL Injection','Critical'))
         SeveritySQLdata = db.fetchall()
         if SeveritySQLdata:
@@ -2088,7 +2076,7 @@ async def dashboard():
             SeveritySQLdataCritical= [0] 
 
 
-        SeveritySQL = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeveritySQL, (project_name_id, 'SQL Injection','High'))
         SeveritySQLdata = db.fetchall()
         if SeveritySQLdata:
@@ -2096,7 +2084,7 @@ async def dashboard():
         else:
             SeveritySQLdataHigh= [0] 
 
-        SeveritySQL = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeveritySQL, (project_name_id, 'SQL Injection','Medium'))
         SeveritySQLdata = db.fetchall()
         if SeveritySQLdata:
@@ -2104,7 +2092,7 @@ async def dashboard():
         else:
             SeveritySQLdataMedium= [0] 
 
-        SeveritySQL = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeveritySQL = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeveritySQL, (project_name_id, 'SQL Injection','Low'))
         SeveritySQLdata = db.fetchall()
         if SeveritySQLdata:
@@ -2125,7 +2113,7 @@ async def dashboard():
         #     Severity10 = Severity10
         # else:
         #     Severity10 = [0]
-        SeverityXSS = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeverityXSS, (project_name_id, 'Reflected Cross Site Scripting','Critical'))
         SeverityXSSdata = db.fetchall()
         if SeverityXSSdata:
@@ -2134,7 +2122,7 @@ async def dashboard():
             SeverityXSSdataCritical= [0] 
 
 
-        SeverityXSS = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeverityXSS, (project_name_id, 'Reflected Cross Site Scripting','High'))
         SeverityXSSdata = db.fetchall()
         if SeverityXSSdata:
@@ -2142,7 +2130,7 @@ async def dashboard():
         else:
             SeverityXSSdataHigh= [0] 
 
-        SeverityXSS = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeverityXSS, (project_name_id, 'Stored Cross Site Scriptng','Medium'))
         SeverityXSSdata = db.fetchall()
         if SeverityXSSdata:
@@ -2150,7 +2138,7 @@ async def dashboard():
         else:
             SeverityXSSdataMedium= [0] 
 
-        SeverityXSS = "SELECT ATT_ID , position,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
+        SeverityXSS = "SELECT ATT_ID , URL,Severity FROM att_ps WHERE PID = %s AND vul_name = %s AND Severity = %s "
         db.execute(SeverityXSS, (project_name_id, 'Stored Cross Site Scriptng','Low'))
         SeverityXSSdata = db.fetchall()
         if SeverityXSSdata:
@@ -2646,7 +2634,6 @@ async def dashboard():
         owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
         db.execute(owasp_query, (project_name_id,))
         owasp_ = db.fetchall()
-        # print("owasp_",owasp_)
         valueTime_query = "SELECT timeproject FROM project WHERE PID = %s"
         db.execute(valueTime_query, (project_name_id,))
         valueTimep = db.fetchall()
@@ -2982,8 +2969,8 @@ def addIssue():
         query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name ,Severity FROM owasp WHERE OID= %s"
         db.execute(query2, (O_id,))
         sql2_ = db.fetchall()
-        query = ('INSERT INTO att_ps(URL_ID,URL, position, PID, vul_des, vul_Sol, OID, payload,state,vul_name, Vul_ref, OType,Severity) VALUES(%s, %s,%s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s)')
-        db.execute(query, (url_id[0][0],url, url, project_name_id, vul_Des or sql2_[0][0] , vul_Sol or  sql2_[0][1], O_id, payload_,"T",O_name[0],sql2_[0][2],sql2_[0][3],sql2_[0][5]))
+        query = ('INSERT INTO att_ps(URL_ID,URL, position, PID, vul_des, vul_Sol, OID, payload,state,vul_name, Vul_ref, OType) VALUES(%s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s)')
+        db.execute(query, (url_id[0][0],url, url, project_name_id, vul_Des or sql2_[0][0] , vul_Sol or  sql2_[0][1], O_id, payload_,"T",O_name[0],sql2_[0][2],sql2_[0][3]))
         mysql.connection.commit()
         print(f"Inserted into att_ps")
         return jsonify("Add URLS สำเร็จ")
@@ -3704,15 +3691,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
         db.execute(owasp_query, (project_name_id,))
         owasp_ = db.fetchall()
-        print(owasp_)
 
-        select_insert_crawl = "SELECT statecrawl FROM project WHERE PID = %s"
-        db.execute(select_insert_crawl, (project_name_id,))             
-        State__crawl = db.fetchall() 
-        if State__crawl:
-            print("mee")
-        else:
-            print("no")
 
         if valueTimep and valueENDp and valueTimep[0][0] == valueENDp[0][0]:
             valueENDpp = None
@@ -3722,7 +3701,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
 
         return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA":[select_att_ID_sql_DATA,owasp11_]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,owasp10_]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,owasp4_]}, 
                        {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,owasp2_]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,owasp3_]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,owasp5_]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,owasp6_]}
-                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]},{"owasp_":owasp_},{"State__crawl":State__crawl})
+                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]},{"owasp_":owasp_})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})
@@ -3908,11 +3887,6 @@ def edit_issue():
         owasp_ = db.fetchall()
 
 
-
-        select_insert_crawl = "SELECT statecrawl FROM proect WHERE PID = %s"
-        db.execute(select_insert_crawl, (project_name_id))             
-        State__crawl = db.fetchall() 
-
         if valueTimep and valueENDp and valueTimep[0][0] == valueENDp[0][0]:
             valueENDpp = None
         else:
@@ -3921,7 +3895,7 @@ def edit_issue():
 
         return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA":[select_att_ID_sql_DATA,owasp11_]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,owasp10_]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,owasp4_]}, 
                        {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,owasp2_]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,owasp3_]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,owasp5_]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,owasp6_]}
-                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]},{"owasp_":owasp_},{"State__crawl":State__crawl})
+                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},{"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]},{"owasp_":owasp_})
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"server error": str(e)})

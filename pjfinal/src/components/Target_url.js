@@ -75,7 +75,7 @@ const Target_url = () => {
         <div>
             <Navbar />
             <div className='Applayout'>
-            <Sidemenu className='Sidemenu' />
+            
             <div className="container2">
                 <Link to='/home' className="exit"><CloseOutlined style={{color:"red"}} /></Link>
                 <h2>Create Project</h2>

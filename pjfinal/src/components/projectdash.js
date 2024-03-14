@@ -8,11 +8,11 @@ import Navbar from './navbar';
 import Dashboard from './dashboard.js';
 import Issues from './Issues';
 import URLlist from './URLlists';
-import { useParams,useNavigate ,Link} from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import SQlinject from './SQlinject';
 
-
+import { useHistory } from 'react-router-dom';
 import PDF from './PDF';
 
   
@@ -28,8 +28,11 @@ const ProjectDash = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [url,setUrl] = useState("")
     const [Des,setDes] = useState("")
+    const location = useLocation();
     const [start,setstart] = useState("")
+    const [urlsAll, setUrlsAll] = useState([]);
     const [end,setend] = useState("")
+    const [time,settiime] = useState("")
     const [link_, setLink_] = useState("");
     const [titleText, settitleText] = useState("");
     const [showStopButton, setShowStopButton] = useState(true);
@@ -39,7 +42,7 @@ const ProjectDash = () => {
     const user = localStorage.user;
     const [activeTabKey1, setActiveTabKey1] = useState('tab1');
     const navigate = useNavigate()
-
+ 
       const fetchData = async () => {
         try {
           const token = localStorage.getItem('token');
@@ -59,6 +62,7 @@ const ProjectDash = () => {
             navigate('/login');
           } else {
             if (response.data[1].url_target[0]) {
+              setUrlsAll(response.data[0].crawl_data.length)
               setUrl(response.data[1].url_target[0][0]);
               setDes(response.data[1].url_target[0][1]);
               setstart(response.data[1].url_target[0][3]);
@@ -81,6 +85,39 @@ const ProjectDash = () => {
     }, [user, project_name, setUrl, setstart, setend, navigate]);
 
 
+  
+      
+
+    useEffect(() => {
+      const handleTabChange = () => {
+        const pathName = location.pathname;
+    
+        if (pathName.endsWith('tab4')) {
+          setActiveTabKey1('tab4');
+        } else if (pathName.endsWith('tab4')) {
+          setActiveTabKey1('tab4');
+        } else {
+          setActiveTabKey1('tab4');
+        }
+      };
+    
+      handleTabChange();
+    }, [location.pathname]);
+
+    
+
+console.log(activeTabKey1)
+const pathName = location.pathname;
+console.log(pathName)
+
+useEffect(() => {
+  const { pathname } = location;
+  if (activeTabKey1 === 'tab5' && pathname.includes('/tab4')) {
+    setActiveTabKey1('tab4');
+    const trimmedPath = pathname.replace('/tab4', '');
+    navigate(trimmedPath, { replace: true });
+  }
+}, [activeTabKey1, location.pathname, navigate]);
 
 useEffect(() => {
   const save = async () => {
@@ -98,7 +135,27 @@ useEffect(() => {
       console.error('Save Error', error);
     }
   };
+  
+  console.log(start, end);
 
+ 
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  
+  
+  const timeDifference = endDate.getTime() - startDate.getTime(); 
+  const seconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  
+  const remainingMinutes = minutes % 60;
+  const remainingSeconds = seconds % 60;
+  
+
+  const timeText = `Time : ${hours} hours: ${remainingMinutes} minutes: ${remainingSeconds} seconds`;
+  
+  const timeText2= ` ${hours} hours: ${remainingMinutes} minutes: ${remainingSeconds} seconds`;
+  settiime(timeText2);
   const generateTitleText = () => {
     return (
       <>
@@ -147,7 +204,7 @@ useEffect(() => {
   whiteSpace: 'pre-line',
   marginBottom: '0',
   textAlign:"center"
-}}>  Complete {end}</p>)}
+}}>  Complete {end}<br/> {timeText}</p>)}
         {showComplete && (
           <>
             Complete
@@ -175,19 +232,21 @@ useEffect(() => {
       //   tab: 'Issues',
       // },
       {
-          key: 'tab4',
-          tab: 'Issues',
+        key: 'tab4',
+        tab: 'Issues',
+        path: 'tab4', 
       },
       {
         key: 'tab5',
         tab: 'Dashboard',
+        
     },
     ];
   const contentList = {
   tab1: <p><URLlist id={project_name} name={project_name_n} /> </p>,
   // tab2: <p><Issues/></p>,
   tab4: <SQlinject id={project_name} name={project_name_n} />,
-  tab5:<Dashboard id={project_name} name={project_name_n}/>
+  tab5:<Dashboard id={project_name} name={project_name_n} time={time} start={start} end={end} urlsAll={urlsAll}/>
   };
     
     dispatch({
@@ -255,7 +314,9 @@ const handleCopy = () => {
         <div className={activeTabKey1 === 'tab5' ? 'ProjectDashh' : 'ProjectDash'}>
       <Navbar />
       <div className='ProjectDash-Head'>
-        <LeftCircleOutlined style={{ fontSize: '30px', color: '#064061', marginRight: '80px' }}/>
+      <Link to={`/home`} className="projedit-btn" style={{ fontSize: '30px', color: '#064061', marginRight: '20px',marginTop:'20px' }}>
+                             <LeftCircleOutlined />
+                            </Link>
         <h2>{project_name_n}</h2>
       </div>
       

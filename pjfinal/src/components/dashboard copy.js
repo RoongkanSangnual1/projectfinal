@@ -333,7 +333,7 @@ if (response.data[6].SeverityHttponly[3][0] === 0) {
           cy="50%"
           innerRadius={40}
           outerRadius={95}
-          fill="#8884d8"
+          fill="#black"
           paddingAngle={2}
           startAngle={90}
           endAngle={450}

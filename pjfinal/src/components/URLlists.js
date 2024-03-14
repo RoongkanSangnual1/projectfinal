@@ -7,6 +7,7 @@ import { PlusOutlined, ReloadOutlined, CloseOutlined,ToTopOutlined } from "@ant-
 import "./maindashboard.css";
 import Swal from "sweetalert2";
 import PDF from "./PDF";
+import ClipLoader  from "react-spinners/ClipLoader";
 import { CSVLink } from "react-csv";
 const URLlist = (props) => {
   // console.log(props.name);
@@ -15,50 +16,56 @@ const URLlist = (props) => {
   const { project_name_id } = useParams();
   const [projectOneData, setProjectOneData] = useState([]);
   const [urls, setUrls] = useState([]);
+  const [urlsAll, setUrlsAll] = useState([]);
   const [method, setmethod] = useState([]);
   const [parameter, setparameter] = useState([]);
   const [url_target, seturl_target] = useState([]);
   const [Details, setDetails] = useState([]);
   const [Delete, setDelete] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [Crawl, setCrawl] = useState([]);
+  const [vul, setvul] = useState([]);
   const user = localStorage.user;
   const token = localStorage.getItem("token");
-  useEffect(() => {
-    axios
-      .get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`, {
+
+
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        console.log(response);
-
-        setDelete(response.data[5].Role);
-        seturl_target(response.data[1].url_target[0][0]);
-        setDetails(response.data[1].url_target[0][1]);
-        const Index = response.data[0].crawl_data
-          .map((data, index) => {
-            try {
-              // let decodedURLBase64 = atob(data[0]);
-              let decodedURL = decodeURIComponent(data[0]);
-              return [index + 1, decodedURL, ...data];
-            } catch (error) {
-              console.error("Error decoding URL:", error);
-              return null;
-            }
-          })
-          .filter((item) => item !== null);
-        console.log(Index);
-        setProjectOneData(Index);
-      })
-      .catch((error) => {
-        console.error(error);
       });
-  }, [user, project_name_id]);
+  
+      console.log(response);
+  
+      setDelete(response.data[5].Role);
+      seturl_target(response.data[1].url_target[0][0]);
+      setDetails(response.data[1].url_target[0][1]);
+      setUrlsAll(response.data[0].crawl_data.length)
+      setCrawl(response.data[17].State__crawl[0][0]);
+      setvul(response.data[12].valueENDpp);
+      const Index = response.data[0].crawl_data.map((data, index) => {
+        try {
+          let decodedURL = decodeURIComponent(data[0]);
+          return [index + 1, decodedURL, ...data];
+        } catch (error) {
+          console.error("Error decoding URL:", error);
+          return null;
+        }
+      }).filter((item) => item !== null);
+  
+      setProjectOneData(Index);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
-
-
-
+        useEffect(()=>{
+            fetchData();
+          },[])
 
 
 
@@ -168,7 +175,7 @@ const URLlist = (props) => {
               });
             }
 
-
+            fetchData();
 
             // console.log(response);
 
@@ -247,74 +254,101 @@ const URLlist = (props) => {
   const refreshData = () => {
     window.location.reload();
   };
-  
+  // setCrawl(projectOneData.length)
+  // console.log("sd",projectOneData.length);
   console.log(projectOneData)
   return (
     <div>
-      <div>
-        <div className="button-container">
-          <Button
-            onClick={refreshData}
-            icon={<ReloadOutlined />}
-            style={{ marginRight: "10px" }}
-          >
-            rescan
-          </Button>
-          {Delete === "Advance" && (
-            <div>
-                <Button onClick={showModal} type="primary" shape="round" icon={<PlusOutlined />} style={{ marginRight: "10px" }}>
-                  Add to URLs
-                </Button>
-                <Button type="primary" shape="round" icon={<ToTopOutlined />}>
-                  <CSVLink filename={`${props.name}-urllist.csv`} data={csvData}>
-                    Export as CSV
-                  </CSVLink>
-                </Button>
-          </div>
-          )}
-        </div>
-        <Modal
-          title="Add URL"
-          open={isModalOpen}
-          onOk={Formsummit}
-          onCancel={handleCancel}
-        >
-          <Form
-            className="input-container"
-            onFinish={Formsummit}
-            labelCol={{
-              span: 5,
-            }}
-          >
-            Location:
-            <Input
-              type="url"
-              className="forminput-control"
-              value={urls}
-              onChange={(e) => setUrls(e.target.value)}
-            />{" "}
-            <br />
-            METHOD:
-            <Input
-              type="text"
-              className="forminput-control"
-              value={method}
-              onChange={(e) => setmethod(e.target.value)}
-            />
-            <br />
-            Status:
-            <Input
-              type="text"
-              className="forminput-control"
-              value={parameter}
-              onChange={(e) => setparameter(e.target.value)}
-            />
-          </Form>
-        </Modal>
+      <div className="button-container">
+      {Crawl === 0 || Crawl === null ? (
+  <div style={{ marginRight: '20px' }}>
+    <ClipLoader 
+      color={"#white"}
+      size={30}
+      aria-label="Loading Spinner"
+      data-testid="loader"
+    />  
+    <br/>  
+    Scanning Url...
+  </div>
+) : (
+  <>
+    <div style={{ marginRight: '20px' }}>
+      URLS All: {urlsAll} 
+    </div>
+    {vul === null && (
+      <div style={{ marginRight: '450px' }}>
+        <ClipLoader 
+          color={"#white"}
+          size={30}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />  
+        <br/>  
+        Scanning Vulnerabilities...
       </div>
+    )}
+  </>
+)}
+        <Button
+          onClick={refreshData}
+          icon={<ReloadOutlined />}
+          style={{ marginRight: '10px' }}
+        >
+          rescan
+        </Button>
+        {Delete === "Advance" && (
+          <div>
+            <Button onClick={showModal} type="primary" shape="round" icon={<PlusOutlined />} style={{ marginRight: '10px' }}>
+              Add to URLs
+            </Button>
+            <Button type="primary" shape="round" icon={<ToTopOutlined />}>
+              <CSVLink filename={`${props.name}-urllist.csv`} data={csvData}>
+                Export as CSV
+              </CSVLink>
+            </Button>
+          </div>
+        )}
+      </div>
+      <Modal
+        title="Add URL"
+        open={isModalOpen}
+        onOk={Formsummit}
+        onCancel={handleCancel}
+      >
+        <Form
+          className="input-container"
+          onFinish={Formsummit}
+          labelCol={{
+            span: 5,
+          }}
+        >
+          Location:
+          <Input
+            type="url"
+            className="forminput-control"
+            value={urls}
+            onChange={(e) => setUrls(e.target.value)}
+          />{" "}
+          <br />
+          METHOD:
+          <Input
+            type="text"
+            className="forminput-control"
+            value={method}
+            onChange={(e) => setmethod(e.target.value)}
+          />
+          <br />
+          Status:
+          <Input
+            type="text"
+            className="forminput-control"
+            value={parameter}
+            onChange={(e) => setparameter(e.target.value)}
+          />
+        </Form>
+      </Modal>
       <Table dataSource={projectOneData} columns={columns} />
-      
-      {/* <PDF  id={project_name} name={project_name_n} url_target={url_target} Details={Details} ></PDF> */}
     </div>
   );
 };

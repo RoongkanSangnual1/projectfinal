@@ -12,6 +12,7 @@ import Edithome from "./components/Edithome";
 import ProjectDashAdmin from "./components/projectdashAdmin";
 // import ForgotPassword from "./components/ForgotPassword";
 import OTPInput from "./components/OTPInput";
+import SQlinject from "./components/SQlinject";
 
 const Router = () =>{
     return(
@@ -28,6 +29,8 @@ const Router = () =>{
             <Route path="/Admin" element={<ProjectDashAdmin/>}></Route>
             {/* <Route path="/:project_name" element={<Onedata/>}></Route> */}
             <Route path="/myproject/:project_name/:project_name_id" element={<ProjectDash/>}></Route>
+            <Route path="/myproject/:project_name/:project_name_id/tab4" element={<ProjectDash/>}></Route>
+
             <Route path="/myproject/edit/:project_name/:project_name_id" element={<Edithome/>}></Route>
             {/* <Route path="/edit-project/" element={<EditProject/>}></Route> */}
              <Route path="/edit-project/" element={<EditPrjectDash/>}></Route>

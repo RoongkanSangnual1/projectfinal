@@ -6,7 +6,7 @@ import { Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import { useState,useEffect } from "react";
 import Swal from 'sweetalert2'
-
+import { IoMdTime } from "react-icons/io";
 const Home = () => {
     const [projectdata, setProjectData] = useState([]);
     const [deletee,setDelete] = useState([]);
@@ -103,80 +103,82 @@ const Home = () => {
       });
     };
     
+  
+    
 
 
-
-        return (
-            <div className="mainDash">
-              <Card title="My Project" extra={<Link to='/create'><Button type="primary" icon={<PlusOutlined />}>Add to create</Button></Link>}>
-              {projectdata &&
-                projectdata.map((project, index) => (
-
-                  //<Link to={`/myproject/${project[1]}/${project[2]}`}>details</Link>
-                  
-                  //
-                  <div className="projindash">
-                   
-                    <Collapse className="projcollaspe"
-                      collapsible="header"
-                      size="small"
-                      defaultActiveKey={['1']}
-                      expandIcon={({ isActive }) => <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px',marginTop:'80px'}} />}
-                      items={[
-                      {
-                        key: {index},
-                        label: <div className="projcollaspe-head" >
-                                  
-                                  <h3 className="projname">
-                                      {project[1]}
-                                      <pre style={{color:"grey"}}>
-                                        {project[3]} <br/>
-                                        {project[4] === project[5] ? (
-                                          <>
-                                            <p style={{color:"red"}}>crawl...</p>
-                                          </>
-                                        ) : (
-                                          <>
-                                            Start:({project[4]}) <br/> 
-                                            complete:({project[5]})
-                                          </>
-                                        )}
-                                      </pre>
-                                    </h3>
-                                  <Button type="link" icon={<CloseOutlined   className="close-button"  style={{ fontSize: '15px',color:'red'}} onClick={()=>Deleteprojuct(project[2])}/>} />
-                                  
-                                </div>,
-
-                        children: 
-                        <div >
-
-                        <Link style={{textAlign:"center"}} className="projedit-btn" to={`/myproject/${project[1]}/${project[2]}`}>
-                        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                          <div className="projcollaspe-content" > 
-                            <p className="projdes" style={{ fontSize: '15px', color: 'grey', marginTop: '0px',whiteSpace: 'pre-line',maxWidth: '1000px'  }}>{project[0]}</p>
+    return (
+      <div className="mainDash">
+        <Card title="My Project" extra={<Link to='/create'><Button type="primary" icon={<PlusOutlined />}>Add to create</Button></Link>}>
+          {projectdata && projectdata.map((project, index) => (
+            <div className="projindash">
+              <Collapse
+                className="projcollaspe"
+                collapsible="header"
+                size="small"
+                defaultActiveKey={['1']}
+                expandIcon={({ isActive }) => <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '80px' }} />}
+                items={[
+                  {
+                    key: { index },
+                    label: (
+                      <div className="projcollaspe-head">
+                        <h3 className="projname">
+                          {project[1]}
+                          <pre style={{ color: "grey" }}>
+                            {project[3]} <br/>
+                            {project[4] === project[5] ? (
+                              <p style={{ color: "red" }}>crawl...</p>
+                            ) : (
+                              <>
+                                Start: ({project[4]}) <br/>
+                                Complete: ({project[5]})
+                                <br/>
+                                {(() => {
+                                    const startDate = new Date(project[4]);
+                                    const endDate = new Date(project[5]);
+                                    const timeDifference = endDate.getTime() - startDate.getTime();
+                                    const seconds = Math.floor(timeDifference / 1000);
+                                    const minutes = Math.floor(seconds / 60);
+                                    const hours = Math.floor(minutes / 60);
+                                    const remainingMinutes = minutes % 60;
+                                    const remainingSeconds = seconds % 60;
+                                    const timeText = `Time : ${hours} hours: ${remainingMinutes} minutes: ${remainingSeconds} seconds`;
+                                    return (
+                                      <div>
+                                      <IoMdTime style={{ fontSize: "20px", color:"#1b317e"}} />  {timeText}
+                                      </div>
+                                    );
+                                  })()}
+                              </>
+                            )}
+                          </pre>
+                        </h3>
+                        <Button type="link" icon={<CloseOutlined className="close-button" style={{ fontSize: '15px', color: 'red' }} onClick={() => Deleteprojuct(project[2])} />} />
+                      </div>
+                    ),
+                    children: (
+                      <div>
+                        <Link style={{ textAlign: "center" }} className="projedit-btn" to={`/myproject/${project[1]}/${project[2]}`}>
+                          <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <div className="projcollaspe-content">
+                              <p className="projdes" style={{ fontSize: '15px', color: 'grey', marginTop: '0px', whiteSpace: 'pre-line', maxWidth: '1000px' }}>{project[0]}</p>
+                            </div>
+                            <Link to={`/myproject/edit/${project[1]}/${project[2]}`} className="projedit-btn" style={{ marginLeft: '650px' }}>
+                              <FormOutlined style={{ fontSize: '15px', color: 'grey' }} />
+                            </Link>
                           </div>
-                      
-                        <Link to={`/myproject/edit/${project[1]}/${project[2]}`} className="projedit-btn" style={{ marginLeft: '650px' }}>
-                          <FormOutlined style={{ fontSize: '15px', color: 'grey' }} />
                         </Link>
                       </div>
-                      </Link>
-                      </div>
-                      },
-                      ]}
-                      
-                    >
-                      
-                    </Collapse>
-                    
-                  </div>
-                  
-                  
-                ))}
-  
-              </Card>
+                    ),
+                  },
+                ]}
+              />
             </div>
-          );
-}
+          ))}
+        </Card>
+      </div>
+    );
+              }
 
 export default Home;

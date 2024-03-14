@@ -65,7 +65,7 @@ const Edithome = () => {
             <div className="App">
             <Navbar />
             <div className="container2">
-            <Link to='/home' className="exit" style={{color:"red"}}><CloseOutlined  style={{color:"red"}}/></Link>
+            <Link to={`/myproject/${project_name}/${project_name_id}`} className="exit" style={{color:"red"}}><CloseOutlined  style={{color:"red"}}/></Link>
             <h2 >Edit Project</h2>
                 <div className="createproject-form">
                     <Form

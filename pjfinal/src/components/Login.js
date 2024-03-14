@@ -81,6 +81,7 @@ const Login = () => {
             .post(`http://localhost:8000/api/resetpassword`, { email, newPassword })
             .then(response => {
                 Swal.fire(response.data.message);
+                
             })
             .catch(err=>{
                 console.log(err)
@@ -122,6 +123,7 @@ const Login = () => {
         if (response) {
           console.log(response.data.token);
           Swal.fire(response.data.message);
+          console.log(response.data.message)
           dispatch({
             type: 'LOGIN',
             payload: response.data.token

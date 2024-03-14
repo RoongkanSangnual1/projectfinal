@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Navbar />
       <div className='Applayout'>
-        <Sidemenu className='Sidemenu' />
+        {/* <Sidemenu className='Sidemenu' /> */}
         <Home className='Home' />
       </div>
     </div>
