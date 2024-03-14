@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import { Table,Button,Modal,Form,Input,Space,Card,theme,Collapse,ConfigProvider } from 'antd';
 import './URLlist.css'
-import {PlusOutlined,ReloadOutlined,CloseOutlined,FormOutlined,RightOutlined,ToTopOutlined,ShareAltOutlined} from '@ant-design/icons';
+import {PlusOutlined,ReloadOutlined,CloseOutlined,FormOutlined,RightOutlined,ToTopOutlined,ShareAltOutlined,DoubleLeftOutlined} from '@ant-design/icons';
 import { Link} from "react-router-dom";
 import { CgDanger } from "react-icons/cg";
 import Highlighter from 'react-highlight-words';
@@ -592,7 +592,11 @@ setresponsedata3(responsedata2)
         <div>
           <div className="button-container">
             
+<<<<<<< HEAD
           {/* {memoizedPDF} */}
+=======
+          
+>>>>>>> 6f07aac8cbc2087002afcb8e12da2ea13578233c
           {Delete === "Advance" && (
             <div>
                 <Button type="primary" shape="round" icon={<ShareAltOutlined />} style={{ marginRight: "10px" }}>
@@ -3086,9 +3090,9 @@ setresponsedata3(responsedata2)
 
 }
 )}
-<div style={{ transform: 'translateX(950px) translateY(0px)  scale(1)' }}>
-<Button  style={{background:"#a7ffb9"}} onClick={handleShowZero}>
-        {showZero ? (<div  style={{color:"#f7fff8"}} >Hide Unfound Vulnerability</div>) : (<div  style={{color:"#f7fff8"}} >Show Unfound Vulnerability</div>) }
+<div style={{ transform: 'translateX(930px) translateY(0px)  scale(1)' }}>
+<Button  type='link' onClick={handleShowZero}>
+        {showZero ? (<div  style={{color:"#006EF0"}} ><DoubleLeftOutlined rotate={90} /> Hide Unfound Vulnerability</div>) : (<div  style={{color:"#006EF0"}} ><DoubleLeftOutlined rotate={270}/> Show Unfound Vulnerability</div>) }
       </Button>
 </div>
 

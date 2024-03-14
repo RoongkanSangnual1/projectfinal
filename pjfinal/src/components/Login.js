@@ -68,7 +68,7 @@ const Login = () => {
       setOTP('');
       setOTPemail('');
     } else {
-      Swal.fire("OTP ผิดพลาด");
+      Swal.fire("Incorrect OTP");
     }
   };
 
@@ -122,8 +122,12 @@ const Login = () => {
       .then(response => {
         if (response) {
           console.log(response.data.token);
+<<<<<<< HEAD
           Swal.fire(response.data.message);
           console.log(response.data.message)
+=======
+          Swal.fire("Login successfully");
+>>>>>>> 6f07aac8cbc2087002afcb8e12da2ea13578233c
           dispatch({
             type: 'LOGIN',
             payload: response.data.token
@@ -136,7 +140,8 @@ const Login = () => {
         }
       })
       .catch(err => {
-        Swal.fire(err.response.data);
+        console.log(err.response.data)
+        Swal.fire("Invalid username or password");
       });
   };
 
@@ -178,10 +183,6 @@ const Login = () => {
         <Form.Item>
           <button type="submit" value="บันทึก" className="btn">Login</button>
         </Form.Item>
-        <div className="LoginFooter">
-          <p>Don’t have an account yet?</p>
-          <Link to='/Register' className="nav-link">Create Account</Link>
-        </div>
         <a
           href="#"
           onClick={() => showModal()}
@@ -189,6 +190,11 @@ const Login = () => {
         >
           Forgot password?
         </a>
+        <div className="LoginFooter">
+          <p>Don’t have an account yet?</p>
+          <Link to='/Register' className="nav-link">Create Account</Link>
+        </div>
+        
 
         <Modal
           title="Forgot Password"
