@@ -68,7 +68,7 @@ const Login = () => {
       setOTP('');
       setOTPemail('');
     } else {
-      Swal.fire("OTP ผิดพลาด");
+      Swal.fire("Incorrect OTP");
     }
   };
 
@@ -121,7 +121,7 @@ const Login = () => {
       .then(response => {
         if (response) {
           console.log(response.data.token);
-          Swal.fire(response.data.message);
+          Swal.fire("Login successfully");
           dispatch({
             type: 'LOGIN',
             payload: response.data.token
@@ -134,7 +134,8 @@ const Login = () => {
         }
       })
       .catch(err => {
-        Swal.fire(err.response.data);
+        console.log(err.response.data)
+        Swal.fire("Invalid username or password");
       });
   };
 
