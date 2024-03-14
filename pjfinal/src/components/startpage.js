@@ -7,6 +7,7 @@ import { useNavigate} from "react-router-dom"
 import fsp1 from "./imgsrc/rm373batch4-15.jpg"
 import fsp2 from "./imgsrc/7971777_3807687.png"
 import owasplogo from "./imgsrc/owasplogo.png"
+import owasplogo2 from "./imgsrc/owasplogo-2.png"
 import robologo from "./imgsrc/logo.png"
 import robo from "./imgsrc/robo.png"
 import robowebdemo from "./imgsrc/robopentestguide-demo.png"
@@ -50,7 +51,7 @@ const Startpage = () => {
                 <div className='fs-2'>
                 <img className='fs-2-image' src={fsp2}></img>
                     <div className='fs-2-t2'>
-                        <img className='fs-2-t2-d-i' src={owasplogo} />
+                        <img className='fs-2-t2-d-i' src={owasplogo2} />
                         <h1>Referring to OWASP Web Security Testing Guide for testing guidance</h1>
                     </div>
                 </div>
@@ -78,7 +79,7 @@ const Startpage = () => {
             <div className='ts-p2'>
                <img className='ts-p2-hi' src={owasplogo}></img> 
                <h1>Automate Web Application Penetration Testing</h1>
-               <h3>Scan for common issues following the guidance in the OWASP Web Security Testing Guide.</h3>
+               <h3>Scan for common issues following the guidance in the OWASP Web Security Testing Guide v4.2</h3>
                <div className='ts-p2-c1'>
                 <div className='ts-p2-c1-t'>
                     <div className='ts-p2-c1-l1'>

@@ -176,10 +176,6 @@ const Login = () => {
         <Form.Item>
           <button type="submit" value="บันทึก" className="btn">Login</button>
         </Form.Item>
-        <div className="LoginFooter">
-          <p>Don’t have an account yet?</p>
-          <Link to='/Register' className="nav-link">Create Account</Link>
-        </div>
         <a
           href="#"
           onClick={() => showModal()}
@@ -187,6 +183,11 @@ const Login = () => {
         >
           Forgot password?
         </a>
+        <div className="LoginFooter">
+          <p>Don’t have an account yet?</p>
+          <Link to='/Register' className="nav-link">Create Account</Link>
+        </div>
+        
 
         <Modal
           title="Forgot Password"
