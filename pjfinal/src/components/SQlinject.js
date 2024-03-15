@@ -592,11 +592,6 @@ setresponsedata3(responsedata2)
         <div>
           <div className="button-container">
             
-<<<<<<< HEAD
-          {/* {memoizedPDF} */}
-=======
-          
->>>>>>> 6f07aac8cbc2087002afcb8e12da2ea13578233c
           {Delete === "Advance" && (
             <div>
                 <Button type="primary" shape="round" icon={<ShareAltOutlined />} style={{ marginRight: "10px" }}>

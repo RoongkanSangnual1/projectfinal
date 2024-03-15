@@ -59,3 +59,46 @@ overflow: hidden;
 text-overflow: ellipsis;
 line-break: anywhere;
 }
+
+.severitybutton-control{
+  display: flex;
+}
+.severitybutton-c{
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #FF0000;
+  margin-left:20px;
+  text-align: center;
+  color: white;
+  
+  
+}
+.severitybutton-h{
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color:#FF5100;
+  margin-left:20px;
+  color: white;
+}
+.severitybutton-m{
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #FFBB28;
+  margin-left:20px;
+  color: white;
+}
+.severitybutton-l{
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #6F77B1;
+  margin-left:20px;
+  color: white;
+}
