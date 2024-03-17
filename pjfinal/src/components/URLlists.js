@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams,useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button, Modal, Form, Input, Space } from "antd";
@@ -14,6 +14,7 @@ const URLlist = (props) => {
   const project_name = props.id;
   const project_name_n = props.name;
   const { project_name_id } = useParams();
+  const location = useLocation();
   const [projectOneData, setProjectOneData] = useState([]);
   const [urls, setUrls] = useState([]);
   const [urlsAll, setUrlsAll] = useState([]);
@@ -251,9 +252,60 @@ const URLlist = (props) => {
       });
     setIsModalOpen(false);
   };
-  const refreshData = () => {
-    window.location.reload();
+
+
+
+  const refreshData = async () => {
+    const confirmationResult = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to refresh this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, refresh it!",
+    });
+  
+    if (confirmationResult.isConfirmed) {
+      axios
+        .delete(
+          `http://127.0.0.1:5000/refreshData?project_name_id=${project_name_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+    
+          if (response.status === 200) {
+            // setProjectOneData((prevData) =>
+            //   prevData.filter((project) => project[5] !== iddelete)
+            // );
+  
+            // Swal.fire({
+            //   title: "Refresh!",
+            //   text: "Your URL has been Refresh.",
+            //   icon: "success",
+            // })
+            // .then(() => {
+            // });
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting data: ", error);
+          Swal.fire({
+            title: "Error!",
+            text: "An error occurred while deleting your URL.",
+            icon: "error",
+          });
+        });
+    }
   };
+
+  
+
+
   // setCrawl(projectOneData.length)
   // console.log("sd",projectOneData.length);
   console.log(projectOneData)

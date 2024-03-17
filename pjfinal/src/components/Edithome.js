@@ -3,7 +3,7 @@ import './maindashboard.css';
 import { PlusOutlined,RightOutlined,CloseOutlined,FormOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { useState,useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import Navbar from "./navbar";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
@@ -12,6 +12,8 @@ import Swal from 'sweetalert2'
 
 
 const Edithome = () => {
+    
+    const navigate = useNavigate()
     const { project_name_id } = useParams();
     const [project_name, setProject_name] = useState("");
     const [url, setUrl] = useState("");
@@ -38,6 +40,11 @@ const Edithome = () => {
         })
         .catch(error => {
             console.error(error);
+            navigate('/login');
+            Swal.fire({
+              icon: 'error',
+              title: 'User Error',
+            });
         });
     }, []);
 

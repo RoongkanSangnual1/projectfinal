@@ -1039,7 +1039,7 @@ setresponsedata3(responsedata2)
                                   </h3>
                                   {Delete === 'Advance' && (
                                     <Button
-                                      style={{ background: getColorForSeverity(severitysamsite) }}
+                                      style={{ background: getColorForSeverity(severitySecure) }}
                                       onClick={() => showModal(2)}
                                       type="primary"
                                       icon={<PlusOutlined />}

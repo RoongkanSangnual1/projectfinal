@@ -861,63 +861,7 @@ const handleDelete = async (iddelete) => {
 
   return (
     <div>
-      <ResponsiveContainer width={1470} height={400}>
-      <BarChart data={transformedData} style={{ fontSize: "12px" }}>
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis dataKey="name" />
-    <YAxis />
-    <Tooltip />
-    {subCategories.map((subCategory, index) => (
-      <Bar
-        key={`bar-${subCategory}-${index}`}
-        dataKey={`value_${subCategory.toLowerCase()}`}
-        fill={colors[index % colors.length]}
-        label={{ position: "top" }}
-      />
-    ))}
-    <Legend
-      iconType="square"
-      align="right"
-      verticalAlign="middle"
-      layout="vertical"
-    />
-  </BarChart>
-
-      </ResponsiveContainer>
-  
-
-<div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", border: "2px solid #ccc", padding: "5px", borderRadius: "20px", marginTop: "30px"}}>
-<h1 className="heading">All Vulnerabilities: <span className="total">{totalC}</span></h1>
-  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
-    {datanumber.map((category, index) => (
-      <div key={`legend-${index}`} style={{ margin: "10px", marginLeft: "10px", flexBasis: "40%", border: "1px solid #ccc", padding: "10px" }}>
-        <Button style={{ marginRight: "10px" }} onClick={() => toggleCategory(category.name)}>{category.name}</Button>
-        <div>
-          {category.c.map((subCategory, subIndex) => (
-            <div key={`legend-sub-${subIndex}`} style={{ marginRight: "20px" }}>
-              {subCategory.c !== 0 && (
-                <span style={{ color: colors[subIndex % colors.length] }}>
-                  <br/>{subCategory.name} ({subCategory.c})<br/>
-                  {openCategory[category.name] && (
-                    <>
-                   {subCategory.url.map((url, urlIndex) => (
-  <Link key={`link-${urlIndex}`} style={{ color: colors[subIndex % colors.length] }} to={`/myproject/${project_name_n}/${project_name_id}/tab4`}>
-    {urlIndex + 1}. {decodeURIComponent(url[1])} <br/>
-  </Link>
-))}
-
-                    </>
-                  )}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-<ResponsiveContainer width={800} height={400}>
+      <ResponsiveContainer width={850} height={400}>
 
     <h2 style={{ textAlign: 'center' }}>Scan Summary</h2>
     <BarChart data={barChartData} style={{ fontSize: "12px" }} layout="vertical">
@@ -1006,13 +950,73 @@ const handleDelete = async (iddelete) => {
       )}
     </div>
 </ResponsiveContainer>
-<div style={{ flex: 1, marginLeft: '900px', marginTop: '-360px', borderRadius: '10px', width: '400px' }}>
+<div style={{ flex: 1, marginLeft: '900px', marginTop: '-360px', borderRadius: '10px', width: '500px' }}>
     <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '10px 10px 0 0', padding: '5px 10px', fontSize: '16px' }}> Scan All URL :<h1 style={{ fontSize: '16px', color:"#1b317e"}}>{urlsAll}</h1> </h2>
     <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>All Vulnerabilities:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {totalC}</h1></h2>
     <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Start Time: <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{start}</h1></h2>
     <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Finish Time: <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{end}</h1></h2>
     <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '0 0 10px 10px', padding: '5px 10px', fontSize: '16px' }}>Total Time:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {time}</h1></h2>
 </div>
+<div style={{ width: '100%', height: '400px', position: 'relative',marginTop: '400px' }}>
+<ResponsiveContainer width={1470} height={400}>
+      <BarChart data={transformedData} style={{ fontSize: "12px" }}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis dataKey="name" />
+    <YAxis />
+    <Tooltip />
+    {subCategories.map((subCategory, index) => (
+      <Bar
+        key={`bar-${subCategory}-${index}`}
+        dataKey={`value_${subCategory.toLowerCase()}`}
+        fill={colors[index % colors.length]}
+        label={{ position: "top" }}
+      />
+    ))}
+    <Legend
+      iconType="square"
+      align="right"
+      verticalAlign="middle"
+      layout="vertical"
+    />
+  </BarChart>
+
+      </ResponsiveContainer>
+  
+
+<div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", border: "2px solid #ccc", padding: "5px", borderRadius: "20px", marginTop: "30px"}}>
+<h1 className="heading">All Vulnerabilities: <span className="total">{totalC}</span></h1>
+  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+    {datanumber.map((category, index) => (
+      <div key={`legend-${index}`} style={{ margin: "10px", marginLeft: "10px", flexBasis: "40%", border: "1px solid #ccc", padding: "10px" }}>
+        <Button style={{ marginRight: "10px" }} onClick={() => toggleCategory(category.name)}>{category.name}</Button>
+        <div>
+          {category.c.map((subCategory, subIndex) => (
+            <div key={`legend-sub-${subIndex}`} style={{ marginRight: "20px" }}>
+              {subCategory.c !== 0 && (
+                <span style={{ color: colors[subIndex % colors.length] }}>
+                  <br/>{subCategory.name} ({subCategory.c})<br/>
+                  {openCategory[category.name] && (
+                    <>
+                   {subCategory.url.map((url, urlIndex) => (
+  <Link key={`link-${urlIndex}`} style={{ color: colors[subIndex % colors.length] }} to={`/myproject/${project_name_n}/${project_name_id}/tab4`}>
+    {urlIndex + 1}. {decodeURIComponent(url[1])} <br/>
+  </Link>
+))}
+
+                    </>
+                  )}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+</div>
+    
+
 
 </div>
   );

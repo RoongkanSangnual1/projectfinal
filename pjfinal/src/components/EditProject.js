@@ -285,13 +285,13 @@ const URLlist = (props) => {
     )}
   </>
 )}
-        <Button
+        {/* <Button
           onClick={refreshData}
           icon={<ReloadOutlined />}
           style={{ marginRight: '10px' }}
         >
           rescan
-        </Button>
+        </Button> */}
         {Delete === "Advance" && (
           <div>
             <Button onClick={showModal} type="primary" shape="round" icon={<PlusOutlined />} style={{ marginRight: '10px' }}>
