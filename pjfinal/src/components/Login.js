@@ -122,12 +122,9 @@ const Login = () => {
       .then(response => {
         if (response) {
           console.log(response.data.token);
-<<<<<<< HEAD
-          Swal.fire(response.data.message);
-          console.log(response.data.message)
-=======
+
           Swal.fire("Login successfully");
->>>>>>> 6f07aac8cbc2087002afcb8e12da2ea13578233c
+
           dispatch({
             type: 'LOGIN',
             payload: response.data.token

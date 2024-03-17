@@ -17,6 +17,7 @@ const SQlinject = (props) => {
   const project_name =props.id
   const project_name_n = props.name
     const { project_name_id } = useParams();
+    const [link_, setLink_] = useState("");
     const [projectOneDataSQL, setprojectOneDataSQL] = useState([]);
     const [projectOneDataXSSSQL, setprojectOneDataXSSSQL] = useState([]);
     const [responsedata, setresponsedata] = useState([]);
@@ -35,6 +36,7 @@ const SQlinject = (props) => {
     const [Issue,setIssue] = useState([])
     const [url_target,seturl_target] = useState([])
     const [Details,setDetails] = useState([])
+    const [isModalOpenShare, setIsModalOpenShare] = useState(false);
     const [isModalOpen1, setIsModalOpen1] = useState(false);
     const [isModalOpen2, setIsModalOpen2] = useState(false);
     const [isModalOpen3, setIsModalOpen3] = useState(false);
@@ -68,7 +70,7 @@ const SQlinject = (props) => {
     const [OID, setOID] = useState('');
     const [Recommendation,setRecommendation]= useState([])
     const [showZero, setShowZero] = useState(false);
-
+    const [usershare,setUershare] = useState([])
     const user = localStorage.user;
     const token = localStorage.getItem('token')
     const fetchData = async () => {
@@ -452,6 +454,7 @@ setresponsedata3(responsedata2)
         setIsModalOpen11(false);
         setIsModalOpen9(false);
         setIsModalOpen12(false);
+        setIsModalOpenShare(false);
       };
     
 
@@ -581,7 +584,48 @@ setresponsedata3(responsedata2)
           console.log(error);
         }
       };
+      const showModalShare = () => {
+        setIsModalOpenShare(true);
+      };
 
+
+
+      const FormsummitShare =()=>{
+        const project_name = project_name_id
+  
+  
+        axios.post(`http://127.0.0.1:5000/generate-link`, { project_name, usershare }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        .then(response => {
+          console.log(response)
+          setLink_(response.data.link)
+          if (response.data && response.data.userError) {
+            Swal.fire({
+              icon: 'error',
+              title: 'This user does not exist.',
+            });
+          }
+          setUershare([])
+        })
+        
+        .catch(err=>{
+            alert(err.response.data)
+        })   
+        setIsModalOpenShare(false);   
+    }
+  
+
+    const handleCopy = () => {
+      navigator.clipboard.writeText(link_).then(() => {
+        alert("Copy successful");
+      }).catch((error) => {
+        console.error('Unable to copy link', error);
+      });
+    };
+    
 
       const memoizedPDF = useMemo(() => {
         return <PDF id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata3}></PDF>;
@@ -592,16 +636,35 @@ setresponsedata3(responsedata2)
         <div>
           <div className="button-container">
             
-<<<<<<< HEAD
-          {/* {memoizedPDF} */}
-=======
-          
->>>>>>> 6f07aac8cbc2087002afcb8e12da2ea13578233c
           {Delete === "Advance" && (
             <div>
-                <Button type="primary" shape="round" icon={<ShareAltOutlined />} style={{ marginRight: "10px" }}>
+
+
+              {link_ && (
+                <div>
+                  <p>{link_}</p>
+                  <Button type="primary" style={{ transform: 'translateX(850px) scale(0.8)', marginTop: '20px' }} onClick={handleCopy}>
+                    Copy Link
+                  </Button>
+                </div>
+              )}    
+                     
+                <Button onClick={showModalShare} type="primary" shape="round" icon={<ShareAltOutlined />}  style={{ marginRight: "10px" }}>
+                Share
+              </Button>
+            <Modal title="SHARE" open={isModalOpenShare} onOk={FormsummitShare} onCancel={handleCancel}>
+              <Form className='input-container'
+                onFinish={FormsummitShare}
+                labelCol={{
+                  span: 5,
+                }}
+              >
+                user:<Input type="text" style={{ marginRight:"20px" }} className="forminput-control" value={usershare} onChange={(e) => setUershare(e.target.value)} /> <br/>
+              </Form>
+            </Modal>
+                {/* <Button type="primary" shape="round" icon={<ShareAltOutlined />} style={{ marginRight: "10px" }}>
                   Share
-                </Button>
+                </Button> */}
             </div>
           )}
           {/* <Button type="primary" shape="round" icon={<ToTopOutlined />}>
