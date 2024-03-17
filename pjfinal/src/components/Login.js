@@ -122,8 +122,11 @@ const Login = () => {
       .then(response => {
         if (response) {
           console.log(response.data.token);
+          console.log(response.data.message)
+
 
           Swal.fire("Login successfully");
+
 
           dispatch({
             type: 'LOGIN',

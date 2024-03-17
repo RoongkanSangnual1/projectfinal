@@ -113,18 +113,27 @@ const Home = () => {
           {projectdata && projectdata.map((project, index) => (
             <div className="projindash">
               <Collapse
-                className="projcollaspe"
                 collapsible="header"
                 size="small"
                 defaultActiveKey={['1']}
-                expandIcon={({ isActive }) => <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '80px' }} />}
+                expandIconPosition="start"
+                expandIcon={({ isActive }) => 
+                <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} 
+                style={{
+                  fontSize: '16px',
+                  position: 'absolute',
+                  top: '50%', // Position the icon at the vertical center
+                  transform: 'translateY(-50%)', // Adjust for half of its height}}  />} //, marginTop: '80px' 
+                  }}
+                />
+                } 
                 items={[
                   {
                     key: { index },
                     label: (
                       <div className="projcollaspe-head">
                         <h3 className="projname">
-                          {project[1]}
+                          Project name: {project[1]}
                           <pre style={{ color: "grey" }}>
                             {project[3]} <br/>
                             {project[4] === project[5] ? (
@@ -150,11 +159,18 @@ const Home = () => {
                                       </div>
                                     );
                                   })()}
+                                  <div className="severitybutton-control">
+                                    <div className="severitybutton-c"> 1</div>
+                                    <div className="severitybutton-h"> 1</div>
+                                    <div className="severitybutton-m"> 1</div>
+                                    <div className="severitybutton-l"> 1</div>
+                                  </div>
+                                  
                               </>
                             )}
                           </pre>
                         </h3>
-                        <Button type="link" icon={<CloseOutlined className="close-button" style={{ fontSize: '15px', color: 'red' }} onClick={() => Deleteprojuct(project[2])} />} />
+                        {/* <Button type="link" icon={<CloseOutlined className="close-button" style={{ fontSize: '15px', color: 'red' }} onClick={() => Deleteprojuct(project[2])} />} /> */}
                       </div>
                     ),
                     children: (
@@ -171,9 +187,30 @@ const Home = () => {
                         </Link>
                       </div>
                     ),
+                    extra: 
+                    <Button type="link" 
+                      icon={
+                      <CloseOutlined className="close-button" 
+                      style={{ 
+                        fontSize: '15px',
+                        color: 'red',
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%', // Position the button at the vertical center
+                        transform: 'translateY(-50%)', // Adjust for half of its height
+                        
+                      }} 
+                      onClick={() => Deleteprojuct(project[2])} 
+                      />
+                      }
+                    />,
                   },
                 ]}
-              />
+
+                >
+
+                </Collapse>
+                
             </div>
           ))}
         </Card>
