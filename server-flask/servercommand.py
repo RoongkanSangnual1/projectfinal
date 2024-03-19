@@ -533,6 +533,10 @@ async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,p
                     # Now you can open the new file
                     f = open(wordlist_path, "r")
                     for payload in f:
+                        att_paramsname = []
+                        for i in att_params.keys():
+                            att_paramsname.append(i)
+                        att_paramsname.sort()
                         for i in att_params:
                             try:
                                 new_att_params = att_params.copy()
@@ -566,9 +570,9 @@ async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,p
                                     vparams = i
                                     results.append((vres, vparams))
                                     insert_query = (
-                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,parameters,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                                     )
-                                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',response.url,vparams,'T',payload.strip(),att_paramsname,response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
                                     db.execute(insert_query, values)
                                     mysql.connection.commit()
                                     
@@ -579,9 +583,9 @@ async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,p
                                     vparams = i
                                     results.append((vres, vparams))
                                     insert_query = (
-                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,parameters,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                                     )
-                                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),vparams,'T',payload.strip(),att_paramsname,response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
                                     db.execute(insert_query, values)
                                     mysql.connection.commit()
                                     
@@ -595,9 +599,9 @@ async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,p
                                     vparams = i
                                     results.append((vres, vparams))
                                     insert_query = (
-                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,parameters,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                                     )
-                                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                                    values = (select_url_id_data[0],project_name_id_result[0][0],'11',unquote(response.url),vparams,'T',payload.strip(),att_paramsname,response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
                                     db.execute(insert_query, values)
                                     mysql.connection.commit()
                                     return vres,vparams
@@ -611,7 +615,7 @@ async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,p
     
 
 
-async def checkscript(response,payload):
+async def checkxssscript(response,payload):
     print((payload))
     payload = str(payload)
     soup = BeautifulSoup(response.content,'lxml')
@@ -772,15 +776,15 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                 # print(contentlenpercent(response,baseper))
                                 vres = False
                                 
-                                
-                                if await checkscript(response,payload.strip()) == True:
-                                    print('XSS found with : '+ payload.strip()+' in '+ i)
+                                xssevidence = await checkxssscript(response,payload.strip())
+                                if await xssevidence != False:
                                     vres = True
                                     vparams = i
+                                    att_paramsname.sort()
                                     insert_query = (
-                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,vul_evidence,parameters,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                                     )
-                                    values = (select_url_id_data[0],project_name_id_result[0][0],'10',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                                    values = (select_url_id_data[0],project_name_id_result[0][0],'10',unquote(response.url),vparams,xssevidence,att_paramsname,'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
                                     db.execute(insert_query, values)
                                     mysql.connection.commit()
                                     return vres,vparams
@@ -790,9 +794,9 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                     vres = True
                                     vparams = i
                                     insert_query = (
-                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                                    "INSERT INTO att_ps (URL_ID, PID, OID, URL,position,state,payload,status_code,reason,res_header,res_body,req_header,req_body,method,URI,length,vul_des , vul_sol , vul_ref , OType,Vul_name,Severity) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                                     )
-                                    values = (select_url_id_data[0],project_name_id_result[0][0],'10',baseatt_URL,unquote(response.url),'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                                    values = (select_url_id_data[0],project_name_id_result[0][0],'10',unquote(response.url),vparams,'T',payload.strip(),response.status_code,response.reason,response.headers, base64.b64encode(response.text.encode()).decode('utf-8'),response.request.headers,response.request.body,response.request.method,urlparse(response.request.path_url).path, len(response.text) ,sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
                                     db.execute(insert_query, values)
                                     mysql.connection.commit()
                                     return vres,vparams
@@ -1041,8 +1045,8 @@ async def run_gobuster(url,project_name,user):
             for item in word_list:
                 file.write(item + '\n')
         command = [
-            'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
-            #  'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
+            # 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
             '-r',
@@ -1118,8 +1122,8 @@ async def run_gobustersensitive(url,project_name,user):
             for item in word_list:
                 file.write(item + '\n')
         command = [
-           'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
-        #    'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
+        #    'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
             '-r',
@@ -3573,7 +3577,7 @@ def addIssueedit():
         vul_Sol = request.json['Recommendation']
         # project_name_id = request.json['project_name_id']   
         print("O_id",O_id)
-        if user_id is None or project_id is None:
+        if user_id is None or project_name_id is None:
             return jsonify({'error': 'Invalid token'}), 401
 # เชคสิทธิ์
         if user_id not in user_data:
