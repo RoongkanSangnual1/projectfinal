@@ -237,16 +237,23 @@ const PDF = (props) => {
         doc.setFontSize(16);
         let details, Evidence, Solutions, owasp, reference;
 
-        if (key === "SQL Injection" || key === "Directory Traversal File Include" || key === "Reflected Cross Site Scriptng") {
+        if (key === "SQL Injection" || key === "Directory Traversal File Include" ) {
           details = vulnerabilities[0][7];
           Evidence = vulnerabilities[0][6];
           Solutions = vulnerabilities[0][8];
           owasp = vulnerabilities[0][9];
           reference = vulnerabilities[0][11];
 
+        } else if (key === "Reflected Cross Site Scripting") {
+          details = vulnerabilities[0][7];
+          Evidence = "From following table above. When we have inject payload into parameter,it get unexpected response";
+          Solutions = vulnerabilities[0][8];
+          owasp = vulnerabilities[0][9];
+          reference = vulnerabilities[0][11];
+
         } else if (key === "Sensitive File Disclosure") {
           details = vulnerabilities[0][7];
-          Evidence = vulnerabilities[0][6];
+          Evidence = "We have found sensitive file from following URLs";
           Solutions = vulnerabilities[0][8];
           owasp = vulnerabilities[0][9];
           reference = vulnerabilities[0][11];
