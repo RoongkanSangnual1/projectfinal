@@ -957,7 +957,7 @@ const handleDelete = async (iddelete) => {
     <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Finish Time: <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{end}</h1></h2>
     <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '0 0 10px 10px', padding: '5px 10px', fontSize: '16px' }}>Total Time:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {time}</h1></h2>
 </div>
-<div style={{ width: '100%', height: '400px', position: 'relative',marginTop: '400px' }}>
+<div style={{ width: '100%', height: '400px', position: 'relative',marginTop: '500px' }}>
 <ResponsiveContainer width={1470} height={400}>
       <BarChart data={transformedData} style={{ fontSize: "12px" }}>
     <CartesianGrid strokeDasharray="3 3" />

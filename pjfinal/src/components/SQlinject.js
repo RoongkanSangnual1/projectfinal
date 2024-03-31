@@ -2392,7 +2392,7 @@ setresponsedata3(responsedata2)
                                           label: (
                                             <div className="projcollaspe-head">
                                               <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
+                                              {dataIndex+1}. {OneData[1]}
                                               </a>
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
@@ -2419,7 +2419,7 @@ setresponsedata3(responsedata2)
                                                 <tr>
                                                 <td style={{textAlign:"center"}}>
                                                           <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                            {OneData[1]}
+                                                           {OneData[1]}
                                                           </a>
                                                         </td>
                                                         <td style={{ textAlign: "center" }}>
