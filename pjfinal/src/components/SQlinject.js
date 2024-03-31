@@ -626,7 +626,7 @@ setresponsedata3(responsedata2)
       });
     };
     
-
+     
       const memoizedPDF = useMemo(() => {
         return <PDF id={project_name} name={project_name_n} url_target={url_target} Details={Details} responsedata={responsedata3}></PDF>;
       }, [responsedata3]);
@@ -1774,7 +1774,7 @@ setresponsedata3(responsedata2)
                                           label: (
                                             <div className="projcollaspe-head">
                                               <a style={{ color: 'red' }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[3]}
+                                                {OneData[1]}
                                               </a>
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
@@ -1794,7 +1794,8 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Parameter</th>
+                                                    <th>Payload</th>                                                      
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -1804,6 +1805,7 @@ setresponsedata3(responsedata2)
                                         {OneData[1]}
                                       </a>
                                     </td>
+                                    <td style={{textAlign:"center",color:"red"}}>{OneData[3]}</td>
                                     <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
                             </tr>
                             <tr>

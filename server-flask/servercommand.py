@@ -481,7 +481,11 @@ async def checkerr(response):
         return None
 
 
+<<<<<<< HEAD
 async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data_,uri):
+=======
+async def brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name, user,cookies_data_,uri):
+>>>>>>> cc7d54bd2e8cc086e0bddbbf4e445d95966d0aa3
     try:
         db = mysql.connection.cursor()
         key_query = "SELECT JSON_KEYS(payloadlist) AS json_keys FROM owasp WHERE OID = 11"
@@ -1680,7 +1684,11 @@ async def crawl_endpoint():
 
 
         db = mysql.connection.cursor()
+<<<<<<< HEAD
         queryURL_data = "SELECT URL , method,req_body , URI FROM urllist WHERE PID = %s AND status_code != 404"
+=======
+        queryURL_data = "SELECT URL , method,req_body , URI FROM urllist WHERE PID = %s"
+>>>>>>> cc7d54bd2e8cc086e0bddbbf4e445d95966d0aa3
         db.execute(queryURL_data, (project_name_id_result))
         URL_data = db.fetchall()
         for url_data in URL_data:
@@ -1688,7 +1696,11 @@ async def crawl_endpoint():
             uri = url_data[3]
             print(f'baseatt_URL',baseatt_URL)
             print(f'uri',uri)
+<<<<<<< HEAD
             select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
+=======
+            select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s "
+>>>>>>> cc7d54bd2e8cc086e0bddbbf4e445d95966d0aa3
             db.execute(select_url_id_query, (project_name_id_result,baseatt_URL))
             select_url_id = db.fetchall()
             select_url_id_data = select_url_id[0]
@@ -1714,7 +1726,11 @@ async def crawl_endpoint():
                     att_params.update({i.split('=')[0]: i.split('=')[1]})
                 # print("project_name",project_name)
                 try:
+<<<<<<< HEAD
                     await brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
+=======
+                    await brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
+>>>>>>> cc7d54bd2e8cc086e0bddbbf4e445d95966d0aa3
                 except Exception as e:
                     print(f"brutesql: {e}")
             # # print(vresults)
