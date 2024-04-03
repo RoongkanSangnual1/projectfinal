@@ -1583,13 +1583,13 @@ async def crawl_endpoint():
                     print(f"run_gobuster: {e}")
 
         select_insert_crawl = ('UPDATE project SET statecrawl = %s WHERE PID = %s')
-        db.execute(select_insert_crawl, (1,project_name_id_result,))
+        db.execute(select_insert_crawl, (1,project_name_id_result[0][0],))
         mysql.commit()
 
         
         db = mysql.cursor()
         queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s AND status_code != 404 "
-        db.execute(queryServer, (project_name_id_result))
+        db.execute(queryServer, (project_name_id_result[0][0]))
         Server = db.fetchall()
         try:   
             await detect_web_server_leakage(Server)
@@ -1600,7 +1600,7 @@ async def crawl_endpoint():
         except Exception as e:
                     print(f"check_cookie_attributes: {e}")
         querypathtraversal = "SELECT URL,req_header,PID,URL_ID FROM urllist WHERE PID = %s AND status_code != 404"
-        db.execute(querypathtraversal, (project_name_id_result))
+        db.execute(querypathtraversal, (project_name_id_result[0][0]))
         pathtraversal = db.fetchall()
 
         try:
@@ -1621,7 +1621,7 @@ async def crawl_endpoint():
 
 
         queryPTargethtml = "SELECT URL,res_body,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
-        db.execute(queryPTargethtml, (project_name_id_result,scope_url))
+        db.execute(queryPTargethtml, (project_name_id_result[0][0],scope_url))
         PTarget = db.fetchall()
         
         try:       
@@ -1632,7 +1632,7 @@ async def crawl_endpoint():
 
         db = mysql.cursor()
         queryURL_data = "SELECT URL , method,req_body , URI FROM urllist WHERE PID = %s AND status_code != 404"
-        db.execute(queryURL_data, (project_name_id_result))
+        db.execute(queryURL_data, (project_name_id_result[0][0]))
         URL_data = db.fetchall()
         for url_data in URL_data:
             baseatt_URL = url_data[0]
@@ -1640,7 +1640,7 @@ async def crawl_endpoint():
             print(f'baseatt_URL',baseatt_URL)
             print(f'uri',uri)
             select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
-            db.execute(select_url_id_query, (project_name_id_result,baseatt_URL))
+            db.execute(select_url_id_query, (project_name_id_result[0][0],baseatt_URL))
             select_url_id = db.fetchall()
             select_url_id_data = select_url_id[0]
             print(f'select_url_id crawl',select_url_id)
@@ -1756,7 +1756,7 @@ async def crawl_endpoint():
 
         db = mysql.cursor()
         queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s"
-        db.execute(queryServer, (project_name_id_result))
+        db.execute(queryServer, (project_name_id_result[0][0]))
 
 
         db = mysql.cursor()
@@ -1976,11 +1976,11 @@ async def crawl_endpoint():
 
         db = mysql.cursor()
         EndTime_query = ('UPDATE project SET EndTime = CURRENT_TIMESTAMP WHERE PID = %s')
-        db.execute(EndTime_query, (project_name_id_result,))
+        db.execute(EndTime_query, (project_name_id_result[0][0],))
         mysql.commit()
 
 
-        return {"project_name_id_result":project_name_id_result}
+        return {"project_name_id_result":project_name_id_result[0][0]}
     except Exception as e:
         return jsonify({"server error": str(e)})
 
@@ -2464,7 +2464,7 @@ async def refreshData():
         mysql.commit()
 
 
-        return {"project_name_id_result":project_name_id}
+        return {"project_name_id_result":project_name_id[0][0]}
     except Exception as e:
         print(e)
         return jsonify({"server error": str(e)})

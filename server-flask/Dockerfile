@@ -39,6 +39,7 @@ RUN pip install mysql-connector-python
 # RUN pip install mysqlclient --global-option=build_ext --global-option="-I/usr/include/mariadb" --global-option="-L/usr/lib"
 RUN pip install Flask-MySQLdb
 RUN pip install pyjwt
+RUN pip install lxml
 
 # Expose port 5000
 EXPOSE 5000
