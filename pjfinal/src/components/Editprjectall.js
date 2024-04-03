@@ -61,7 +61,9 @@ const EditPrjectDash = () => {
           try {
             const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
               headers: {
-                'Authorization': `Bearer ${tokenuser}`
+                'Authorization': `Bearer ${tokenuser}`,
+                'Access-Control-Allow-Origin' : '*',
+                'Content-Type': 'application/json'
               }
             })
     
@@ -145,6 +147,8 @@ useEffect(() => {
       await axios.post(`http://127.0.0.1:5000/save`, { name_pj }, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Access-Control-Allow-Origin' : '*',
+          'Content-Type': 'application/json'
         },
       });
       

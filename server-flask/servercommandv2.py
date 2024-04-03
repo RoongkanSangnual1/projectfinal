@@ -245,7 +245,7 @@ async def save_log(response, i,project_name,user,Host,http_log_data,formlist=Non
             str(req['body']),
             str(res['header']),
             base64.b64encode(res['body'].encode()).decode('utf-8'),
-            project_name_id_result[0],
+            project_name_id_result[0][0],
         )
         db.execute(insert_query, values)
         mysql.commit()

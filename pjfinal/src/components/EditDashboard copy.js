@@ -557,6 +557,8 @@ const EditDashboard = () => {
         const response = await axios.get(`http://127.0.0.1:5000/edit-Dashboard?token=${token}`, {
           headers: {
             Authorization: `Bearer ${tokenuser}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'
           },
         });
 
@@ -884,6 +886,8 @@ const EditDashboard = () => {
             {
               headers: {
                 Authorization: `Bearer ${tokenuser}`,
+                'Access-Control-Allow-Origin' : '*',
+                'Content-Type': 'application/json'
               },
             }
           )
@@ -910,6 +914,8 @@ const EditDashboard = () => {
         axios.delete(`http://127.0.0.1:5000/edit_oneSeverity?project_name_id=${token}&record=${iddelete}`,{
                     headers:{
                       Authorization:`Bearer ${tokenuser}`,
+                      'Access-Control-Allow-Origin' : '*',
+                      'Content-Type': 'application/json'
                     },
                   })
 

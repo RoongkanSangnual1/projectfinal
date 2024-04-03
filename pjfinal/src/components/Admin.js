@@ -91,7 +91,8 @@ const Formsummit2 = () => {
             .post(`http://127.0.0.1:5000/payload2`, { payloadone,Owasp,valuepayload },{
                 headers: {
                     Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
                 },})
             .then(response => {
                 console.log(response)
@@ -125,7 +126,8 @@ const Formsummit2 = () => {
             .post(`http://127.0.0.1:5000/payload3`, { Owasp,payloadall },{
                 headers: {
                     Authorization:`Bearer ${token}`,
-                  "Content-Type": "application/json",
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
                 },})
             .then(response => {
             alert("บันทึกสำเร็จ")
@@ -141,7 +143,8 @@ const Formsummit2 = () => {
             .post(`http://127.0.0.1:5000/payload4`, {Owasp},{
                 headers: {
                     Authorization:`Bearer ${token}`,
-                  "Content-Type": "application/json",
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
                 },})
             .then(response => {
                 console.log(response.data.Owasp_payloadlist)
