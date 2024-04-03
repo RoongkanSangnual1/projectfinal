@@ -35,6 +35,7 @@ exports.login = async(req,res) =>{
   try{
     const {username,password} = req.body
     const findQuery = 'SELECT * FROM user WHERE username = ?'
+    
     dbConnection.query(findQuery,[username],async (finderror,results)=>{
       if(results.length === 0){
         return res.status(401).send('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
