@@ -65,6 +65,8 @@ const Home = () => {
           const response = await axios.delete(`http://localhost:5000/onedelete?project_name_id=${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
             },
           });
     

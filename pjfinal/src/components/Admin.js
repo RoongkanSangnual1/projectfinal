@@ -28,6 +28,8 @@ const Admin = () => {
         axios.get(`http://127.0.0.1:5000/check`,{
           headers:{
             Authorization:`Bearer ${token}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'
           },
         })
             .then(response => {
@@ -69,7 +71,8 @@ const Admin = () => {
             .post(`http://127.0.0.1:5000/payload`, { Owasp },{
                 headers: {
                     Authorization:`Bearer ${token}`,
-                  "Content-Type": "application/json",
+                  'Access-Control-Allow-Origin' : '*',
+                  'Content-Type': 'application/json'
                 },})
             .then(response => {
                 const options =JSON.parse(response.data.value[0][0]).map(value => ({

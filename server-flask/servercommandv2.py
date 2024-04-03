@@ -1558,7 +1558,7 @@ async def crawl_endpoint():
                
 
 
-        insert_query11 = ('INSERT INTO project(PName,PTarget,PDes,username,EndTime,statecrawl) VALUES(%s, %s, %s, %s, NULL ,%s )')
+        insert_query11 = ('INSERT INTO project(PName,PTarget,PDes,username,statecrawl) VALUES(%s, %s, %s, %s,%s )')
         values11 = (project_name, scope_url, description_name, user,0)
         db.execute(insert_query11, values11)
         mysql.commit()
