@@ -78,7 +78,12 @@ const Login = () => {
         if (newPassword === confirmNewPassword) {
             console.log("Reset Password:", newPassword);
             axios
-            .post(`http://192.168.15.227:8000/api/resetpassword`, { email, newPassword })
+            .post(`http://192.168.15.227:8000/api/resetpassword`, { email, newPassword },{
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  'Access-Control-Allow-Origin' : '*',
+                  'Content-Type': 'application/json'},
+              })
             .then(response => {
                 Swal.fire(response.data.message);
                 
@@ -118,7 +123,11 @@ const Login = () => {
 
   const Formsummit = () => {
     axios
-      .post(`http://192.168.15.227:8000/api/login`, { username, password })
+      .post(`http://192.168.15.227:8000/api/login`, { username, password },{
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'},})
       .then(response => {
         if (response) {
           console.log(response.data.token);
