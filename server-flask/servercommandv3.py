@@ -6187,7 +6187,7 @@ def generate_link():
                 payload = {'user_id': usershare, 'project_id': project_name_id,
                         'project_name': project_name, 'username': username}
                 token = jwt.encode(payload, 'jwtSecret', algorithm='HS256')
-                link = f'http://localhost:3000/edit-project?token={token}'
+                link = f'http://192.168.15.227:3000/edit-project?token={token}'
                 return jsonify({'link': link})
         else:
             return jsonify({'userError': 'This user does not exist.'})

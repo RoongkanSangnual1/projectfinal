@@ -78,7 +78,7 @@ const SQlinject = (props) => {
     const token = new URLSearchParams(location.search).get('token');
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+        const response = await axios.get(`http://192.168.15.227:5000/edit-issue?token=${token}`, {
           headers: {
             'Authorization': `Bearer ${tokenuser}`,
             'Access-Control-Allow-Origin' : '*',
@@ -370,7 +370,7 @@ setresponsedata3(responsedata2)
     const Formsummit = async () => {
       try {
         await         axios
-        .post(`http://127.0.0.1:5000/addIssueedit`,{urls,EVIDENCE,Risk,Recommendation,OID,token},
+        .post(`http://192.168.15.227:5000/addIssueedit`,{urls,EVIDENCE,Risk,Recommendation,OID,token},
         {
           headers:{
               Authorization: `Bearer ${tokenuser}`,
@@ -508,7 +508,7 @@ setresponsedata3(responsedata2)
     const sendSeverityToAPI = async (vulnerability, newSeverity) => {
       try {
         await axios.put(
-          `http://127.0.0.1:5000/editupdateSeverityURL`,
+          `http://192.168.15.227:5000/editupdateSeverityURL`,
           {
             token,
             vulnerability,
@@ -562,7 +562,7 @@ setresponsedata3(responsedata2)
           });
     
           if (result.isConfirmed) {
-            await    axios.delete(`http://127.0.0.1:5000/EditoneVulsdelete?project_name_id=${token}&record=${iddelete}`,{
+            await    axios.delete(`http://192.168.15.227:5000/EditoneVulsdelete?project_name_id=${token}&record=${iddelete}`,{
               headers:{
                 Authorization:`Bearer ${tokenuser}`,
                 'Access-Control-Allow-Origin' : '*',
@@ -603,7 +603,7 @@ setresponsedata3(responsedata2)
     //     const project_name = project_name_id
   
   
-    //     axios.post(`http://127.0.0.1:5000/generate-link`, { project_name, usershare }, {
+    //     axios.post(`http://192.168.15.227:5000/generate-link`, { project_name, usershare }, {
     //       headers: {
     //         'Authorization': `Bearer ${token}`
     //       }

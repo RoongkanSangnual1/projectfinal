@@ -25,7 +25,7 @@ const Admin4 = () => {
   
     useEffect(() => {
       console.log(token)
-        axios.get(`http://127.0.0.1:5000/check`,{
+        axios.get(`http://192.168.15.227:5000/check`,{
           headers:{
             Authorization:`Bearer ${token}`,
             'Access-Control-Allow-Origin' : '*',
@@ -47,7 +47,7 @@ const Admin4 = () => {
     //   const Deleteprojuct=(id)=>{
     //             /// ส่ง token user แบบheaders
     //       const token = localStorage.getItem("token")
-    //       axios.delete(`http://127.0.0.1:5000/onedelete?project_name_id=${id}`,{
+    //       axios.delete(`http://192.168.15.227:5000/onedelete?project_name_id=${id}`,{
     //         headers:{
     //           Authorization:`Bearer ${token}`,
     //         },
@@ -68,7 +68,7 @@ const Admin4 = () => {
         console.log(`1${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload`, { Owasp },{
+            .post(`http://192.168.15.227:5000/payload`, { Owasp },{
                 headers: {
                     Authorization:`Bearer ${token}`,
                     'Access-Control-Allow-Origin' : '*',
@@ -88,7 +88,7 @@ const Formsummit2 = () => {
     console.log(`2${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload5`, { payloadone,Owasp },{
+            .post(`http://192.168.15.227:5000/payload5`, { payloadone,Owasp },{
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Access-Control-Allow-Origin' : '*',
@@ -108,7 +108,7 @@ const Formsummit2 = () => {
         console.log(`3${Owasp}`);
         setPay(Owasp)
         // axios
-        //     .post(`http://127.0.0.1:5000/payload`, { Owasp })
+        //     .post(`http://192.168.15.227:5000/payload`, { Owasp })
         //     .then(response => {
         //         const options =JSON.parse(response.data.value[0][0]).map(value => ({
         //             value,
@@ -123,7 +123,7 @@ const Formsummit2 = () => {
         console.log(`3${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload3`, { Owasp,payloadall },{
+            .post(`http://192.168.15.227:5000/payload3`, { Owasp,payloadall },{
                 headers: {
                     Authorization:`Bearer ${token}`,
                     'Access-Control-Allow-Origin' : '*',
@@ -140,7 +140,7 @@ const Formsummit2 = () => {
         console.log(`4${Owasp}`);
         setPay(Owasp)
         axios
-            .post(`http://127.0.0.1:5000/payload4`, {Owasp},{
+            .post(`http://192.168.15.227:5000/payload4`, {Owasp},{
                 headers: {
                     Authorization:`Bearer ${token}`,
                     'Access-Control-Allow-Origin' : '*',
@@ -159,7 +159,7 @@ const Formsummit2 = () => {
     //     console.log(`3${Owasp}`);
     //     setPay(Owasp)
     //     axios
-    //         .post(`http://127.0.0.1:5000/payload3`, { Owasp })
+    //         .post(`http://192.168.15.227:5000/payload3`, { Owasp })
     //         .then(response => {
     //         alert("บันทึกสำเร็จ")
                 

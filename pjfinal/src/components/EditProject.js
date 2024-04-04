@@ -33,7 +33,7 @@ const URLlist = (props) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+      const response = await axios.get(`http://192.168.15.227:5000/edit-issue?token=${token}`, {
         headers: {
           'Authorization': `Bearer ${tokenuser}`,
           'Access-Control-Allow-Origin' : '*',
@@ -149,7 +149,7 @@ const URLlist = (props) => {
 
       if (result.isConfirmed) {
         axios
-          .delete(`http://127.0.0.1:5000/edit-oneurlsdelete?token=${token}&record=${iddelete}`, {
+          .delete(`http://192.168.15.227:5000/edit-oneurlsdelete?token=${token}&record=${iddelete}`, {
             headers: {
               Authorization: `Bearer ${tokenuser}`,
               'Access-Control-Allow-Origin' : '*',
@@ -236,7 +236,7 @@ const URLlist = (props) => {
   }
 
   axios
-  .post(`http://127.0.0.1:5000/addurlsedit`, { urls, method, parameter, token },
+  .post(`http://192.168.15.227:5000/addurlsedit`, { urls, method, parameter, token },
   {
     headers: {
        Authorization:`Bearer ${tokenuser}`,
