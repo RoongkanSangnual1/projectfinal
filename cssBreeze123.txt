@@ -1,0 +1,2 @@
+/admin                [32m (Status: 200) [0m [Size: 80799]
+/main                 [32m (Status: 200) [0m [Size: 80799]

@@ -45,4 +45,4 @@ RUN pip install lxml
 EXPOSE 5000
 
 # Define the command to run the server
-CMD ["python", "servercommandv3.py"]
+CMD ["python", "servercommandv2.py"]
