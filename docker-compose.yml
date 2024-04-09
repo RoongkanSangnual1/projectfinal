@@ -31,6 +31,7 @@ services:
       - mysql-server
 
   server:
+    build: ./server
     image: server:lastest
     container_name: server
     restart: always
@@ -42,6 +43,7 @@ services:
       - mysql-server
 
   server-flask:
+    build: './server-flask'
     image: server-flask:lastest
     container_name: server-flask
     restart: always
@@ -53,6 +55,7 @@ services:
       - mysql-server
 
   react-container:
+    build: ./pjfinal
     image: react:lastest
     container_name: react-container
     restart: always
