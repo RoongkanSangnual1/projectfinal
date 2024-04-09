@@ -329,9 +329,11 @@ const handleCopy = () => {
       console.log(name_pj)
 
   return (
+<div>
+<Navbar />
 
         <div className={activeTabKey1 === 'tab5' ? 'ProjectDashh' : 'ProjectDash'}>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className='ProjectDash-Head'>
       <Link to={`/home`} className="projedit-btn" style={{ fontSize: '30px', color: '#064061', marginRight: '20px',marginTop:'20px' }}>
                              <LeftCircleOutlined />
@@ -387,6 +389,7 @@ const handleCopy = () => {
           </>
         )}
       </div>
+    </div>
     </div>
   );
   

@@ -23,6 +23,7 @@ const Home = () => {
               Authorization: `Bearer ${token}`,
             },
           });
+          console.log(response)
     
           if (response.data && response.data["server error"]) {
             navigate('/login');
