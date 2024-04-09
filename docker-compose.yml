@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  mysql-server:
+    image: mysql
+    container_name: mysql-server
+    restart: always
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+      MYSQL_DATABASE: robo
+
+
+    volumes:
+      - ./c/mysql-data:/var/lib/mysql
+    networks:
+      - backend-network
+
+  phpmyadmin-server:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-server
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql-server
+    networks:
+      - backend-network
+    depends_on:
+      - mysql-server
+
+  server:
+    image: server:lastest
+    container_name: server
+    restart: always
+    ports:
+      - "8000:8000"
+    networks:
+      - backend-network
+    depends_on:
+      - mysql-server
+
+  server-flask:
+    image: server-flask:lastest
+    container_name: server-flask
+    restart: always
+    ports:
+      - "5000:5000"
+    networks:
+      - backend-network
+    depends_on:
+      - mysql-server
+
+  react-container:
+    image: react:lastest
+    container_name: react-container
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql-server
+
+networks:
+  backend-network:
