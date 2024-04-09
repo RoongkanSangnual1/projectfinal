@@ -1,0 +1,399 @@
+
+.contentStyle{
+    height: 650px;
+    color: #fff;
+    line-height:auto;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(130deg, rgba(1,21,38,1) 23%, rgba(43,71,96,1) 100%);
+  }
+  .fs-1 {
+    position: relative;
+    height: 650px /* Ensure the container takes the full height of the parent */
+  }
+  .fs-1-image {
+    width: 100%;
+    height: 1000px;
+    object-fit: cover;
+    opacity: 0.1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+.fs-1-t1{
+    display: flex;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-size: 30px;
+    margin-left: 5%;
+    margin-top: 20px;
+    font-style: normal;
+    
+}
+.fs-1-t1-appname {
+    background: linear-gradient(335deg, rgba(34,193,195,1) 0%, rgba(45,74,253,1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; /* Standard property */
+    color: transparent; /* Standard property */
+    font-family: "Bricolage Grotesque", sans-serif;
+  }
+.fs-1-t2{
+    
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 15px;
+    margin-left: 8%;
+    margin-top: 5px;
+    text-align: left;
+    font-style: normal;
+    
+}
+.fs-1-t2-d{
+    display: flex;
+    margin-top: 0px;
+}
+.fs-1-t2-d-i{
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    
+}
+.fs-1-t2-d > h3 {
+
+    font-weight: 400;
+    font-size: 15px;
+    text-align: left;
+    font-style: normal;
+    margin: 10px 5px;
+}
+.fs-2 {
+    position: relative;
+    height: 650px; /* Ensure the container takes the full height of the parent */
+    /* background-color: #ffffff1b; */
+  }
+.fs-2-image {
+    width: 100%;
+    height: 650px;
+    object-fit: cover;
+    opacity: 0.2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+.fs-2-t2{
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-optical-sizing: auto;
+    width: auto;
+    margin-left: 8%;
+    display: inline-block;
+    text-shadow: 0px 0px 5px rgb(190, 192, 246);
+    z-index: 1;
+    position: absolute;
+    top: 45%;
+    left: 5%;
+    /* transform: translate(-50%, -50%); */
+}
+.fs-2-t2 > h1{
+    color: #000;
+    font-weight: 800;
+    font-size: 30px;
+    font-style: normal;
+    text-shadow: 0px 0px 0px 5px rgb(190, 192, 246);
+
+}
+.fs-2-t2-d-i{
+    width: 120px;
+    height: 120px;
+    margin-right: 10px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0px 0px 1px 1px rgb(190, 192, 246);
+    
+}
+.CButton {
+    position: absolute; 
+    top: 90%;
+    left: 50%;
+    width: 150px;
+    height: 50px;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    background: #F0AD21;
+    z-index: 1; /* Ensure the button is on top of the carousel */
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-size: 20px;
+    font-style: normal;
+}
+.secondSection {
+    width: 100%;
+    height: 1100px;
+    position: relative; /* Change from absolute to relative positioning */
+    background: rgb(3, 20, 34);
+}
+
+.ss-p1 > img {
+    width: 120px;
+    height: 120px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 1px rgb(190, 192, 246);
+    position: absolute; /* Position the image absolutely */
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the image */
+}
+
+.ss-p1 > h1 {
+    position: absolute; /* Position the h1 absolutely */
+    top: 17%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the h1 */
+    font-family: "Bricolage Grotesque";
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-size: 45px;
+    font-style: bold;
+    color: #ffffff;
+}
+.ss-p1 > h3 {
+    position: absolute; /* Position the h1 absolutely */
+    top: 23%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the h1 */
+    font-family: "Roboto";
+    /* font-optical-sizing: auto; */
+    font-weight: 300;
+    font-size: 20px;
+    font-style:normal;
+    width: 1000px;
+    text-align: center;
+    color: #ffffff;
+}
+.webimgdemo{
+    width: 1200px;
+    height: 700px;
+    border-radius: 10px;
+
+    position: absolute; /* Position the h1 absolutely */
+    top: 62%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+   
+}
+.thirdSection{
+    width: auto;
+    height: 1600px;
+    background: linear-gradient(164deg, rgba(3,90,166,1) 0%, rgba(1,35,64,1) 100%);
+    
+}
+.ts-p1{
+    background:rgb(3, 20, 34);
+    position: relative;
+    height: 300px;
+}
+
+.ts-p1 > img {
+    width: 120px;
+    height: 120px;
+    background: #ffffff;
+    padding: auto;
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 1px rgb(190, 192, 246);
+    position: absolute; /* Position the image absolutely */
+    top: 110px;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the image */
+}
+.ts-p1 > h1 {
+    position: absolute; /* Position the h1 absolutely */
+    top: 187px;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the h1 */
+    font-family: "Bricolage Grotesque";
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-size: 45px;
+    font-style: bold;
+    color: #ffffff;
+}
+.ts-p1 > h3 {
+    position: absolute; /* Position the h1 absolutely */
+    top: 250px;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the h1 */
+    font-family: "Roboto";
+    /* font-optical-sizing: auto; */
+    font-weight: 300;
+    font-size: 20px;
+    font-style:normal;
+    width: 1000px;
+    text-align: center;
+    color: #ffffff;
+}
+.ts-p2{
+    background:rgb(3, 20, 34);
+    position: relative;
+    width: auto;
+    height: 650px;
+}
+
+.ts-p2 > img {
+    width: 120px;
+    height: 120px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 1px rgb(190, 192, 246);
+    position: absolute; /* Position the image absolutely */
+    top: 110px;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the image */
+}
+.ts-p2 > h1 {
+    position: absolute; /* Position the h1 absolutely */
+    top: 187px;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the h1 */
+    font-family: "Bricolage Grotesque";
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-size: 45px;
+    font-style: bold;
+    width: max-content;
+    color: #ffffff;
+}
+.ts-p2 > h3 {
+    position: absolute; /* Position the h1 absolutely */
+    top: 250px;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the h1 */
+    font-family: "Roboto";
+    /* font-optical-sizing: auto; */
+    font-weight: 300;
+    font-size: 20px;
+    font-style:normal;
+    width: 1000px;
+    text-align: center;
+    color: #ffffff;
+}
+.ts-p2-c1 {
+    width: 1100px;
+    height: auto;
+    padding: 20px;
+    border-radius: 25px;
+    background-color: rgba(12, 54, 89, 0.118);
+    position: relative;
+    top: 450px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+}
+
+.ts-p2-c1-t {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.ts-p2-c1-l1,
+.ts-p2-c1-r1 {
+    display: flex;
+    align-items: center;
+    width: 48%; /* Set the width for both columns */
+}
+
+.ts-p2-c1-l1-t1-i,
+.ts-p2-c1-r1-t1-i {
+    margin-left: 20px;
+    margin-right: 10px;
+    color: #ffffff;
+}
+
+.ts-p2-c1-l1 > h3,
+.ts-p2-c1-r1 > h3 {
+    font-family: "Roboto";
+    font-weight: 300;
+    font-size: 20px;
+    font-style: normal;
+    width: 100%;
+    color: #ffffff;
+    margin: 0;
+}
+.ts-p3 {
+    background: rgb(3, 20, 34);
+    position: relative;
+    width: auto;
+    height: 650px;
+}
+
+.ts-p3 > h1 {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Bricolage Grotesque";
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-size: 45px;
+    font-style: bold;
+    width: max-content;
+    color: #ffffff;
+}
+
+.ts-p3-cc {
+    width: 1200px;
+    height: auto;
+    padding: 20px;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-between;
+}
+
+.ts-p3-c {
+    flex: 0 0 45%;
+    background-color: rgba(12, 54, 89, 0.118);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    justify-content: space-between; /* Distribute items evenly vertically */
+}
+
+.ts-p3-c > h3 {
+    font-family: "Roboto";
+    font-weight: 500;
+    font-size: 25px;
+    font-style: Bold;
+    text-align: center;
+    color: #ffffff;
+}
+
+.ts-p3-c-l {
+    font-family: "Roboto";
+    font-weight: 300;
+    font-size: 20px;
+    font-style: Bold;
+    color: #ffffff;
+}
+
+.ts-p3-c-l > li {
+    margin-bottom: 10px;
+}
+
+.ts-p3-c-b {
+    align-self: center; /* Align button to the bottom of its container */
+    margin-top: auto; /* Align the ul to the top of its container */
+}

@@ -1,0 +1,71 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  /* align-content: center; */
+  /* justify-content: center;  */
+  width: 500px;
+  margin: 100px auto; 
+  padding: 20px;
+  
+  border-radius: 20px;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: #f9f9f9;
+  }
+.regis-container {
+display: flex;
+flex-direction: column;
+align-items: center; 
+
+justify-content: center; 
+width: 600px;
+height: 500px;
+margin: 100px auto; 
+padding: 20px;
+
+border-radius: 20px;
+box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+background-color: #f9f9f9;
+}
+
+
+
+h2{
+font-weight: 500;
+}
+
+.forminput-control{
+  width: 50px;
+}
+
+
+
+.btn {
+
+width: 100%;
+margin-top: 10px;
+padding: 10px;
+background-color: #060326;
+color: #fff;
+border-radius: 5px;
+cursor: pointer;
+font-style: Bold;
+font-weight: 500;
+font-size: 16px;
+
+}
+
+.LoginFooter{
+  display:flex;
+  align-items: center;
+}
+.LoginFooter > p {
+  color: #838383;
+font-weight: 400;
+font-size: 14px;
+}
+.nav-link {
+  color: #0046eb;
+font-weight: 400;
+font-size: 14px;
+}
