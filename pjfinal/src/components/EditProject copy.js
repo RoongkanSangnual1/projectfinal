@@ -28,7 +28,9 @@ const EditProject = (props) => {
     useEffect(() => {
       axios.get(`http://127.0.0.1:5000/edit-project?token=${token}`, {
             headers: {
-              'Authorization': `Bearer ${tokenuser}`
+              'Authorization': `Bearer ${tokenuser}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
             }
           })
   
@@ -113,6 +115,8 @@ const handleDelete = (iddelete) => {
         axios.delete(`http://127.0.0.1:5000/edit-oneurlsdelete?token=${token}&record=${iddelete}`, {
           headers: {
             Authorization: `Bearer ${tokenuser}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'
           },
           })
           .then((response) => {
@@ -189,8 +193,9 @@ const handleDelete = (iddelete) => {
         .post(`http://127.0.0.1:5000/addurlsedit`, { urls, method, parameter, token },
         {
           headers: {
-            "Content-Type": "application/json",
-             Authorization:`Bearer ${tokenuser}`,
+            Authorization:`Bearer ${tokenuser}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'
           },})
         .then(response=>{
             console.log(response)

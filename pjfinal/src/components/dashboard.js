@@ -183,6 +183,8 @@ const Dashboard = (props) => {
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
                   },
                 }
               )
@@ -797,6 +799,8 @@ const sendSeverityToAPI = async (vulnerability, newSeverity) => {
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Access-Control-Allow-Origin' : '*',
+          'Content-Type': 'application/json'
         },
       }
     );
@@ -844,6 +848,8 @@ const handleDelete = async (iddelete) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'
           },
         }
       );

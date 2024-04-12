@@ -79,11 +79,11 @@ const PDF = (props) => {
     doc.setTextColor("blue");
     doc.setFont("MyFont", "bold");
     //25.4mm = 1 inch 
-
-    doc.text(`Penetration Testing Report of ${props.name}`, 25.4, 25.4);
+    let startY = 25.4;
+    doc.text(`Penetration Testing Report of ${props.name}`, 25.4, startY);
     doc.setFontSize(16);
-
-    doc.text(`Vulnerability Targets`, 25.4, 32.4);
+    startY += 7;
+    doc.text(`Vulnerability Targets`, 25.4, startY);
 
     let content = {
       startY: 35.4,
@@ -107,7 +107,7 @@ const PDF = (props) => {
 
     let content2 = {
       startY: 60.4,
-      head: [['ID', 'Vulnerability Details', 'Severity']],
+      head: [['No.', 'Vulnerability Details', 'Severity']],
       body: body2,
       margin: { left: 25.4 },
       columnStyles: {
@@ -124,9 +124,10 @@ const PDF = (props) => {
     };
 
     doc.autoTable(content);
-
+//32.4
+    startY += 25
     doc.setFontSize(16);
-    doc.text(`Vulnerability Issues`, 25.4, 57.4);
+    doc.text(`Vulnerability Issues`, 25.4, startY);
     doc.autoTable(content2);
     const maxWidth = doc.internal.pageSize.getWidth();
     const maxHeight = doc.internal.pageSize.getHeight();
@@ -156,7 +157,7 @@ const PDF = (props) => {
         doc.text(`${index+1}. ${key}`, 25.4, 25.4);
         doc.setFont("MyFont", "normal");
         doc.setTextColor("black");
-        let vulcontenthead = [['ID', 'URL', 'Parameters', 'Severity']];
+        let vulcontenthead = [['No.', 'URL', 'Parameters', 'Severity']];
         
         let columnStyles_vulcontent_1 = {
           //159.2
@@ -188,23 +189,23 @@ const PDF = (props) => {
         let vulcontentbody = vulnerabilities.map((vulnerability, innerIndex) => {
           let url, evidence, severity;
           /* เดี๋ยวแก้เป็นพารามิเตอร์ */
-          if (key === "SQL Injection" || key === "Directory Traversal File Include"|| key === "Reflected Cross Site Scripting") {
-            vulcontenthead = [['ID', 'URL', 'Parameters', 'severity']];
+          if (key === "SQL Injection" || key === "Directory Traversal File Include") {
+            vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
             url = vulnerability[4];
             evidence = vulnerability[5];
             severity = vulnerability[12];
             columnStyles_vulcontent = columnStyles_vulcontent_1;
             return [`${innerIndex + 1}`, url, evidence, severity];
-          }/* else if (key === "Reflected Cross Site Scripting") {
-            vulcontenthead = [['ID', 'URL', 'Parameters', 'severity']];
-            url = vulnerability[4];
-            evidence = vulnerability[5];
+          } else if (key === "Reflected Cross Site Scripting") {
+            vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
+            url = vulnerability[1];
+            evidence = vulnerability[3];
             severity = vulnerability[12];
             columnStyles_vulcontent = columnStyles_vulcontent_1;
             return [`${innerIndex + 1}`, url, evidence, severity];
-          } */
+          }
           else if (key === "Sensitive File Disclosure") {
-            vulcontenthead = [['ID', 'URL', 'severity']];
+            vulcontenthead = [['No.', 'URL', 'severity']];
             url = vulnerability[2];
             severity = vulnerability[12];
             columnStyles_vulcontent = columnStyles_vulcontent_2;
@@ -214,7 +215,7 @@ const PDF = (props) => {
           //   return null;
           // } 
           else {
-            vulcontenthead = [['ID', 'URL', 'severity']];
+            vulcontenthead = [['No.', 'URL', 'severity']];
             url = vulnerability[2];
             // evidence = vulnerability[3];
             severity = vulnerability[10];

@@ -9,10 +9,11 @@ const mysql = require('mysql2');
 
 // module.exports = dbConnection;const mysql = require('mysql2');
 const dbConnection = mysql.createConnection({
-   host: 'mysql-server',
+  host: 'localhost',
   user: 'root',
-  password: '123d4',
+  password: '',
   database: 'robo',
 });
 
 module.exports = dbConnection;
+

@@ -272,6 +272,8 @@ const DashboardAll = () => {
     axios.get(`http://127.0.0.1:5000/DashboardAll`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Access-Control-Allow-Origin' : '*',
+        'Content-Type': 'application/json'
       },
     })
       .then(response => {

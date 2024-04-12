@@ -74,7 +74,9 @@ const EdiSQlinject = (props) => {
       try {
         const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
           headers: {
-            'Authorization': `Bearer ${tokenuser}`
+            'Authorization': `Bearer ${tokenuser}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'
           }
         })
 
@@ -343,6 +345,8 @@ const EdiSQlinject = (props) => {
         {
           headers:{
               Authorization: `Bearer ${tokenuser}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
           },
 
       })
@@ -528,6 +532,8 @@ const EdiSQlinject = (props) => {
           {
             headers: {
               Authorization:`Bearer ${tokenuser}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
             },
           }
         );
@@ -574,6 +580,8 @@ const EdiSQlinject = (props) => {
             await    axios.delete(`http://127.0.0.1:5000/EditoneVulsdelete?project_name_id=${token}&record=${iddelete}`,{
               headers:{
                 Authorization:`Bearer ${tokenuser}`,
+                'Access-Control-Allow-Origin' : '*',
+                'Content-Type': 'application/json'
               },
             });
             await fetchData();

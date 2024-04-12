@@ -26,11 +26,10 @@ const Admin4 = () => {
     useEffect(() => {
       console.log(token)
         axios.get(`http://127.0.0.1:5000/check`,{
-            headers: {
-                Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-              'Access-Control-Allow-Origin' : '*',
-            },})
+          headers:{
+            Authorization:`Bearer ${token}`,
+          },
+        })
             .then(response => {
                 console.log(response.data[1].Admin)
                 setProjectData(response.data[1].Admin);
@@ -69,9 +68,8 @@ const Admin4 = () => {
         axios
             .post(`http://127.0.0.1:5000/payload`, { Owasp },{
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization:`Bearer ${token}`,
                   "Content-Type": "application/json",
-                  'Access-Control-Allow-Origin' : '*',
                 },})
             .then(response => {
                 const options =JSON.parse(response.data.value[0][0]).map(value => ({
@@ -91,7 +89,6 @@ const Formsummit2 = () => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                   "Content-Type": "application/json",
-                  'Access-Control-Allow-Origin' : '*',
                 },})
             .then(response => {
                 console.log(response)
@@ -124,9 +121,8 @@ const Formsummit2 = () => {
         axios
             .post(`http://127.0.0.1:5000/payload3`, { Owasp,payloadall },{
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization:`Bearer ${token}`,
                   "Content-Type": "application/json",
-                  'Access-Control-Allow-Origin' : '*',
                 },})
             .then(response => {
             alert("บันทึกสำเร็จ")
@@ -142,7 +138,8 @@ const Formsummit2 = () => {
             .post(`http://127.0.0.1:5000/payload4`, {Owasp},{
                 headers: {
                     Authorization:`Bearer ${token}`,
-                  "Content-Type": "application/json",
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
                 },})
             .then(response => {
                 console.log(response.data.Owasp_payloadlist)

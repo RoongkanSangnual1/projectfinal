@@ -39,14 +39,13 @@ const Target_url = () => {
             const res = await axios.post(`http://127.0.0.1:5000/crawl`, { project_name, url, description }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                  'Access-Control-Allow-Origin' : '*',
-                },})
+                },
+            });
     
             console.log(res);
             setLoad(false);
             setLoadingButton(false);
-            setProject_name_id(res.data.project_name_id_result);
+            setProject_name_id(res.data.project_name_id_result[0][0]);
     
             if (res.data.Change) {
                 console.log(res.data.Change.length);
