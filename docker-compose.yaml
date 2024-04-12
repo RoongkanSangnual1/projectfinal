@@ -41,7 +41,7 @@ services:
       image: mysql
       restart: always
       environment:
-        MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+        MYSQL_ROOT_PASSWORD: '1234'
         # MYSQL_ALLOW_EMPTY_PASSWORD: yes
         MYSQL_DATABASE: robo
         
