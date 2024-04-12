@@ -1,6 +1,10 @@
 from cmath import e
 from flask import Flask, request, jsonify ,Response
 from flask_cors import CORS
+from PIL import Image
+from selenium import webdriver
+# import chromedriver_binary
+from selenium.webdriver.chrome.options import Options
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, unquote
@@ -15,15 +19,15 @@ import os
 import re
 app = Flask(__name__)
 CORS(app,resources={"/*":{"origins":"*"}})
-# app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 
 # def connect_to_mysql():
 #     return mysql.connector.connect(
 #         user='root',
-#        password='1234',
-#         host= 'mysql-server',
+#        password='',
+#         host= 'localhost',
 #         database='robo'
 #     )
 async def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
@@ -202,8 +206,8 @@ async def save_log(response, i,project_name,user,Host,http_log_data,formlist=Non
 
         mydb = mysql.connector.connect(
             user='root',
-            password='1234',
-            host= 'mysql-server',
+            password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -484,8 +488,8 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -627,8 +631,8 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                       
                                         mydb = mysql.connector.connect(
                                         user='root',
-                                       password='1234',
-                                        host= 'mysql-server',
+                                       password='',
+                                        host= 'localhost',
                                         database='robo' )
                                         print('SQL found with 1:' + payload.strip() + 'in ' + i)  
                                         vres = True
@@ -884,8 +888,8 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -1103,8 +1107,8 @@ async def brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_ur
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1271,8 +1275,8 @@ async def brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_d
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1427,8 +1431,8 @@ async def detect_pathtraversal(pathtraversal):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1482,8 +1486,8 @@ async def run_gobuster(url,project_name,user):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1569,8 +1573,8 @@ async def run_gobustersensitive(url,project_name,user):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1610,8 +1614,8 @@ async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1719,8 +1723,8 @@ async def detect_web_server_leakage(Server):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1751,8 +1755,8 @@ async def HSTS(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1801,8 +1805,8 @@ async def webFramework(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1858,8 +1862,8 @@ async def webFrameworkhtml(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1923,8 +1927,8 @@ async def webFramewordgit(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -1987,8 +1991,8 @@ async def check_cookie_attributes(Server):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -2083,8 +2087,8 @@ async def crawl_endpoint():
     try:
         mydb = mysql.connector.connect(
             user='root',
-            password='1234',
-            host= 'mysql-server',
+            password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -2121,13 +2125,29 @@ async def crawl_endpoint():
                  Change = "Change name project name"
                  return {"Change":Change} 
                
-      
+            
+        # chrome_options = Options()
+        # chrome_options.add_argument('--headless')       
+        # driver = webdriver.Chrome(options=chrome_options)
+        try:
+           
+            # driver.get(scope_url)
+            # screenshot = driver.get_screenshot_as_png()
 
-        insert_query11 = ('INSERT INTO project(PName,PTarget,PDes,username,statecrawl) VALUES(%s, %s, %s, %s ,%s )')
-        values11 = (project_name, scope_url, description_name, user,0)
-        mycursor.execute(insert_query11, values11)
-        mydb.commit()
+            insert_query = ('INSERT INTO project(PName, PTarget, PDes, username, statecrawl) VALUES (%s, %s, %s, %s, %s)')
+            values = (project_name, scope_url, description_name, user, 0)
+            mycursor.execute(insert_query, values)
+            mydb.commit()
 
+        except Exception as e:
+            print(f"crawl error: {e}")
+            # insert_query = ('INSERT INTO project(PName, PTarget, PDes, username, statecrawl, image) VALUES (%s, %s, %s, %s, %s, %s)')
+            # values = (project_name, scope_url, description_name, user, 0, None)
+            # mycursor.execute(insert_query, values)
+            # mydb.commit()
+     
+            # driver.quit()
+                # print("screenshot",screenshot)
         try:            
             cres = await crawl(scope_url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post)
         except Exception as e:
@@ -2138,13 +2158,13 @@ async def crawl_endpoint():
         project_name_id_result = mycursor.fetchall() 
   
 
-        # try:   
-        #     print(project_name_id_result[0][0])
-        #     await run_gobuster(baseURL,project_name,user)
-        #     print("baseURL",baseURL)        
-        #     await checkTempFuzz(i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls)
-        # except Exception as e:
-        #             print(f"run_gobuster: {e}")
+        try:   
+            print(project_name_id_result[0][0])
+            await run_gobuster(baseURL,project_name,user)
+            print("baseURL",baseURL)        
+            await checkTempFuzz(i,project_name,user,baseURL,Host,cookies_data,http_log_data,visited_urls)
+        except Exception as e:
+                    print(f"run_gobuster: {e}")
 
         select_insert_crawl = ('UPDATE project SET statecrawl = %s WHERE PID = %s')
         mycursor.execute(select_insert_crawl, (1,project_name_id_result[0][0],))
@@ -2217,8 +2237,8 @@ async def crawl_endpoint():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -2251,13 +2271,13 @@ async def crawl_endpoint():
 
         mycursor = mydb.cursor()
         select_att_ID_Server = "SELECT Vul_name  FROM owasp WHERE PID = %s AND Vul_name = %s "
-        mycursor.execute(select_att_ID_Server, (project_name_id_result[0][0], 'Web Server Infomation Leakage through Server header'))
+        mycursor.execute(select_att_ID_Server, (project_name_id_result[0][0], 'Missing Secure Attribute in Cookie Header'))
         Vul_name = mycursor.fetchall()
         if Vul_name:
             print("Vul_name 2")
         else:                
-            select_att_ID_secure = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND Vul_name = %s "
-            mycursor.execute(select_att_ID_secure, (project_name_id_result[0][0], 'Missing Secure Attribute in Cookie Header'))
+            select_att_ID_secure = "SELECT URL , res_header FROM att_ps WHERE PID = %s AND OID = %s "
+            mycursor.execute(select_att_ID_secure, (project_name_id_result[0][0], '2'))
             select_att_ID_select_att_secure_DATA = mycursor.fetchall()
 
 
@@ -2422,137 +2442,139 @@ async def crawl_endpoint():
         queryURL_data = "SELECT URL , method,req_body , URI FROM urllist WHERE PID = %s AND status_code != 404"
         mycursor.execute(queryURL_data, (project_name_id_result[0][0],))
         URL_data = mycursor.fetchall()
-  
 
-        for url_data in URL_data:
+
+        try:
+            for url_data in URL_data:
+            
+                baseatt_URL = url_data[0]
+                uri = url_data[3]
+                # print(f'baseatt_URL',baseatt_URL)
+                # print(f'uri',uri)
+                select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
+                mycursor.execute(select_url_id_query, (project_name_id_result[0][0],baseatt_URL,))
+                select_url_id = mycursor.fetchall()
         
-            baseatt_URL = url_data[0]
-            uri = url_data[3]
-            print(f'baseatt_URL',baseatt_URL)
-            print(f'uri',uri)
-            select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
-            mycursor.execute(select_url_id_query, (project_name_id_result[0][0],baseatt_URL))
-            select_url_id = mycursor.fetchall()
-      
 
-            select_url_id_data = select_url_id[0]
-            print(f'select_url_id crawl',select_url_id)
-            Host = urlparse(baseatt_URL).netloc
-            cookies_data_ = {}
-            baseper = len((await get_response(baseatt_URL,cookies_data)).content)
-            print('b:'+str(baseper))
-            # print(baseatt_URL)
-            print(urlparse(baseatt_URL))
-            att_url = urlparse(baseatt_URL).scheme+'://'+urlparse(baseatt_URL).netloc+urlparse(baseatt_URL).path
-            att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-            #parse full query to dictionary
-
-
-            if urlparse(baseatt_URL).query != '' :
+                select_url_id_data = select_url_id[0]
+                print(f'select_url_id crawl',select_url_id_data)
+                Host = urlparse(baseatt_URL).netloc
+                cookies_data_ = {}
+                baseper = len((await get_response(baseatt_URL,cookies_data)).content)
+                print('b:'+str(baseper))
+                # print(baseatt_URL)
+                print(urlparse(baseatt_URL))
+                att_url = urlparse(baseatt_URL).scheme+'://'+urlparse(baseatt_URL).netloc+urlparse(baseatt_URL).path
                 att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
                 #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_paramsname = []
-                    att_paramsname.append(i.split('=')[0])
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                # print("project_name",project_name)
-                try:
-                    await brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-
-                except Exception as e:
-                    print(f"brutesql: {e}")
-            # # print(vresults)
-            # # all_results.extend(vresults)
-            # # for vres, vparams in vresults:
-            # #     print(vres)
-            # #     print(vparams)           
-            # else:
-            #     print('we cannot find sql injection')
-
-            if urlparse(baseatt_URL).query != '' :
-                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
-                att_paramsname = []
-                #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                    att_paramsname.append(i.split('=')[0])
-                # print(att_url)
-                print("project_name",project_name)
-                try: 
-                    await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                  
-                except Exception as e:
-                    print(f"brutexss: {e}")
-                # if vres and vparams != None:
-                #     print(vres)
-                #     print(vparams)
-            else:
-                print('we cannot find xss injection in this way')
 
 
-            if urlparse(baseatt_URL).query != '' :
-                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
-                att_paramsname = []
-                #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                    att_paramsname.append(i.split('=')[0])
-                # print(att_url)
-                print("project_name",project_name) 
-                try:   
-                    await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                except Exception as e:
-                    print(f"brutepathtraversal: {e}")
-                    #                 if vres and vparams != None:
-                    # print(vres)
-                    # print(vparams)
-                
-            else:
-                print('[-] we cannot find path traversal')
+                if urlparse(baseatt_URL).query != '' :
+                    att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                    att_params={}
+                    #parse full query to dictionary
+                    for i in urlparse(baseatt_URL).query.split('&'):
+                        #params=value
+                        # print(i)
+                        att_paramsname = []
+                        att_paramsname.append(i.split('=')[0])
+                        att_params.update({i.split('=')[0]: i.split('=')[1]})
+                    # print("project_name",project_name)
+                    try:
+                        await brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
 
+                    except Exception as e:
+                        print(f"brutesql: {e}")
+                # # print(vresults)
+                # # all_results.extend(vresults)
+                # # for vres, vparams in vresults:
+                # #     print(vres)
+                # #     print(vparams)           
+                # else:
+                #     print('we cannot find sql injection')
 
-            if url_data[1] == 'POST':
-                print("url_data[0] POST",url_data[1])
-                if url_data[2] != None :
-                    att_paramsnum = len(url_data[2].split('&'))
+                if urlparse(baseatt_URL).query != '' :
+                    att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
                     att_params={}
                     att_paramsname = []
                     #parse full query to dictionary
-                    for i in url_data[2].split('&'):
+                    for i in urlparse(baseatt_URL).query.split('&'):
                         #params=value
                         # print(i)
                         att_params.update({i.split('=')[0]: i.split('=')[1]})
                         att_paramsname.append(i.split('=')[0])
                     # print(att_url)
-                    try:      
-                        await brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,url_data[2],uri)
+                    print("project_name",project_name)
+                    try: 
+                        await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
+                    
                     except Exception as e:
-                        print(f"brutepathtraversal: {e}")
+                        print(f"brutexss: {e}")
                     # if vres and vparams != None:
                     #     print(vres)
                     #     print(vparams)
-                  
-                    
+                else:
+                    print('we cannot find xss injection in this way')
 
-            else:
-                print('[-] we cannot find command injection')
+
+                if urlparse(baseatt_URL).query != '' :
+                    att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                    att_params={}
+                    att_paramsname = []
+                    #parse full query to dictionary
+                    for i in urlparse(baseatt_URL).query.split('&'):
+                        #params=value
+                        # print(i)
+                        att_params.update({i.split('=')[0]: i.split('=')[1]})
+                        att_paramsname.append(i.split('=')[0])
+                    # print(att_url)
+                    print("project_name",project_name) 
+                    try:   
+                        await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
+                    except Exception as e:
+                        print(f"brutepathtraversal: {e}")
+                        #                 if vres and vparams != None:
+                        # print(vres)
+                        # print(vparams)
+                    
+                else:
+                    print('[-] we cannot find path traversal')
+
+
+                if url_data[1] == 'POST':
+                    print("url_data[0] POST",url_data[1])
+                    if url_data[2] != None :
+                        att_paramsnum = len(url_data[2].split('&'))
+                        att_params={}
+                        att_paramsname = []
+                        #parse full query to dictionary
+                        for i in url_data[2].split('&'):
+                            #params=value
+                            # print(i)
+                            att_params.update({i.split('=')[0]: i.split('=')[1]})
+                            att_paramsname.append(i.split('=')[0])
+                        # print(att_url)
+                        try:      
+                            await brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,url_data[2],uri)
+                        except Exception as e:
+                            print(f"brutepathtraversal: {e}")
+                        # if vres and vparams != None:
+                        #     print(vres)
+                        #     print(vparams)
+                    
+                        
+
+                else:
+                    print('[-] we cannot find command injection')
+        except Exception as e:
+                    print(f"url_data: {e}")
   
-  
-        # try:        
-        #     await run_gobustersensitive(baseURL,project_name,user)
-        #     print("baseURLsensitive",baseURL)
-        #     await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
-        # except Exception as e:
-        #     print(f"run_gobustersensitive: {e}")
+        try:        
+            await run_gobustersensitive(baseURL,project_name,user)
+            print("baseURLsensitive",baseURL)
+            await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
+        except Exception as e:
+            print(f"run_gobustersensitive: {e}")
                 
 
         # mycursor = mydb.cursor()
@@ -2561,8 +2583,8 @@ async def crawl_endpoint():
         # select_att_ID_sql_DATA = mycursor.fetchall()
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -2699,8 +2721,8 @@ async def refreshData():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -2786,7 +2808,7 @@ async def refreshData():
 
         
         mycursor = mydb.cursor()
-        queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s"
+        queryServer = "SELECT URL,res_header,PID,URL_ID FROM urllist WHERE PID = %s AND status_code != 404"
         mycursor.execute(queryServer, (project_name_id,))
         Server = mycursor.fetchall()
         try:   
@@ -2797,7 +2819,7 @@ async def refreshData():
              await check_cookie_attributes(Server)
         except Exception as e:
                     print(f"check_cookie_attributes: {e}")
-        querypathtraversal = "SELECT URL,req_header,PID,URL_ID FROM urllist WHERE PID = %s"
+        querypathtraversal = "SELECT URL,req_header,PID,URL_ID FROM urllist WHERE PID = %s AND status_code != 404"
         mycursor.execute(querypathtraversal, (project_name_id,))
         pathtraversal = mycursor.fetchall()
 
@@ -2807,7 +2829,7 @@ async def refreshData():
                     print(f"await detect_pathtraversal(pathtraversal): {e}")
 
 
-        queryPTarget = "SELECT URL,res_header,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s"
+        queryPTarget = "SELECT URL,res_header,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
         mycursor.execute(queryPTarget, (project_name_id,scope_url))
         PTarget = mycursor.fetchall()
         print("PTarget", PTarget[0][1])
@@ -2818,8 +2840,8 @@ async def refreshData():
             print(f"await webFramework(PTarget): {e}")
 
 
-        queryPTargethtml = "SELECT URL,res_body,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s"
-        mycursor.execute(queryPTargethtml, (project_name_id,scope_url))
+        queryPTargethtml = "SELECT URL,res_body,PID,URL_ID  FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
+        mycursor.execute(queryPTargethtml, (project_name_id,scope_url,))
         PTarget = mycursor.fetchall()
         
         try:       
@@ -2841,8 +2863,8 @@ async def refreshData():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -2999,121 +3021,123 @@ async def refreshData():
         queryURL_data = "SELECT URL , method,req_body,URI FROM urllist WHERE PID = %s"
         mycursor.execute(queryURL_data, (project_name_id,))
         URL_data = mycursor.fetchall()
-        for url_data in URL_data:
-            baseatt_URL = url_data[0]
-            uri = url_data[3]
-            print(f'baseatt_URL',baseatt_URL)
-            print(f'uri',uri)
-            select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s "
-            mycursor.execute(select_url_id_query, (project_name_id,baseatt_URL))
-            select_url_id = mycursor.fetchall()
-            select_url_id_data = select_url_id[0]
-            print(f'select_url_id crawl',select_url_id)
-            Host = urlparse(baseatt_URL).netloc
-            cookies_data_ = {}
-            baseper = len((await get_response(baseatt_URL,cookies_data)).content)
-            print('b:'+str(baseper))
-            # print(baseatt_URL)
-            print(urlparse(baseatt_URL))
-            att_url = urlparse(baseatt_URL).scheme+'://'+urlparse(baseatt_URL).netloc+urlparse(baseatt_URL).path
-            att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-            #parse full query to dictionary
+        try:
+            for url_data in URL_data:
+                baseatt_URL = url_data[0]
+                uri = url_data[3]
+                print(f'baseatt_URL',baseatt_URL)
+                print(f'uri',uri)
+                select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s "
+                mycursor.execute(select_url_id_query, (project_name_id,baseatt_URL))
+                select_url_id = mycursor.fetchall()
+                select_url_id_data = select_url_id[0]
+                print(f'select_url_id crawl',select_url_id)
+                Host = urlparse(baseatt_URL).netloc
+                cookies_data_ = {}
+                baseper = len((await get_response(baseatt_URL,cookies_data)).content)
+                print('b:'+str(baseper))
+                # print(baseatt_URL)
+                print(urlparse(baseatt_URL))
+                att_url = urlparse(baseatt_URL).scheme+'://'+urlparse(baseatt_URL).netloc+urlparse(baseatt_URL).path
+                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                #parse full query to dictionary
 
 
-            if urlparse(baseatt_URL).query != '' :
+                if urlparse(baseatt_URL).query != '' :
+                        att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                        att_params={}
+                        #parse full query to dictionary
+                        for i in urlparse(baseatt_URL).query.split('&'):
+                            #params=value
+                            # print(i)
+                            att_paramsname = []
+                            att_paramsname.append(i.split('=')[0])
+                            att_params.update({i.split('=')[0]: i.split('=')[1]})
+                        try:
+                            await brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
+
+                            # await brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
+                        except Exception as e:
+                            print(f"brutesql: {e}")
+                # # print(vresults)
+                # # all_results.extend(vresults)
+                # # for vres, vparams in vresults:
+                # #     print(vres)
+                # #     print(vparams)           
+                # else:
+                #     print('we cannot find sql injection')
+
+                if urlparse(baseatt_URL).query != '' :
                     att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                    att_params={}
-                    #parse full query to dictionary
-                    for i in urlparse(baseatt_URL).query.split('&'):
-                        #params=value
-                        # print(i)
-                        att_paramsname = []
-                        att_paramsname.append(i.split('=')[0])
-                        att_params.update({i.split('=')[0]: i.split('=')[1]})
-                    try:
-                        await brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-
-                        # await brutesql(att_url, att_params, baseper,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                    except Exception as e:
-                        print(f"brutesql: {e}")
-            # # print(vresults)
-            # # all_results.extend(vresults)
-            # # for vres, vparams in vresults:
-            # #     print(vres)
-            # #     print(vparams)           
-            # else:
-            #     print('we cannot find sql injection')
-
-            if urlparse(baseatt_URL).query != '' :
-                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
-                att_paramsname = []
-                #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                    att_paramsname.append(i.split('=')[0])
-                # print(att_url)
-                print("project_name",project_name)
-                try: 
-                    await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                except Exception as e:
-                    print(f"brutexss: {e}")
-                # if vres and vparams != None:
-                #     print(vres)
-                #     print(vparams)
-            else:
-                print('we cannot find xss injection in this way')
-
-
-            if urlparse(baseatt_URL).query != '' :
-                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
-                att_paramsname = []
-                #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                    att_paramsname.append(i.split('=')[0])
-                # print(att_url)
-                print("project_name",project_name) 
-                try:   
-                    await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                except Exception as e:
-                    print(f"brutepathtraversal: {e}")
-                                    # if vres and vparams != None:
-                #     print(vres)
-                #     print(vparams)
-            else:
-                print('[-] we cannot find path traversal')
-
-
-            if url_data[1] == 'POST':
-                print("url_data[0] POST",url_data[1])
-                if url_data[2] != None :
-                    att_paramsnum = len(url_data[2].split('&'))
                     att_params={}
                     att_paramsname = []
                     #parse full query to dictionary
-                    for i in url_data[2].split('&'):
+                    for i in urlparse(baseatt_URL).query.split('&'):
                         #params=value
                         # print(i)
                         att_params.update({i.split('=')[0]: i.split('=')[1]})
                         att_paramsname.append(i.split('=')[0])
                     # print(att_url)
-                    try:      
-                        await brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,url_data[2],uri)
+                    print("project_name",project_name)
+                    try: 
+                        await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
                     except Exception as e:
-                        print(f"brutepathtraversal: {e}")
+                        print(f"brutexss: {e}")
                     # if vres and vparams != None:
                     #     print(vres)
                     #     print(vparams)
-            else:
-                print('[-] we cannot find command injection')
-  
-  
+                else:
+                    print('we cannot find xss injection in this way')
+
+
+                if urlparse(baseatt_URL).query != '' :
+                    att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
+                    att_params={}
+                    att_paramsname = []
+                    #parse full query to dictionary
+                    for i in urlparse(baseatt_URL).query.split('&'):
+                        #params=value
+                        # print(i)
+                        att_params.update({i.split('=')[0]: i.split('=')[1]})
+                        att_paramsname.append(i.split('=')[0])
+                    # print(att_url)
+                    print("project_name",project_name) 
+                    try:   
+                        await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
+                    except Exception as e:
+                        print(f"brutepathtraversal: {e}")
+                                        # if vres and vparams != None:
+                    #     print(vres)
+                    #     print(vparams)
+                else:
+                    print('[-] we cannot find path traversal')
+
+
+                if url_data[1] == 'POST':
+                    print("url_data[0] POST",url_data[1])
+                    if url_data[2] != None :
+                        att_paramsnum = len(url_data[2].split('&'))
+                        att_params={}
+                        att_paramsname = []
+                        #parse full query to dictionary
+                        for i in url_data[2].split('&'):
+                            #params=value
+                            # print(i)
+                            att_params.update({i.split('=')[0]: i.split('=')[1]})
+                            att_paramsname.append(i.split('=')[0])
+                        # print(att_url)
+                        try:      
+                            await brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,url_data[2],uri)
+                        except Exception as e:
+                            print(f"brutepathtraversal: {e}")
+                        # if vres and vparams != None:
+                        #     print(vres)
+                        #     print(vparams)
+                else:
+                    print('[-] we cannot find command injection')
+    
+        except Exception as e:
+                                print(f"url_id: {e}")
         try:        
             await run_gobustersensitive(baseURL,project_name,user)
             print("baseURLsensitive",baseURL)
@@ -3124,8 +3148,8 @@ async def refreshData():
              
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -3259,8 +3283,8 @@ def savee():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -3296,6 +3320,8 @@ def savee():
     except Exception as e:
         return jsonify({"server error": str(e)})
 
+
+
 @app.route("/home", methods=['GET'])
 def home():
     try:
@@ -3308,8 +3334,8 @@ def home():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -3363,6 +3389,89 @@ def home():
         print(e)
         return jsonify({"server error": str(e)})
 
+        
+# @app.route("/home", methods=['GET'])
+# def home():
+#     try:
+#         user_data = None
+#         token = request.headers.get('Authorization').split(' ')[1]
+#         if token is None:
+#             return jsonify({'error': 'Token is missing'}), 403        
+#         user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
+#         user_data = user.get('username', None)
+
+#         mydb = mysql.connector.connect(
+#                     user='root',
+#                    password='',
+#                     host= 'localhost',
+#                     database='robo'
+#                 )
+#         mycursor = mydb.cursor()
+#         query = "SELECT PName, PTarget, PDes, timeproject, EndTime ,PID FROM project WHERE username = %s"
+#         mycursor.execute(query, (user_data,))
+#         project_data = mycursor.fetchall()
+
+#         combined_data = []
+
+#         # for project_item in project_data:
+   
+#         #     image_data = project_item[5]
+#         #     if image_data is not None:
+#         #         base64_image = base64.b64encode(image_data).decode('utf-8')
+#         #     else:
+#         #         base64_image = None
+            
+   
+#         #     combined_item = list(project_item)
+#         #     combined_item[5] = base64_image
+#         #     combined_data.append(combined_item)
+
+
+#         # ดึงข้อมูล owasp_data2
+#         owasp_query2 = """
+#             SELECT project.PName, project.PTarget, project.PDes, project.timeproject , project.EndTime , project.PID, att_ps.Severity 
+#             FROM att_ps
+#             JOIN project ON att_ps.PID = project.PID
+#             JOIN urllist ON att_ps.URL_ID = urllist.URL_ID
+#             JOIN user ON project.username = user.username
+#             JOIN owasp ON owasp.PID = project.PID AND owasp.Vul_name = att_ps.Vul_name
+#             WHERE att_ps.state = %s AND user.username = %s
+#         """
+#         mycursor.execute(owasp_query2, ('T', user_data,))
+#         owasp_data2 = mycursor.fetchall()
+
+    
+#         combined_data = []
+#         for project_item in project_data:
+#             combined_item = list(project_item)  
+#             combined_item.extend([0, 0, 0, 0])  
+#             combined_data.append(combined_item)
+
+      
+#         for owasp_item in owasp_data2:
+#             pid = owasp_item[6]  
+#             for combined_item in combined_data:
+#                 if combined_item[6] == pid:  
+                  
+#                     severity = owasp_item[7]
+#                     if severity == 'Critical':
+#                         combined_item[7] += 1
+#                     elif severity == 'High':
+#                         combined_item[8] += 1
+#                     elif severity == 'Medium':
+#                         combined_item[9] += 1
+#                     elif severity == 'Low':
+#                         combined_item[10] += 1    
+      
+#                 if owasp_item[5] is not None:                                    
+#                     base64_image = base64.b64encode(owasp_item[5]).decode('utf-8')
+                                    
+#                     combined_item.append(base64_image)
+#                 else:
+#                     combined_item.append(None)
+#         return jsonify({"project_data": combined_data})
+#     except Exception as e:
+#         return jsonify({"server error": str(e)})
 # @app.route("/DashboardAll", methods=['GET'])
 # def DashboardAll():
 #     try:
@@ -3433,8 +3542,8 @@ async def dashboard():
         project_name_id = request.args.get('project_name_id')
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
 
@@ -4093,8 +4202,8 @@ def check():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -4119,8 +4228,8 @@ async def addurls():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -4212,8 +4321,8 @@ async def addurls():
 
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -4338,8 +4447,8 @@ async def addurls():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -4699,8 +4808,8 @@ def addIssue():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -4777,8 +4886,8 @@ def addIssueAll():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -4843,8 +4952,8 @@ def addIssueedit():
     try:
         mydb = mysql.connector.connect(
                     user='root',
-                   password='1234',
-                    host= 'mysql-server',
+                   password='',
+                    host= 'localhost',
                     database='robo'
                 )
 
@@ -4966,8 +5075,8 @@ async def addurlsedit():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -5424,8 +5533,8 @@ def update():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -5466,8 +5575,8 @@ def updateSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -5512,8 +5621,8 @@ def updateSeverityURL():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -5557,8 +5666,8 @@ def editupdateSeverityURL():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -5594,8 +5703,8 @@ def updateeditSeverityupdateSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -5641,8 +5750,8 @@ async def onedata():
 
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -5662,8 +5771,8 @@ async def onedata():
 
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
     
@@ -5698,8 +5807,8 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
 
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -5974,8 +6083,8 @@ def edit_issue():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6188,8 +6297,8 @@ def onedelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6226,8 +6335,8 @@ def oneurlsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6275,8 +6384,8 @@ def oneVulsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6325,8 +6434,8 @@ def EditoneVulsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6378,8 +6487,8 @@ def oneSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6422,8 +6531,8 @@ def edit_oneSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6567,8 +6676,8 @@ def payload():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6597,8 +6706,8 @@ def payload2():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6632,8 +6741,8 @@ def payload3():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6670,8 +6779,8 @@ def payload4():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6700,8 +6809,8 @@ def delete_payload():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6773,8 +6882,8 @@ def generate_link():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6818,8 +6927,8 @@ def edit_project():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -6923,8 +7032,8 @@ def edit_Dashboard():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
@@ -7586,8 +7695,8 @@ def edit_issueoneurlsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='1234',
-            host= 'mysql-server',
+           password='',
+            host= 'localhost',
             database='robo'
         )
 
