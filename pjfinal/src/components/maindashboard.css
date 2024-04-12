@@ -60,7 +60,7 @@ text-overflow: ellipsis;
 line-break: anywhere;
 }
 
-.severitybutton-control{
+/* .severitybutton-control{
   display: flex;
 }
 .severitybutton-c{
@@ -101,4 +101,4 @@ line-break: anywhere;
   background-color: #6F77B1;
   margin-left:20px;
   color: white;
-}
+} */

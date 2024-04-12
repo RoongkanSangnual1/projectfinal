@@ -4,6 +4,9 @@ import { Card,theme,Collapse,ConfigProvider,Button,Select,Form} from 'antd';
 import { PlusOutlined,RightOutlined,CloseOutlined,FormOutlined } from '@ant-design/icons';
 import { Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import "./home.css"
+import ClipLoader  from "react-spinners/ClipLoader";
+import Navbar from "./navbar";
 import { useState,useEffect } from "react";
 import Swal from 'sweetalert2'
 import { IoMdTime } from "react-icons/io";
@@ -119,142 +122,164 @@ const Home = () => {
           setProjectData([...sortedProjectData]); 
         }
       }
-
-    return (
-      <div className="mainDash">
-<Card
-  title="My Project"
-  extra={
-    <>
-<Form onFinish={ShowFormsummit} labelCol={{ span: 10 }}>
-  <Form.Item label="" name="">
-    <Select
-      value={vesion}
-      onChange={(value) => {
-        setvesion(value);
-        ShowFormsummit(value); 
-      }}
-      placeholder={"Latest"}
-      options={[
-        { value: '2', label: 'Latest' },
-        { value: '1', label: 'Oldest' },
-      ]}
-    />
-  </Form.Item>
-</Form>
-      <Link to="/create">
-        <Button type="primary" icon={<PlusOutlined />}>
-          Add to create
-        </Button>
-      </Link>
-    </>
-  }
->          {projectdata && projectdata.map((project, index) => (
-            <div className="projindash">
-              <Collapse
-                collapsible="header"
-                size="small"
-                defaultActiveKey={['1']}
-                expandIconPosition="start"
-                expandIcon={({ isActive }) => 
-                <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} 
-                style={{
-                  fontSize: '16px',
-                  position: 'absolute',
-                  top: '50%', // Position the icon at the vertical center
-                  transform: 'translateY(-50%)', // Adjust for half of its height}}  />} //, marginTop: '80px' 
-                  }}
-                />
-                } 
-                items={[
-                  {
-                    key: { index },
-                    label: (
-                      <div className="projcollaspe-head">
-                        <h3 className="projname">
-                          Project name: {project[0]}
-                          <pre style={{ color: "grey" }}>
-                            {project[1]} <br/>
-                            {project[3] === project[4] ? (
-                              <p style={{ color: "red" }}>crawl...</p>
-                            ) : (
-                              <>
-                                Start: ({project[3]}) <br/>
-                                Complete: ({project[4]})
-                                <br/>
-                                {(() => {
-                                    const startDate = new Date(project[3]);
-                                    const endDate = new Date(project[4]);
-                                    const timeDifference = endDate.getTime() - startDate.getTime();
-                                    const seconds = Math.floor(timeDifference / 1000);
-                                    const minutes = Math.floor(seconds / 60);
-                                    const hours = Math.floor(minutes / 60);
-                                    const remainingMinutes = minutes % 60;
-                                    const remainingSeconds = seconds % 60;
-                                    const timeText = `Time : ${hours} hours: ${remainingMinutes} minutes: ${remainingSeconds} seconds`;
-                                    return (
-                                      <div>
-                                      <IoMdTime style={{ fontSize: "20px", color:"#1b317e"}} />  {timeText}
-                                      </div>
-                                    );
-                                  })()}
-                                  <div className="severitybutton-control">
-                                    <div className="severitybutton-c"> {project[6]}</div>
-                                    <div className="severitybutton-h"> {project[7]}</div>
-                                    <div className="severitybutton-m"> {project[8]}</div>
-                                    <div className="severitybutton-l"> {project[9]}</div>
-                                  </div>
-                                  
-                              </>
-                            )}
-                          </pre>
-                        </h3>
-                        {/* <Button type="link" icon={<CloseOutlined className="close-button" style={{ fontSize: '15px', color: 'red' }} onClick={() => Deleteprojuct(project[2])} />} /> */}
-                      </div>
-                    ),
-                    children: (
-                      <div>
-                        <Link style={{ textAlign: "center" }} className="projedit-btn" to={`/myproject/${project[0]}/${project[5]}`}>
-                          <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <div className="projcollaspe-content">
-                              <p className="projdes" style={{ fontSize: '15px', color: 'grey', marginTop: '0px', whiteSpace: 'pre-line', maxWidth: '1000px' }}>{project[2]}</p>
-                            </div>
-                            <Link to={`/myproject/edit/${project[0]}/${project[5]}`} className="projedit-btn" style={{ marginLeft: '650px' }}>
-                              <FormOutlined style={{ fontSize: '15px', color: 'grey' }} />
-                            </Link>
-                          </div>
-                        </Link>
-                      </div>
-                    ),
-                    extra: 
-                    <Button type="link" 
+      return (
+        <div className="Home">
+          <Card
+            className="CardContainer"
+            title="My Project"
+            extra={
+              <>
+                <Form onFinish={ShowFormsummit} labelCol={{ span: 10 }}>
+                  <Form.Item label="" name="">
+                    <Select
+                      value={vesion}
+                      onChange={(value) => {
+                        setvesion(value);
+                        ShowFormsummit(value); 
+                      }}
+                      placeholder={"Latest"}
+                      options={[
+                        { value: '2', label: 'Latest' },
+                        { value: '1', label: 'Oldest' },
+                      ]}
+                    />
+                  </Form.Item>
+                </Form>
+                <div className="Link-container">
+                <Link to="/create">
+                  <Button type="primary" icon={<PlusOutlined />}>
+                    Add to create
+                  </Button>
+                </Link>
+                </div>
+              </>
+            }
+          >
+            <div className="card-container">
+              {projectdata.map((project, index) => (
+                // <Link
+                                        
+                //   to={`/myproject/${project[0]assword=''}/${project[5]}`}
+                // >
+                  <div className="project-item">
+                    <div className="CloseOutlined-button">
+                    
+                    <Button
+                      type="link"
                       icon={
-                      <CloseOutlined className="close-button" 
-                      style={{ 
-                        fontSize: '15px',
-                        color: 'red',
-                        position: 'absolute',
-                        right: '10px',
-                        top: '50%', // Position the button at the vertical center
-                        transform: 'translateY(-50%)', // Adjust for half of its height
-                        
-                      }} 
-                      onClick={() => Deleteprojuct(project[5])} 
-                      />
+                        <CloseOutlined
+                          className="CloseOutlined-button"
+                          style={{
+                            fontSize: '25px',
+                            color: 'red',
+                          
+                          }}
+                          onClick={() => Deleteprojuct(project[5])}
+                        />
+                      
                       }
-                    />,
-                  },
-                ]}
+                    />
+                      </div>
+                      <Link
+                                        
+                                        to={`/myproject/${project[0]}/${project[5]}`}
+                              >
+                    {/* <h1
+                      src={`data:image/jpeg;base64,${project[5]}`}
+                      alt={`${project[1]}`} className="card-img"
+                    />
+                     */}
+          
+                     <h1>
+                      {project[1]}
+                     </h1>
+             
+                     </Link>
+                     <div className="edit-button">
+                     <Link to={`/myproject/edit/${project[0]}/${project[5]}`} >
+                        <FormOutlined style={{ fontSize: '25px', color: 'grey'}}/>
+                      </Link>
+                      </div>
+                      <div className="project-details">
+                      <h3>Project Name: {project[0].slice(0,30)}</h3>
+                      {/* <p>URLs: <a href={project[1]}>{project[1]}</a></p> */}
+                      <p>Description: {project[2].slice(0, 30)}</p>
+                      {project[3] === project[4] ? (
+                       <p style={{ color: "red", position: "relative" }}>
+                       <ClipLoader 
+                         color={"#white"}
+                         size={30}
+                         aria-label="Loading Spinner"
+                         data-testid="loader"
+                       />
+                  
+                         Scanning 
+                     </p>
+                      ) : (
+                        <>
+                          <p>Start: ({project[3]})</p>
+                          <p>Complete: ({project[4]})</p>
+                          {(() => {
+                            const startDate = new Date(project[3]);
+                            const endDate = new Date(project[4]);
+                            const timeDifference = endDate.getTime() - startDate.getTime();
+                            const seconds = Math.floor(timeDifference / 1000);
+                            const minutes = Math.floor(seconds / 60);
+                            const hours = Math.floor(minutes / 60);
+                            const remainingMinutes = minutes % 60;
+                            const remainingSeconds = seconds % 60;
+                            const timeText = `Time : ${hours} hours: ${remainingMinutes} minutes: ${remainingSeconds} seconds`;
+                            return (
+                              <div>
+                               <p>  <IoMdTime style={{ fontSize: "20px", color:"#1b317e"}} /> {timeText}</p>
+                              </div>
+                            );
+                          })()}
+                           <div className="severitybutton-control">
+                                    <div className="severitybutton-c"> 
+                                    <p>
+                                    {project[6]} 
+                                    </p>
+                                    </div>
+                                    <div className="severitybutton-h"> 
+                                    <p>
+                                    {project[7]} 
+                                    </p>
+                                    </div>
+                                    <div className="severitybutton-m">
+                                    <p>
+                                    {project[8]} 
+                                    </p>
+                                       </div>
+                                    <div className="severitybutton-l"> 
+                                    <p>
+                                    {project[9]} 
+                                    </p>
+                                    </div>
+                                  </div>
 
-                >
-
-                </Collapse>
+                        </>
+                      )}
+                    </div>
+                  </div>
+               
+              ))}
+              <div className="project-item2">
+                <Link to="/create">
+                  <PlusOutlined style={{marginTop:'150px',fontSize:"40px"}} />
+                  <h1>
+                  Create
+                  </h1>
                 
+                </Link>
+              </div>
             </div>
-          ))}
-        </Card>
-      </div>
-    );
+          </Card>
+        </div>
+      );
+      
+      
+      
               }
 
 export default Home;
