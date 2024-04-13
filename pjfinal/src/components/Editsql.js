@@ -75,12 +75,14 @@ const SQlinject = (props) => {
     const user = localStorage.user;
     const location = useLocation();
     const tokenuser = localStorage.getItem("token");
-    const token = new URLSearchParams(location.search).get('token');
+    const token = new URLSearchParams(location.search).get('Share');
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+        const response = await axios.get(`http://127.0.0.1:5000/edit-issue?Share=${token}`, {
           headers: {
-            'Authorization': `Bearer ${tokenuser}`
+            'Authorization': `Bearer ${tokenuser}`,
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json'
           }
         })
 
@@ -365,13 +367,37 @@ setresponsedata3(responsedata2)
       fetchData();
     }, [project_name_id]);
   
+    function isURL(input) {
+      const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+      return urlRegex.test(input);
+    }
+    
+
+    
+
     const Formsummit = async () => {
+        if (!isURL(urls)) {
+      return Swal.fire({
+        title: "url Error",
+        text: "url Error",
+        icon: "error",
+      });
+  }
+  if (!EVIDENCE.trim()) {
+    Swal.fire({
+      title: "EVIDENCE",
+      text: "Please enter EVIDENCE",
+      icon: "error",
+    });
+  } 
       try {
         await         axios
         .post(`http://127.0.0.1:5000/addIssueedit`,{urls,EVIDENCE,Risk,Recommendation,OID,token},
         {
           headers:{
               Authorization: `Bearer ${tokenuser}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
           },
 
       })
@@ -513,6 +539,8 @@ setresponsedata3(responsedata2)
           {
             headers: {
               Authorization:`Bearer ${tokenuser}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
             },
           }
         );
@@ -559,6 +587,8 @@ setresponsedata3(responsedata2)
             await    axios.delete(`http://127.0.0.1:5000/EditoneVulsdelete?project_name_id=${token}&record=${iddelete}`,{
               headers:{
                 Authorization:`Bearer ${tokenuser}`,
+                'Access-Control-Allow-Origin' : '*',
+                'Content-Type': 'application/json'
               },
             });
             await fetchData();

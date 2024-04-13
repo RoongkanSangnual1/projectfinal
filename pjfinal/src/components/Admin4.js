@@ -138,7 +138,8 @@ const Formsummit2 = () => {
             .post(`http://127.0.0.1:5000/payload4`, {Owasp},{
                 headers: {
                     Authorization:`Bearer ${token}`,
-                  "Content-Type": "application/json",
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
                 },})
             .then(response => {
                 console.log(response.data.Owasp_payloadlist)

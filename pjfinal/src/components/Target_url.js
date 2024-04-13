@@ -45,7 +45,7 @@ const Target_url = () => {
             console.log(res);
             setLoad(false);
             setLoadingButton(false);
-            setProject_name_id(res.data.project_name_id_result);
+            setProject_name_id(res.data.project_name_id_result[0][0]);
     
             if (res.data.Change) {
                 console.log(res.data.Change.length);

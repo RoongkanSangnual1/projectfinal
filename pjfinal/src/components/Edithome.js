@@ -28,6 +28,8 @@ const Edithome = () => {
         axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
             headers:{
                 Authorization: `Bearer ${token}`,
+                'Access-Control-Allow-Origin' : '*',
+                'Content-Type': 'application/json'
             },
 
         })
@@ -55,6 +57,8 @@ const Edithome = () => {
         axios.put(`http://127.0.0.1:5000/update`, { project_name, authUser, url, description,project_name_id },{
             headers:{
               Authorization:`Bearer ${token}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
             },
           })
             .then(res => {

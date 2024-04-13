@@ -1,4 +1,6 @@
 .App {
+  display: flex;
+  flex-direction: column;
   text-align: center;
 }
 
@@ -12,8 +14,8 @@
   order: 1; 
 }
 
-.Home {
+/* .Home {
   margin-right: 20px;
   margin-top: 50px;
   order: 2; 
-}
+} */

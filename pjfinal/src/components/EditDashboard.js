@@ -167,7 +167,7 @@ const EditDashboard = (props) => {
 
   const location = useLocation();
   const tokenuser= localStorage.getItem('token');
-  const token = new URLSearchParams(location.search).get('token')
+  const token = new URLSearchParams(location.search).get('Share')
 
 
 
@@ -179,9 +179,11 @@ const EditDashboard = (props) => {
           const fetchData = async () => {
             try {
         
-                const response = await axios.get(`http://127.0.0.1:5000/edit-Dashboard?token=${token}`, {
+                const response = await axios.get(`http://127.0.0.1:5000/edit-Dashboard?Share=${token}`, {
                   headers: {
                     Authorization: `Bearer ${tokenuser}`,
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
                   },
                 });
              
@@ -795,6 +797,8 @@ const sendSeverityToAPI = async (vulnerability, newSeverity) => {
           {
             headers: {
               Authorization: `Bearer ${tokenuser}`,
+              'Access-Control-Allow-Origin' : '*',
+              'Content-Type': 'application/json'
             },
           }
         )
@@ -821,6 +825,9 @@ const handleDelete = async (iddelete) => {
       axios.delete(`http://127.0.0.1:5000/edit_oneSeverity?project_name_id=${token}&record=${iddelete}`,{
                   headers:{
                     Authorization:`Bearer ${tokenuser}`,
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json'
+                    
                   },
                 })
 
@@ -856,7 +863,6 @@ const handleSeverityChange = (e, index, vulnerability) => {
   newUpdatedSeverities[index] = e.target.value;
   setUpdatedSeverities(newUpdatedSeverities);
 };
-
 
 
 return (
@@ -954,10 +960,12 @@ return (
   <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '10px 10px 0 0', padding: '5px 10px', fontSize: '16px' }}> Scan All URL :<h1 style={{ fontSize: '16px', color:"#1b317e"}}>{urlsAll}</h1> </h2>
   <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>All Vulnerabilities:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {totalC}</h1></h2>
   <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Start Time: <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{start}</h1></h2>
-  <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Finish Time: <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{end}</h1></h2>
-  <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '0 0 10px 10px', padding: '5px 10px', fontSize: '16px' }}>Total Time:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {time}</h1></h2>
+  <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Finish Time:{start!==end&&(
+       <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{end}</h1>
+    )}</h2>
+      <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '0 0 10px 10px', padding: '5px 10px', fontSize: '16px' }}>Total Time:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {time}</h1></h2>
 </div>
-<div style={{ width: '100%', height: '400px', position: 'relative',marginTop: '300px' }}>
+<div style={{ width: '100%', height: '400px', position: 'relative',marginTop: '600px' }}>
 <ResponsiveContainer width={1470} height={400}>
     <BarChart data={transformedData} style={{ fontSize: "12px" }}>
   <CartesianGrid strokeDasharray="3 3" />
@@ -1021,7 +1029,7 @@ return (
 </div>
 );
 
-  
-                        }
+                      }
+
 
 export default EditDashboard;

@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./pjfinal
+    container_name: robo-frontend_c
+    ports:
+      - "3000:3000"
+    networks:
+      - robo-network
+    stdin_open: true
+    tty: true
+  backend_node:
+    build: ./server
+    container_name: robo-backend_node_c
+    environment:
+      - BACKEND_URL=db
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - robo-network
+    stdin_open: true
+    tty: true
+  backend_flask:
+    build: './server-flask'
+    ports:
+      - '5000:5000'
+    container_name: robo-backend_flask_c
+    # environment:
+    #   - BACKEND_URL=db
+    depends_on:
+      - db
+    networks:
+      - robo-network
+    stdin_open: true
+    tty: true
+  db:
+      container_name: db
+      # command: --default-authentication-plugin=mysql_native_password
+      image: mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: '1234'
+        # MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        MYSQL_DATABASE: robo
+        
+      ports:
+        - "3306:3306"
+      networks:
+      - robo-network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - robo-network
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+  
+networks:
+  robo-network:
+    driver: bridge

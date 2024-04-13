@@ -40,8 +40,10 @@ const URLlist = (props) => {
       });
   
       console.log(response);
-  
-      setDelete(response.data[5].Role);
+  if(response.data[5]){
+    setDelete(response.data[5].Role);
+  }
+
       seturl_target(response.data[1].url_target[0][0]);
       setDetails(response.data[1].url_target[0][1]);
       setUrlsAll(response.data[0].crawl_data.length)

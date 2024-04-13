@@ -1,123 +1,65 @@
-        db = mysql.connection.cursor()
-        queryURL_data = "SELECT URL , method,req_body , URI FROM urllist WHERE PID = %s AND status_code != 404"
-        db.execute(queryURL_data, (project_name_id_result))
-        URL_data = db.fetchall()
-        for url_data in URL_data:
-            baseatt_URL = url_data[0]
-            uri = url_data[3]
-            print(f'baseatt_URL',baseatt_URL)
-            print(f'uri',uri)
-            select_url_id_query = "SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s AND status_code != 404"
-            db.execute(select_url_id_query, (project_name_id_result,baseatt_URL))
-            select_url_id = db.fetchall()
-            select_url_id_data = select_url_id[0]
-            print(f'select_url_id crawl',select_url_id)
-            Host = urlparse(baseatt_URL).netloc
-            cookies_data_ = {}
-            baseper = len((await get_response(baseatt_URL,cookies_data)).content)
-            print('b:'+str(baseper))
-            # print(baseatt_URL)
-            print(urlparse(baseatt_URL))
-            att_url = urlparse(baseatt_URL).scheme+'://'+urlparse(baseatt_URL).netloc+urlparse(baseatt_URL).path
-            att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-            #parse full query to dictionary
+@app.route("/home", methods=['GET'])
+def home():
+    try:
+        user_data = None
+        token = request.headers.get('Authorization').split(' ')[1]
+        if token is None:
+            return jsonify({'error': 'Token is missing'}), 403        
+        user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
 
+        mydb = mysql.connector.connect(
+                    user='root',
+                   password='',
+                    host= 'localhost',
+                    database='robo'
+                )
+        mycursor = mydb.cursor()
+        query = "SELECT PName, PTarget, PDes, timeproject, EndTime, PID, image FROM project WHERE username = %s"
+        mycursor.execute(query, (user_data,))
+        project_data = mycursor.fetchall()
 
-            if urlparse(baseatt_URL).query != '' :
-                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
-                #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                # print("project_name",project_name)
-                try:
-                    await brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                except Exception as e:
-                    print(f"brutesql: {e}")
-            # # print(vresults)
-            # # all_results.extend(vresults)
-            # # for vres, vparams in vresults:
-            # #     print(vres)
-            # #     print(vparams)           
-            # else:
-            #     print('we cannot find sql injection')
+        owasp_query2 = """
+            SELECT project.PName, project.PTarget, project.PDes, project.timeproject, project.EndTime, project.PID, att_ps.Severity, project.image
+            FROM att_ps
+            JOIN project ON att_ps.PID = project.PID
+            JOIN urllist ON att_ps.URL_ID = urllist.URL_ID
+            JOIN user ON project.username = user.username
+            JOIN owasp ON owasp.PID = project.PID AND owasp.Vul_name = att_ps.Vul_name
+            WHERE att_ps.state = %s AND user.username = %s
+        """
+        mycursor.execute(owasp_query2, ('T', user_data,))
+        owasp_data2 = mycursor.fetchall()
 
-            if urlparse(baseatt_URL).query != '' :
-                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
-                att_paramsname = []
-                #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                    att_paramsname.append(i.split('=')[0])
-                # print(att_url)
-                print("project_name",project_name)
-                try: 
-                    await brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                except Exception as e:
-                    print(f"brutexss: {e}")
-                # if vres and vparams != None:
-                #     print(vres)
-                #     print(vparams)
-            else:
-                print('we cannot find xss injection in this way')
+        combined_data = []
+        for project_item in project_data:
+            combined_item = list(project_item)  
+            combined_item.extend([0, 0, 0, 0])  
+            combined_data.append(combined_item)
 
+        for owasp_item in owasp_data2:
+            pid = owasp_item[5]  
+            for combined_item in combined_data:
+                if combined_item[5] == pid:  
+                    severity = owasp_item[6]
+                    if severity == 'Critical':
+                        combined_item[6] += 1
+                    elif severity == 'High':
+                        combined_item[7] += 1
+                    elif severity == 'Medium':
+                        combined_item[8] += 1
+                    elif severity == 'Low':
+                        combined_item[9] += 1
 
-            if urlparse(baseatt_URL).query != '' :
-                att_paramsnum = len(urlparse(baseatt_URL).query.split('&'))
-                att_params={}
-                att_paramsname = []
-                #parse full query to dictionary
-                for i in urlparse(baseatt_URL).query.split('&'):
-                    #params=value
-                    # print(i)
-                    att_params.update({i.split('=')[0]: i.split('=')[1]})
-                    att_paramsname.append(i.split('=')[0])
-                # print(att_url)
-                print("project_name",project_name) 
-                try:   
-                    await brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,uri)
-                except Exception as e:
-                    print(f"brutepathtraversal: {e}")
-                                    # if vres and vparams != None:
-                #     print(vres)
-                #     print(vparams)
-            else:
-                print('[-] we cannot find path traversal')
-
-
-            if url_data[1] == 'POST':
-                print("url_data[0] POST",url_data[1])
-                if url_data[2] != None :
-                    att_paramsnum = len(url_data[2].split('&'))
-                    att_params={}
-                    att_paramsname = []
-                    #parse full query to dictionary
-                    for i in url_data[2].split('&'):
-                        #params=value
-                        # print(i)
-                        att_params.update({i.split('=')[0]: i.split('=')[1]})
-                        att_paramsname.append(i.split('=')[0])
-                    # print(att_url)
-                    try:      
-                        await brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_data,baseatt_URL,project_name, user,cookies_data,url_data[2],uri)
-                    except Exception as e:
-                        print(f"brutepathtraversal: {e}")
-                    # if vres and vparams != None:
-                    #     print(vres)
-                    #     print(vparams)
-            else:
-                print('[-] we cannot find command injection')
-  
-  
-        try:        
-            await run_gobustersensitive(baseURL,project_name,user)
-            print("baseURLsensitive",baseURL)
-            await checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id_result[0][0])
-        except Exception as e:
-            print(f"run_gobustersensitive: {e}")
-                
+                    # ตรวจสอบว่าข้อมูลภาพไม่ใช่ค่าว่าง
+                    if owasp_item[7] is not None:
+                        # แปลงข้อมูลภาพให้เป็น base64 string
+                        base64_image = base64.b64encode(owasp_item[7]).decode('utf-8')
+                        # เพิ่ม base64 string ของภาพลงในลิสต์ข้อมูลโครงการ
+                        combined_item.append(base64_image)
+                    else:
+                        # ถ้าข้อมูลภาพเป็นค่าว่างให้ใส่ค่า None แทน
+                        combined_item.append(None)
+        return jsonify({"project_data": combined_data})
+    except Exception as e:
+        return jsonify({"server error": str(e)})

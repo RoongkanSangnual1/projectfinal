@@ -1,4 +1,5 @@
 import './App.css';
+import './components/navbar.css'
 import Home from './components/home';
 import Navbar from './components/navbar'
 import Sidemenu from './components/sidemenu';
@@ -9,7 +10,7 @@ function App() {
       <Navbar />
       <div className='Applayout'>
         {/* <Sidemenu className='Sidemenu' /> */}
-        <Home className='Home' />
+        <Home />
       </div>
     </div>
   );
