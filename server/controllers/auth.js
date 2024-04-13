@@ -171,3 +171,125 @@ function sendEmail({ recipient_email, OTP }) {
     });
   });
 }
+
+
+exports.share = async (req, res) => {
+  try {
+      const { project_name, usershare } = req.body;
+      console.log(project_name, usershare);
+
+     
+      if (!project_name || !usershare) {
+          return res.status(400).json({ error: 'Missing project_name or usershare' });
+      }
+      const FindUserQuery = 'SELECT username FROM user WHERE username = ?';
+      dbConnection.query(FindUserQuery, [usershare], async (error, userResults) => {
+        if (error) {
+          console.error('Error:', error);
+          return res.status(500).json({ error: 'Internal server error' });
+        }
+        if (userResults.length === 0) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+      
+
+    
+      const FindQuery = 'SELECT PName, username FROM project WHERE PID = ?';
+      dbConnection.query(FindQuery, [project_name], async (error, results) => {
+          if (error) {
+              console.error('Error:', error);
+              return res.status(500).json({ error: 'Internal server error' });
+          }      
+          if (results.length === 0) {
+              return res.status(404).json({ error: 'Project not found' });
+          }
+          const projectName = results[0].PName;
+          const username = results[0].username;
+      
+       
+          const FindUserQuery = 'SELECT email FROM user WHERE username = ?';
+          dbConnection.query(FindUserQuery, [usershare], async (error, userResults) => {
+              if (error) {
+                  console.error('Error:', error);
+                  return res.status(500).json({ error: 'Internal server error' });
+              }      
+              if (userResults.length === 0) {
+                  return res.status(404).json({ error: 'User not found' });
+              }
+              
+              const email = userResults[0].email;
+      
+              console.log(projectName);
+              console.log(username);
+              const tyoemail = email.toString('utf-8');
+              console.log(tyoemail);
+              payload = {'user_id': usershare, 'project_id': project_name,
+              'project_name': [[projectName]], 'username': [[username]]}
+          const token = jwt.sign(payload, 'jwtSecret', { algorithm: 'HS256' });
+          link = `http://localhost:3000/edit-project?Share=${token}`
+          console.log(link)
+          sendEmail2(tyoemail,link)
+          
+          .then((response) => res.send(response.message))
+          });
+      });
+    });
+  } catch (error) {
+      console.error('Errosssr:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
+
+
+function sendEmail2(email, link) {
+  return new Promise((resolve, reject) => {
+      var transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+              user: process.env.MY_EMAIL,
+              pass: process.env.MY_PASSWORD,
+          },
+      });
+
+      const mail_configs = {
+          from: process.env.MY_EMAIL,
+          to: email,
+          subject: "ROBOPENTESTGUIDE SHARE",
+          html: `<!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>CodePen - OTP Email Template</title>
+          </head>
+          <body>
+            <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+              <div style="margin:50px auto;width:70%;padding:20px 0">
+                <div style="border-bottom:1px solid #eee">
+                  <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">RoboPentestGuide</a>
+                </div>
+                <p style="font-size:1.1em">Hi,</p>
+                <p>Thank you for choosing RoboPentestGuide. Use the following OTP to complete your Password Recovery Procedure. OTP is valid for 5 minutes</p>
+                <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${link}</h2>
+                <p style="font-size:0.9em;">Regards,<br />RoboPentestGuide</p>
+                <hr style="border:none;border-top:1px solid #eee" />
+                <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+                  <p>RoboPentestGuide</p>
+                </div>
+              </div>
+            </div>
+          </body>
+          </html>`,
+      };
+
+      transporter.sendMail(mail_configs, function (error, info) {
+          if (error) {
+              // console.log(error);
+              return reject({ message: `An error occurred while sending email to ${email}: ${error.message}` });
+          }
+          return resolve({ message: `Email sent successfully to ${email}` });
+      });
+  });
+}
