@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
-import "./Register.css"; 
+import "./Register.css";
+import logo from "./imgsrc/robo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Input, Modal } from 'antd';
 import { useDispatch } from "react-redux";
@@ -146,111 +147,118 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <Form
-        onFinish={Formsummit}
-        labelCol={{
-          span: 10,
-        }}
-      >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your username!',
-            },
-          ]}
-        >
-          <Input type="text" className="forminput-control" value={username} onChange={(e) => setUsername(e.target.value)} />
-        </Form.Item>
-
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your password!',
-            },
-          ]}
-        >
-          <Input.Password type="password" className="forminput-control" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </Form.Item>
-
-        <Form.Item>
-          <button type="submit" value="บันทึก" className="btn">Login</button>
-        </Form.Item>
-        <a
-          href="#"
-          onClick={() => showModal()}
-          className="text-gray-800"
-        >
-          Forgot password?
-        </a>
-        <div className="LoginFooter">
-          <p>Don’t have an account yet?</p>
-          <Link to='/Register' className="nav-link">Create Account</Link>
-        </div>
+    <div className="loginpage">
+      <nav className="navlogin">
+        <Link to="/home">  <img src={logo} alt="logo" style={{ width: '60px', height: '40px' }}></img></Link> 
+        <h3>ROBOPentestGuide</h3>
+      </nav>
+      <div className="login-container">
         
-
-        <Modal
-          title="Forgot Password"
-          visible={visible}
-          onOk={navigateToOtp}
-          onCancel={handleCancel}
-        >
-          <p>Please enter your email:</p>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </Modal>
-        
-        <Modal
-          title="Enter OTP"
-          visible={otpVisible}
-          onOk={verfiyOTP}
-          onCancel={handleCancel}
-        >
-          <p>Please enter the OTP sent to your email: {email}</p>
-          <Input type="text" value={OTPemail} onChange={(e) => setOTPemail(e.target.value)} />
-        </Modal>
-
-        <Modal
-          title="Reset Password"
-          visible={resetPasswordVisible}
-          onOk={resetPassword}
-          onCancel={() => {
-            if (!newPassword && !confirmNewPassword ) {
-              handleCancel();
-            } else {
-              Swal.fire({
-                title: "Are you sure?",
-                text: "If you cancel, the changes will not be saved.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, cancel",
-                cancelButtonText: "No, continue editing",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  handleCancel();
-                }
-              });
-            }
+        <h2>Login</h2>
+        <Form
+          onFinish={Formsummit}
+          labelCol={{
+            span: 10,
           }}
         >
-          <p>Password must contain at least 1 special character (!/[@#$%^&*()_+={}[\]:;,.?~\\/]) And Password must contain at least 1 uppercase letter</p>
-          <Input.Password
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <p>Please confirm your new password:</p>
-          <Input.Password
-            value={confirmNewPassword}
-            onChange={(e) => setConfirmNewPassword(e.target.value)}
-          />
-        </Modal>
-      </Form>
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your username!',
+              },
+            ]}
+          >
+            <Input type="text" className="forminput-control" value={username} onChange={(e) => setUsername(e.target.value)} />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password!',
+              },
+            ]}
+          >
+            <Input.Password type="password" className="forminput-control" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </Form.Item>
+
+          <Form.Item>
+            <button type="submit" value="บันทึก" className="btn">Login</button>
+          </Form.Item>
+          <a
+            href="#"
+            onClick={() => showModal()}
+            className="text-gray-800"
+          >
+            Forgot password?
+          </a>
+          <div className="LoginFooter">
+            <p>Don’t have an account yet?</p>
+            <Link to='/Register' className="nav-link">Create Account</Link>
+          </div>
+          
+
+          <Modal
+            title="Forgot Password"
+            visible={visible}
+            onOk={navigateToOtp}
+            onCancel={handleCancel}
+          >
+            <p>Please enter your email:</p>
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </Modal>
+          
+          <Modal
+            title="Enter OTP"
+            visible={otpVisible}
+            onOk={verfiyOTP}
+            onCancel={handleCancel}
+          >
+            <p>Please enter the OTP sent to your email: {email}</p>
+            <Input type="text" value={OTPemail} onChange={(e) => setOTPemail(e.target.value)} />
+          </Modal>
+
+          <Modal
+            title="Reset Password"
+            visible={resetPasswordVisible}
+            onOk={resetPassword}
+            onCancel={() => {
+              if (!newPassword && !confirmNewPassword ) {
+                handleCancel();
+              } else {
+                Swal.fire({
+                  title: "Are you sure?",
+                  text: "If you cancel, the changes will not be saved.",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonText: "Yes, cancel",
+                  cancelButtonText: "No, continue editing",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    handleCancel();
+                  }
+                });
+              }
+            }}
+          >
+            <p>Password must contain at least 1 special character (!/[@#$%^&*()_+={}[\]:;,.?~\\/]) And Password must contain at least 1 uppercase letter</p>
+            <Input.Password
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <p>Please confirm your new password:</p>
+            <Input.Password
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+            />
+          </Modal>
+        </Form>
+      </div>
     </div>
   );
 };
