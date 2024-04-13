@@ -12,6 +12,7 @@ const mysql = require('mysql2');
 // module.exports = dbConnection;const mysql = require('mysql2');
 
 
+
 const dbConnection = mysql.createConnection({
   host: 'localhost',
   port: 3306,
