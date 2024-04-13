@@ -1,10 +1,6 @@
 from cmath import e
 from flask import Flask, request, jsonify ,Response
 from flask_cors import CORS
-from PIL import Image
-from selenium import webdriver
-# import chromedriver_binary
-from selenium.webdriver.chrome.options import Options
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, unquote
