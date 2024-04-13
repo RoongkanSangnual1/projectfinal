@@ -28,12 +28,12 @@ const URLlist = (props) => {
   const user = localStorage.user;
   const location = useLocation();
   const tokenuser = localStorage.getItem("token");
-  const token = new URLSearchParams(location.search).get('token');
+  const token = new URLSearchParams(location.search).get('Share');
 
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+      const response = await axios.get(`http://127.0.0.1:5000/edit-issue?Share=${token}`, {
         headers: {
           'Authorization': `Bearer ${tokenuser}`,
           'Access-Control-Allow-Origin' : '*',

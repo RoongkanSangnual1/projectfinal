@@ -51,7 +51,7 @@ const EditPrjectDash = () => {
   const [owner,setOwner]= useState("")
     const user = localStorage.getItem("user");
     const tokenuser = localStorage.getItem("token");
-    const token = new URLSearchParams(location.search).get('token');
+    const token = new URLSearchParams(location.search).get('Share');
     const [header, payload,signature] = token.split('.');
     const decodedHeader = atob(header);
     const decodedPayload = JSON.parse(atob(payload));
@@ -59,7 +59,7 @@ const EditPrjectDash = () => {
 
       const fetchData = async () => {
           try {
-            const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+            const response = await axios.get(`http://127.0.0.1:5000/edit-issue?Share=${token}`, {
               headers: {
                 'Authorization': `Bearer ${tokenuser}`,
                 'Access-Control-Allow-Origin' : '*',
