@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {register , login,tokenUser,resetpassword,email,send_recovery_email} =require('../controllers/auth')
+const {register , login,tokenUser,resetpassword,email,send_recovery_email, share} =require('../controllers/auth')
 const {auth}  =require('../middleware/auth')
 
 
@@ -12,4 +12,5 @@ router.post("/resetpassword",resetpassword)
 
 router.get("/",email)
 router.post("/send_recovery_email",send_recovery_email)
+router.post("/share",share)
 module.exports = router
