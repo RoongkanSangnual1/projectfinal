@@ -12,22 +12,22 @@ function Navbar() {
   const user = localStorage.user;
   const [isScrolled, setIsScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      if (scrollPosition > 30) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollPosition = window.scrollY;
+  //     if (scrollPosition > 30) {
+  //       setIsScrolled(true);
+  //     } else {
+  //       setIsScrolled(false);
+  //     }
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   const handleMenuClick = (e) => {
     if (e.key === '3') {
@@ -66,12 +66,13 @@ function Navbar() {
   };
 
   return (
-    <nav className={`mynavbar ${isScrolled ? 'sticky' : ''}`}>
+    <nav className="mynavbar">
+    {/* <nav className={`mynavbar ${isScrolled ? 'sticky' : ''}`}> */}
       
       <Link to="/home">  <img src={logo} alt="logo" style={{ width: '60px', height: '40px' }}></img></Link> 
       <h3>ROBOPentestGuide</h3>
 
-      <div className="userdrop">
+      <div className="userdrop" >
         <Space wrap>
           {token ? (
             <Dropdown menu={menuProps}>

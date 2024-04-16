@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios'
 import "./Register.css";
+import logo from "./imgsrc/robo.svg";
 import {  Form,Input, Select } from 'antd';
 import { Link,useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
@@ -98,6 +99,12 @@ const Register = () =>{
     };
 
     return(
+        <div>
+        <nav className="navlogin">
+        <Link to="/home">  <img src={logo} alt="logo" style={{ width: '60px', height: '40px' }}></img></Link> 
+        <h3>ROBOPentestGuide</h3>
+        </nav>
+        
         <div className="regis-container">
             <h2>Create Account</h2>
             
@@ -187,6 +194,7 @@ const Register = () =>{
             <p>Already have an account? </p><Link to='/login' className="nav-link">Login</Link>
             </div>
             
+        </div>
         </div>
     )
 }

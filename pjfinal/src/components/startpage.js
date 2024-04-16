@@ -1,16 +1,16 @@
 import React from 'react';
 import Navbar from './navbar.js';
 import { Button, Carousel } from 'antd';
-import { BugFilled, SmileFilled, FileTextFilled, ClockCircleFilled,CheckOutlined } from '@ant-design/icons';
+import { BugFilled, SmileFilled, FileTextFilled, ClockCircleFilled,CheckOutlined,WarningTwoTone } from '@ant-design/icons';
 import "./startpage.css"
 import { useNavigate} from "react-router-dom"
 import fsp1 from "./imgsrc/rm373batch4-15.jpg"
 import fsp2 from "./imgsrc/7971777_3807687.png"
 import owasplogo from "./imgsrc/owasplogo.png"
-import owasplogo2 from "./imgsrc/owasplogo-2.png"
-import robologo from "./imgsrc/logo.png"
+import robologo from "./imgsrc/robo.png"
 import robo from "./imgsrc/robo.png"
 import robowebdemo from "./imgsrc/robopentestguide-demo.png"
+
 import webscan from "./imgsrc/availability-svgrepo-com.svg"
 import radar from "./imgsrc/radar-svgrepo-com.svg"
 
@@ -18,6 +18,7 @@ const Startpage = () => {
     const navigate = useNavigate()
     return( <div>
         <Navbar />
+        <div className='spaceUp'/>
         <div className='firstSection'>
            <Carousel autoplay autoplaySpeed={10000} className='contentStyle'>
                 <div className='fs-1'>
@@ -51,8 +52,8 @@ const Startpage = () => {
                 <div className='fs-2'>
                 <img className='fs-2-image' src={fsp2}></img>
                     <div className='fs-2-t2'>
-                        <img className='fs-2-t2-d-i' src={owasplogo2} />
-                        <h1>Referring to OWASP Web Security Testing Guide for testing guidance</h1>
+                        <WarningTwoTone style={{fontSize: '100px'}}/>
+                        <h1>For ethical purposes only</h1>
                     </div>
                 </div>
                 

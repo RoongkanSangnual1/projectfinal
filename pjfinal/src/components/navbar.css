@@ -4,19 +4,25 @@
 }
 
 .mynavbar {
+  position: fixed;
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  height: auto;
+  width: 100%;
+  
+  height: 70px;
+  z-index: 100;
   padding: 20px 20px;
   box-shadow: 0 1px 15px 0 rgba(0, 0, 0, 0.2);
   font-family: 'Montserrat', sans-serif;
-  transition: all 0.3s; 
+  /* transition: top 0.3s;  */
 }
 
 .mynavbar > img {
   max-width: 30px;
   margin-right: 20px;
+  position: 'fixed';
+  top: 35;
 }
 
 .mynavbar > h3 {
@@ -29,12 +35,15 @@
 .mynavbar .userdrop {
   color: rgb(124, 124, 124);
   font-weight: 400;
-  margin-right: 20px;
+  margin-right: 60px;
+  position: 'fixed';
+  top: 50%;
+  right: 20%;
 }
 
 .sticky {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 1;
 }
