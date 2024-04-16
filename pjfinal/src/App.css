@@ -2,9 +2,9 @@
   text-align: center;
 }
 
-/* .Applayout {
-  display: flex;
-} */
+.Applayout {
+  border: #efefef;
+}
 .spaceUpApp{
   width: 100%;
   color: #000;
