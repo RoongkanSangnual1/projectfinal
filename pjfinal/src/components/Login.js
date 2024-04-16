@@ -116,35 +116,52 @@ const Login = () => {
         }
 
   };
-
-  const Formsummit = () => {
-    axios
-      .post(`http://localhost:8000/api/login`, { username, password })
-      .then(response => {
-        if (response) {
-          console.log(response.data.token);
-          console.log(response.data.message)
-
-
-          Swal.fire("Login successfully");
-
-
-          dispatch({
-            type: 'LOGIN',
-            payload: response.data.token
-          });
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('user', response.data.username);
+  const Formsummit = async () => {
+    try {
+      const response = await axios.post(`http://localhost:8000/api/login`, { username, password });
+  
+      if (response) {
+        console.log(response.data.token);
+        console.log(response);
+  
+        Swal.fire("Login successfully");
+  
+        dispatch({
+          type: 'LOGIN',
+          payload: response.data.token
+        });
+  
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', response.data.username);
+  
+        if (response.data.role === 'Admin') {
+          navigate('/Admin');
+        } else {
           navigate('/home');
-          setOTPemail('')
-          setOTP('');
         }
-      })
-      .catch(err => {
-        console.log(err.response.data)
-        Swal.fire("Invalid username or password");
-      });
+        
+        setOTPemail('');
+        setOTP('');
+      }
+    } catch (error) {
+      console.log(error.response.data)
+          
+            if ( error.response.data) {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.response.data
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.message,
+                });
+            }
+    
+           
+        }
   };
+  
 
   return (
     <div className="loginpage">

@@ -553,15 +553,15 @@ setresponsedata3(responsedata2)
     const getColorForSeverity = (severity) => {
       switch (severity) {
         case 'Low':
-          return '#6F77B1';
+          return '#6adb11';
         case 'Medium':
           return '#FFBB28';
         case 'High':
-          return '#FF5100';
+          return '#f78129';
           case 'Critical':
             return '#FF0000';
         default:
-          return '#a7ffb9';
+          return '#000001';
       }
     };
   
@@ -1564,9 +1564,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[3]}
-                                              </a>
+                                             {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.  {OneData[3]}
+                                                        </a>
+                                                        <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {OneData[3]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -1684,9 +1693,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[3]}
-                                              </a>
+                                              {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {OneData[3]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {OneData[3]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -1804,9 +1822,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[3]}
-                                              </a>
+                                              {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {OneData[3]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {OneData[3]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -1925,9 +1952,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[3]}
-                                              </a>
+                                              {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {OneData[3]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {OneData[3]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -2044,9 +2080,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[3]}
-                                              </a>
+                                             {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {OneData[3]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {OneData[3]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -2167,9 +2212,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
-                                              </a>
+                                              {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.      {OneData[1]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[10]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                       {dataIndex+1}.    {OneData[1]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -2293,9 +2347,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
-                                              </a>
+                                              {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.      {OneData[1]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[10]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                       {dataIndex+1}.    {OneData[1]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -2422,9 +2485,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
-                                              </a>
+                                             {OneData[12] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.      {OneData[1]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[10]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                       {dataIndex+1}.    {OneData[1]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -2552,9 +2624,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
-                                              </a>
+                                             {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.      {OneData[1]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[10]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                       {dataIndex+1}.    {OneData[1]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -2797,9 +2878,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
-                                              </a>
+                                             {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.      {OneData[1]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[10]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                       {dataIndex+1}.    {OneData[1]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -2926,9 +3016,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
-                                              </a>
+                                              {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.      {OneData[1]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[10]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                       {dataIndex+1}.    {OneData[1]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button
@@ -3054,9 +3153,18 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              <a style={{ color: 'red' }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                                {OneData[1]}
-                                              </a>
+                                             {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.      {OneData[1]}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[10]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[10]) }} href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                                       {dataIndex+1}.    {OneData[1]}
+                                                    </a>
+                                                )}
                                               {Delete === 'Advance' && (
                                                 <Space size="middle">
                                                   <Button

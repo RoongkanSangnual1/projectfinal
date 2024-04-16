@@ -550,17 +550,18 @@ setresponsedata3(responsedata2)
     const getColorForSeverity = (severity) => {
       switch (severity) {
         case 'Low':
-          return '#6F77B1';
+          return '#6adb11';
         case 'Medium':
           return '#FFBB28';
         case 'High':
-          return '#FF5100';
+          return '#f78129';
           case 'Critical':
             return '#FF0000';
         default:
-          return '#a7ffb9';
+          return '#000001';
       }
     };
+  
   
 
     
@@ -692,7 +693,7 @@ setresponsedata3(responsedata2)
               {link_ && (
                 <div>
                   <p>{link_}</p>
-                  <Button type="primary" style={{ transform: 'translateX(850px) scale(0.8)', marginTop: '20px' }} onClick={handleCopy}>
+                  <Button type="primaButtonry" style={{ transform: 'translateX(850px) scale(0.8)', marginTop: '20px' }} onClick={handleCopy}>
                     Copy Link
                   </Button>
                 </div>
@@ -1654,10 +1655,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[11]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[11]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -1676,18 +1679,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[12]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[10])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
                           </td>
@@ -1783,10 +1786,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[11]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[11]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -1805,18 +1810,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[12]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[10])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
                           </td>
@@ -1914,10 +1919,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[11]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[11]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -1936,18 +1943,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[12]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[10])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
                           </td>
@@ -2044,10 +2051,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[11]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[11]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -2066,18 +2075,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[12]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[10])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
                           </td>
@@ -2172,10 +2181,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[11]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[11]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -2194,18 +2205,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[12]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[10])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
                           </td>
@@ -2313,10 +2324,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[9]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[9]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -2335,18 +2348,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[10]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[7])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
                           </td>
@@ -2448,10 +2461,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[9]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[9]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -2470,18 +2485,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[10]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[7])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
                           </td>
@@ -2587,10 +2602,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[9]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[9]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -2609,18 +2626,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[10]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[7])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
                           </td>
@@ -2828,10 +2845,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[9]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[9]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -2850,18 +2869,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[10]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[7])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
                           </td>
@@ -2979,10 +2998,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[9]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[9]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -3001,18 +3022,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[10]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[7])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
                           </td>
@@ -3117,10 +3138,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[9]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[9]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -3139,18 +3162,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[10]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[7])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
                           </td>
@@ -3254,10 +3277,12 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[9]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[9]}
+                                                      </a>
                               </td>
                             </tr>
                             <tr>
@@ -3276,18 +3301,18 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[10]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[7])}
                             >
-                              <option style={{ color: "#6F77B1" }} value="Low">
-                                Low
-                              </option>
-                              <option style={{ color: "#FFBB28" }} value="Medium">
-                                Medium
-                              </option>
-                              <option style={{ color: "#FF5100" }} value="High">
-                                High
-                              </option>
-                              <option style={{ color: "#FF0000" }} value="Critical">
-                              Critical
-                              </option>
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
                             </select>
                             <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[7], updatedSeverities[index] || OneData[10])}>Confirm</Button>
                           </td>
