@@ -3389,6 +3389,36 @@ def home():
         print(e)
         return jsonify({"server error": str(e)})
 
+
+
+
+
+@app.route("/Admin", methods=['GET'])
+def admin():
+    try:
+        user_data = None
+        token = request.headers.get('Authorization').split(' ')[1]
+        if token is None:
+            return jsonify({'error': 'Token is missing'}), 403        
+        user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+
+        mydb = mysql.connector.connect(
+                    user='root',
+                   password='',
+                    host= 'localhost',
+                    database='robo'
+                )
+        mycursor = mydb.cursor()
+        query = "SELECT role FROM user WHERE username = %s"
+        mycursor.execute(query, (user_data,))
+        user_role = mycursor.fetchall()
+        
+        return jsonify({"user_role": user_role})
+    except Exception as e:
+        print(e)
+        return jsonify({"server error": str(e)})
+
         
 # @app.route("/home", methods=['GET'])
 # def home():
@@ -6071,7 +6101,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
 
 
         mycursor = mydb.cursor()
-        userall = "SELECT username FROM user"
+        userall ="SELECT username FROM user WHERE role = 'Advance'"
         mycursor.execute(userall)
         usernameall = mycursor.fetchall()
         print(usernameall)
@@ -6134,7 +6164,7 @@ def edit_issue():
         url_target = mycursor.fetchall()
         print("url_target", url_target)
 
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = mycursor.fetchall()
         if select_att_ID_sql_DATA:
@@ -6144,7 +6174,7 @@ def edit_issue():
         else:
             owasp11_ = [0]
 
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = mycursor.fetchall()
         if select_att_ID_xsssql_DATA:
@@ -6156,7 +6186,7 @@ def edit_issue():
 
 
 
-        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_traversal, (project_name_id, '4'))
         select_att_ID_select_att_traversal_DATA = mycursor.fetchall()
         if select_att_ID_select_att_traversal_DATA:
@@ -6167,7 +6197,7 @@ def edit_issue():
             owasp4_ = [0]
 
 
-        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state   FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_secure, (project_name_id, '2'))
         select_att_ID_select_att_secure_DATA = mycursor.fetchall()
         if select_att_ID_select_att_secure_DATA:
@@ -6177,7 +6207,7 @@ def edit_issue():
         else:
             owasp2_ = [0]
 
-        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_httponly, (project_name_id, '3'))
         select_att_ID_select_att_httponly_DATA = mycursor.fetchall()
         if select_att_ID_select_att_httponly_DATA:           
@@ -6188,7 +6218,7 @@ def edit_issue():
             owasp3_ = [0]
 
 
-        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_expire, (project_name_id, '5'))
         select_att_ID_select_att_expire_DATA = mycursor.fetchall()
         if select_att_ID_select_att_expire_DATA:       
@@ -6198,7 +6228,7 @@ def edit_issue():
         else:
             owasp5_ = [0]
 
-        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_samsite, (project_name_id, '6'))
         select_att_ID_select_att_samsite_DATA = mycursor.fetchall()
         if select_att_ID_select_att_samsite_DATA:
@@ -6209,7 +6239,7 @@ def edit_issue():
             owasp6_ = [0]
 
 
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_Server, (project_name_id, '1'))
         select_att_ID_select_att_server_DATA = mycursor.fetchall()
         print(select_att_ID_select_att_server_DATA[0][9])
@@ -6221,7 +6251,7 @@ def edit_issue():
         else:
             owasp1_ = [0]
 
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_Server, (project_name_id, '8'))
         select_att_ID_select_att_HSTS_DATA = mycursor.fetchall()
         if select_att_ID_select_att_HSTS_DATA:
@@ -6231,7 +6261,7 @@ def edit_issue():
         else:
             owasp8_ = [0]
 
-        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_Sensitive, (project_name_id, '7'))
         select_att_ID_sensitive = mycursor.fetchall()
         if select_att_ID_sensitive:      
@@ -6241,7 +6271,7 @@ def edit_issue():
         else:
             owasp7_ = [0]
             
-        select_att_ID_web = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name  FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_web = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state   FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_web, (project_name_id, '9'))
         select_att_ID_webb = mycursor.fetchall()
         if select_att_ID_webb:
@@ -6252,7 +6282,7 @@ def edit_issue():
             owasp9_ = [0]
 
 
-        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_command, (project_name_id, '12'))
         select_att_ID_command_DATA = mycursor.fetchall()
         if select_att_ID_command_DATA:
@@ -6758,14 +6788,16 @@ def payload3():
         user = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])['user']
         admin = user.get('role', None)
         if (admin == 'Admin'):
-            payload_ = request.json['payloadall']
+            payload_ = request.json['selectedFile']
             Owasp = request.json['Owasp']
-            print(payload_)
-
-            data_dict = json.loads(payload_)
+            inputKey = request.json['inputKey']
+            print(Owasp,payload_)
+            data = {f"{inputKey}": [line.strip() for line in payload_.split("\n")]}
+            
+            print(data)
             mycursor = mydb.cursor()
             with mycursor as db:
-                for key_, values_ in data_dict.items():
+                for key_, values_ in data.items():
                     print(f'Key: {key_}')
                     print(f'Values: {json.dumps(values_),}')
                     query = "UPDATE owasp SET payloadlist = JSON_SET(payloadlist, %s, JSON_ARRAY(%s)) WHERE OID = %s"
@@ -6776,7 +6808,7 @@ def payload3():
         else:
             return jsonify({"login"})
 
-        return jsonify(data_dict)
+        return jsonify({"data":"successfully"})
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": str(e)})
@@ -6833,6 +6865,7 @@ def delete_payload():
             # print(payload_)
             # print(f'\"{value_payload}\"')
             print(Owasp)
+            print(payload_)
             # print(f'\"$.{payload_}\"')
             mycursor = mydb.cursor()
             with mycursor as db:
@@ -7726,7 +7759,7 @@ def edit_issueoneurlsdelete():
         if user_id not in user_data:
             return jsonify({'error': 'User Error'}), 403
         if (Role == 'Advance'):
-              
+            print(project_id)
             # delete_ATT_ID_query = "DELETE FROM ATT_ID WHERE PID = %s AND URL_ID = %s"
             # mycursor.execute(delete_ATT_ID_query, (project_name_id, urls_id),)
             mycursor = mydb.cursor()     

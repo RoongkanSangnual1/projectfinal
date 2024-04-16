@@ -50,9 +50,10 @@ exports.login = async(req,res) =>{
             role:user.role
           }
         }
+        const role=user.role
         jwt.sign(payload,'jwtSecret',{expiresIn: '1d'},(err,token)=>{
           if(err) throw err;
-          res.status(201).json({ token, payload,username,message: "เข้าสู่ระบบเรียบร้อยแล้ว" });
+          res.status(201).json({ token, role,username,message: "เข้าสู่ระบบเรียบร้อยแล้ว" });
 
         })
       }else{
@@ -74,9 +75,7 @@ const resetPassword = async (email, newPassword) => {
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     const updateQuery = 'UPDATE user SET Password = ? WHERE email = ?';
-    
-    // const [results, fields] = await dbConnection.promise().query(updateQuery, [hashedPassword, email]);
-    dbConnection.query(updateQuery, [ hashedPassword,email], (inserterror, insertresults) => {
+        dbConnection.query(updateQuery, [ hashedPassword,email], (inserterror, insertresults) => {
       if (insertresults) {
         console.log("successfully")
       }
@@ -175,10 +174,7 @@ function sendEmail({ recipient_email, OTP }) {
 
 exports.share = async (req, res) => {
   try {
-      const { project_name, usershare } = req.body;
-      console.log(project_name, usershare);
-
-     
+      const { project_name, usershare } = req.body;    
       if (!project_name || !usershare) {
           return res.status(400).json({ error: 'Missing project_name or usershare' });
       }
@@ -190,10 +186,7 @@ exports.share = async (req, res) => {
         }
         if (userResults.length === 0) {
           return res.status(404).json({ error: 'User not found' });
-        }
-      
-
-    
+        }   
       const FindQuery = 'SELECT PName, username FROM project WHERE PID = ?';
       dbConnection.query(FindQuery, [project_name], async (error, results) => {
           if (error) {
@@ -204,10 +197,8 @@ exports.share = async (req, res) => {
               return res.status(404).json({ error: 'Project not found' });
           }
           const projectName = results[0].PName;
-          const username = results[0].username;
-      
-       
-          const FindUserQuery = 'SELECT email FROM user WHERE username = ?';
+          const username = results[0].username;       
+           const FindUserQuery = 'SELECT email FROM user WHERE username = ?';
           dbConnection.query(FindUserQuery, [usershare], async (error, userResults) => {
               if (error) {
                   console.error('Error:', error);
@@ -215,10 +206,8 @@ exports.share = async (req, res) => {
               }      
               if (userResults.length === 0) {
                   return res.status(404).json({ error: 'User not found' });
-              }
-              
-              const email = userResults[0].email;
-      
+              }              
+              const email = userResults[0].email;     
               console.log(projectName);
               console.log(username);
               const tyoemail = email.toString('utf-8');
@@ -262,7 +251,7 @@ function sendEmail2(email, link) {
           <html lang="en">
           <head>
             <meta charset="UTF-8">
-            <title>CodePen - OTP Email Template</title>
+            <title>SHARE</title>
           </head>
           <body>
             <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
@@ -271,7 +260,7 @@ function sendEmail2(email, link) {
                   <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">RoboPentestGuide</a>
                 </div>
                 <p style="font-size:1.1em">Hi,</p>
-                <p>Thank you for choosing RoboPentestGuide. Use the following OTP to complete your Password Recovery Procedure. OTP is valid for 5 minutes</p>
+                <p>Thank you for choosing RoboPentestGuide. SHARE user</p>
                 <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${link}</h2>
                 <p style="font-size:0.9em;">Regards,<br />RoboPentestGuide</p>
                 <hr style="border:none;border-top:1px solid #eee" />

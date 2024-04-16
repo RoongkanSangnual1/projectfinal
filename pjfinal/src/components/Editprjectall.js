@@ -353,9 +353,9 @@ const handleCopy = () => {
                 width: '100%',
               }}
               title={titleText}
-              extra={<Link to={`/myproject/edit/${name_pj}/${name_pj}`} className="projedit-btn" style={{ marginLeft: '50px', color:"blue" }}>
-                <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
-              </Link>}
+              // extra={<Link to={`/myproject/edit/${name_pj}/${name_pj}`} className="projedit-btn" style={{ marginLeft: '50px', color:"blue" }}>
+              //   <FormOutlined style={{ fontSize: '20px', color: 'grey' }} />
+              // </Link>}
               tabList={tabList}
               activeTabKey={activeTabKey1}
               onTabChange={onTab1Change}

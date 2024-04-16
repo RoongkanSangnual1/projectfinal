@@ -690,9 +690,23 @@ const Dashboard = (props) => {
 
     
   ];
+  const getColorForSeverity = (severity) => {
+    switch (severity) {
+      case 'Low':
+        return '#6adb11';
+      case 'Medium':
+        return '#FFBB28';
+      case 'High':
+        return '#f78129';
+        case 'Critical':
+          return '#FF0000';
+      default:
+        return '#000001';
+    }
+  };
 
    
-  const colors = ['#FF0000', '#FF5100', '#FFBB28', '#6F77B1'];
+  const colors = ['#FF0000', '#f78129', '#FFBB28', '#6adb11'];
   const subCategories = ["Critical", "High", "Medium", "Low"]
 
 
@@ -809,20 +823,20 @@ const sendSeverityToAPI = async (vulnerability, newSeverity) => {
     console.error(error);
   }
 };
-const getColorForSeverity = (severity) => {
-  switch (severity) {
-    case 'Low':
-      return '#6F77B1';
-    case 'Medium':
-      return '#FFBB28';
-    case 'High':
-      return '#FF5100';
-      case 'Critical':
-        return '#FF0000';
-    default:
-      return '#23b842';
-  }
-};
+// const getColorForSeverity = (severity) => {
+//   switch (severity) {
+//     case 'Low':
+//       return '#6F77B1';
+//     case 'Medium':
+//       return '#FFBB28';
+//     case 'High':
+//       return '#FF5100';
+//       case 'Critical':
+//         return '#FF0000';
+//     default:
+//       return '#23b842';
+//   }
+// };
 
 const handleSeverityChange = (e, index, vulnerability) => {
   const newUpdatedSeverities = { ...updatedSeverities };
@@ -901,25 +915,11 @@ const handleDelete = async (iddelete) => {
                       {index+1}. {item[0]}
                     </td>
                     <td style={{ textAlign: "left" }}>
-                      <select
-                        style={{ color: getColorForSeverity(item[1]) }}
-                        value={updatedSeverities[index] || item[1]}
-                        onChange={(e) => handleSeverityChange(e, index, item[0])}
-                      >
-                        <option style={{ color: "#6F77B1" }} value="Low">
-                          Low
-                        </option>
-                        <option style={{ color: "#FFBB28" }} value="Medium">
-                          Medium
-                        </option>
-                        <option style={{ color: "#FF5100" }} value="High">
-                          High
-                        </option>
-                        <option style={{ color: "#FF0000" }} value="Critical">
-                          Critical
-                        </option>
-                      </select>
-                      <Button
+                    <p style={{ color: getColorForSeverity(item[1]), border: '1px solid #cbcbcb', borderRadius: '5px' ,maxWidth: '80px', margin: '0 0' }}>
+  {item[1]}
+</p>
+
+                      {/* <Button
                         style={{ marginLeft: "20px" }}
                         onClick={() =>
                           handleConfirmButtonClick(
@@ -945,7 +945,7 @@ const handleDelete = async (iddelete) => {
                             {" "}
                           </Button>
                         </Space>
-                      )}
+                      )} */}
                     </td>
                   </tr>
                 ))}

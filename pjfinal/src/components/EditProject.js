@@ -149,7 +149,7 @@ const URLlist = (props) => {
 
       if (result.isConfirmed) {
         axios
-          .delete(`http://127.0.0.1:5000/edit-oneurlsdelete?token=${token}&record=${iddelete}`, {
+          .delete(`http://127.0.0.1:5000/edit-oneurlsdelete?Share=${token}&record=${iddelete}`, {
             headers: {
               Authorization: `Bearer ${tokenuser}`,
               'Access-Control-Allow-Origin' : '*',

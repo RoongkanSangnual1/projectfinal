@@ -15,8 +15,8 @@ function getItem(label, key, icon, children, type) {
 }
 const items = [
   
-  getItem('Dashboard', '/Dashboard', <FundOutlined />),
-  getItem('Home', '/Home', <SignalFilled />),
+  getItem('EditPayload', '/Admin', <FundOutlined />),
+  getItem('EditData', '/Home', <SignalFilled />),
   
 ];
 
@@ -51,7 +51,7 @@ const Sidemenu = () => {
       className="sidemenu" 
       style={{
         width: 200,
-        height: 980,
+        height: 1000,
       }}
       
       items={items}
