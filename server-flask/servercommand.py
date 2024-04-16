@@ -14,16 +14,15 @@ import subprocess
 import os
 import re
 app = Flask(__name__)
-CORS(app,resources={"/*":{"origins":"*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, resources={r"/*": {"origins": "*"}}, headers='Content-Type')
 
 
 
 # def connect_to_mysql():
 #     return mysql.connector.connect(
 #         user='root',
-#        password='',
-#         host= 'localhost',
+#        password='MYSQL_ROOT_PASSWORD',
+#         host= 'db',
 #         database='robo'
 #     )
 async def crawl(url,project_name,user,Host,baseURL,cookies_data,http_log_data,visited_urls,visited_post):
@@ -202,8 +201,8 @@ async def save_log(response, i,project_name,user,Host,http_log_data,formlist=Non
 
         mydb = mysql.connector.connect(
             user='root',
-            password='',
-            host= 'localhost',
+            password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -484,8 +483,8 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -627,8 +626,8 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                       
                                         mydb = mysql.connector.connect(
                                         user='root',
-                                       password='',
-                                        host= 'localhost',
+                                        password='MYSQL_ROOT_PASSWORD',
+                                        host= 'db',
                                         database='robo' )
                                         print('SQL found with 1:' + payload.strip() + 'in ' + i)  
                                         vres = True
@@ -884,8 +883,8 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+            password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -1103,8 +1102,8 @@ async def brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_ur
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1271,8 +1270,8 @@ async def brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_d
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1427,8 +1426,8 @@ async def detect_pathtraversal(pathtraversal):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1482,8 +1481,8 @@ async def run_gobuster(url,project_name,user):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1569,8 +1568,8 @@ async def run_gobustersensitive(url,project_name,user):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1610,8 +1609,8 @@ async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1719,8 +1718,8 @@ async def detect_web_server_leakage(Server):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1751,8 +1750,8 @@ async def HSTS(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1801,8 +1800,8 @@ async def webFramework(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1858,8 +1857,8 @@ async def webFrameworkhtml(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+            password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1923,8 +1922,8 @@ async def webFramewordgit(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -1987,8 +1986,8 @@ async def check_cookie_attributes(Server):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -2083,8 +2082,8 @@ async def crawl_endpoint():
     try:
         mydb = mysql.connector.connect(
             user='root',
-            password='',
-            host= 'localhost',
+            password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -2233,8 +2232,8 @@ async def crawl_endpoint():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                   password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -2579,8 +2578,8 @@ async def crawl_endpoint():
         # select_att_ID_sql_DATA = mycursor.fetchall()
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                   password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -2717,8 +2716,8 @@ async def refreshData():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -2859,8 +2858,8 @@ async def refreshData():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                   password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -3144,8 +3143,8 @@ async def refreshData():
              
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                   password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -3279,8 +3278,8 @@ def savee():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -3330,8 +3329,8 @@ def home():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                    password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -3398,8 +3397,8 @@ def home():
 
 #         mydb = mysql.connector.connect(
 #                     user='root',
-#                    password='',
-#                     host= 'localhost',
+#                    password='MYSQL_ROOT_PASSWORD',
+#                     host= 'db',
 #                     database='robo'
 #                 )
 #         mycursor = mydb.cursor()
@@ -3538,8 +3537,8 @@ async def dashboard():
         project_name_id = request.args.get('project_name_id')
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                   password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
 
@@ -4198,8 +4197,8 @@ def check():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -4224,8 +4223,8 @@ async def addurls():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -4317,8 +4316,8 @@ async def addurls():
 
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -4443,8 +4442,8 @@ async def addurls():
 
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                   password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
         mycursor = mydb.cursor()
@@ -4804,8 +4803,8 @@ def addIssue():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -4882,8 +4881,8 @@ def addIssueAll():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -4948,8 +4947,8 @@ def addIssueedit():
     try:
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
-                    host= 'localhost',
+                   password='MYSQL_ROOT_PASSWORD',
+                    host= 'db',
                     database='robo'
                 )
 
@@ -5071,8 +5070,8 @@ async def addurlsedit():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -5529,8 +5528,8 @@ def update():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -5571,8 +5570,8 @@ def updateSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -5617,8 +5616,8 @@ def updateSeverityURL():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -5662,8 +5661,8 @@ def editupdateSeverityURL():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -5699,8 +5698,8 @@ def updateeditSeverityupdateSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -5746,8 +5745,8 @@ async def onedata():
 
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -5767,8 +5766,8 @@ async def onedata():
 
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
     
@@ -5803,8 +5802,8 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
 
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
         mycursor = mydb.cursor()
@@ -6087,8 +6086,8 @@ def edit_issue():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6301,8 +6300,8 @@ def onedelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6339,8 +6338,8 @@ def oneurlsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6388,8 +6387,8 @@ def oneVulsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6438,8 +6437,8 @@ def EditoneVulsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6491,8 +6490,8 @@ def oneSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6535,8 +6534,8 @@ def edit_oneSeverity():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6680,8 +6679,8 @@ def payload():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6710,8 +6709,8 @@ def payload2():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6745,8 +6744,8 @@ def payload3():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6783,8 +6782,8 @@ def payload4():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6813,8 +6812,8 @@ def delete_payload():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6886,8 +6885,8 @@ def generate_link():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -6932,8 +6931,8 @@ def edit_project():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -7037,8 +7036,8 @@ def edit_Dashboard():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 
@@ -7700,8 +7699,8 @@ def edit_issueoneurlsdelete():
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
-            host= 'localhost',
+           password='MYSQL_ROOT_PASSWORD',
+            host= 'db',
             database='robo'
         )
 

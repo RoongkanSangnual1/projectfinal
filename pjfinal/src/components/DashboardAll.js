@@ -25,7 +25,7 @@
 //   useEffect(() => {
 //     const token = localStorage.getItem("token")
 //     console.log(token)
-//       axios.get(`http://127.0.0.1:5000/DashboardAll`,{
+//       axios.get(`http://localhost:5000/DashboardAll`,{
 //         headers:{
 //           Authorization:`Bearer ${token}`,
 //         },
@@ -269,7 +269,7 @@ const DashboardAll = () => {
   useEffect(() => {
     const token = localStorage.getItem("token")
     console.log(token)
-    axios.get(`http://127.0.0.1:5000/DashboardAll`, {
+    axios.get(`http://localhost:5000/DashboardAll`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Access-Control-Allow-Origin' : '*',

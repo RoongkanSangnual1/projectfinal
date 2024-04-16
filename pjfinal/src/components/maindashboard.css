@@ -1,11 +1,11 @@
 .mainDash {
-    
   margin: auto;
   text-align:left;
   width:1000px;
-  height: 800px;
+  height: max-content;
   
 }
+
 
 /* .projcard-inner{
 display: flex;

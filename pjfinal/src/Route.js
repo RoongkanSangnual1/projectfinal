@@ -13,6 +13,7 @@ import ProjectDashAdmin from "./components/projectdashAdmin";
 // import ForgotPassword from "./components/ForgotPassword";
 import OTPInput from "./components/OTPInput";
 import SQlinject from "./components/SQlinject";
+import Notfound from "./components/404";
 
 const Router = () =>{
     return(
@@ -34,6 +35,7 @@ const Router = () =>{
             <Route path="/myproject/edit/:project_name/:project_name_id" element={<Edithome/>}></Route>
             {/* <Route path="/edit-project/" element={<EditProject/>}></Route> */}
              <Route path="/edit-project/" element={<EditPrjectDash/>}></Route>
+            <Route path="/404" element={<Notfound />}/>
             
             
 

@@ -46,7 +46,7 @@ const ProjectDash = () => {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`, {
+          const response = await axios.get(`http://localhost:5000/onedata?project_name_id=${project_name}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -123,7 +123,7 @@ useEffect(() => {
   const save = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://127.0.0.1:5000/save`, { project_name }, {
+      await axios.post(`http://localhost:5000/save`, { project_name }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -284,7 +284,7 @@ const handleCopy = () => {
 
       
 
-      axios.post(`http://127.0.0.1:5000/generate-link`, { project_name, usershare }, {
+      axios.post(`http://localhost:5000/generate-link`, { project_name, usershare }, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

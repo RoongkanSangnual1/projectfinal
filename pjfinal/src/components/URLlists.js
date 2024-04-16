@@ -33,7 +33,7 @@ const URLlist = (props) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`, {
+      const response = await axios.get(`http://localhost:5000/onedata?project_name_id=${project_name_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -148,7 +148,7 @@ const URLlist = (props) => {
       if (result.isConfirmed) {
         axios
           .delete(
-            `http://127.0.0.1:5000/oneurlsdelete?project_name_id=${project_name_id}&record=${iddelete}`,
+            `http://localhost:5000/oneurlsdelete?project_name_id=${project_name_id}&record=${iddelete}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -236,7 +236,7 @@ const URLlist = (props) => {
 
     axios
       .post(
-        `http://127.0.0.1:5000/addurls`,
+        `http://localhost:5000/addurls`,
         { urls, method, parameter, project_name_id },
         {
           headers: {
@@ -269,7 +269,7 @@ const URLlist = (props) => {
     if (confirmationResult.isConfirmed) {
       axios
         .delete(
-          `http://127.0.0.1:5000/refreshData?project_name_id=${project_name_id}`,
+          `http://localhost:5000/refreshData?project_name_id=${project_name_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

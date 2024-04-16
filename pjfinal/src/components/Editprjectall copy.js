@@ -164,7 +164,7 @@ console.log("user",user)
     setOwner(decodedPayload.username[0][0])
       const fetchData = async () => {
           try {
-            const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+            const response = await axios.get(`http://localhost:5000/edit-issue?token=${token}`, {
               headers: {
                 'Authorization': `Bearer ${tokenuser}`,
                 'Access-Control-Allow-Origin' : '*',
@@ -243,7 +243,7 @@ console.log("user",user)
 //   const save = async () => {
 //     try {
 //       const token = localStorage.getItem('token');
-//       await axios.post(`http://127.0.0.1:5000/save`, { name_pj }, {
+//       await axios.post(`http://localhost:5000/save`, { name_pj }, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },
@@ -404,7 +404,7 @@ const handleCopy = () => {
 
       
 
-      axios.post(`http://127.0.0.1:5000/generate-link`, { project_name, usershare }, {
+      axios.post(`http://localhost:5000/generate-link`, { project_name, usershare }, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Access-Control-Allow-Origin' : '*',

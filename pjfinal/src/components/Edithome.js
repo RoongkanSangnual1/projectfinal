@@ -25,7 +25,7 @@ const Edithome = () => {
     const [loadingButton, setLoadingButton] = useState(false);
     const token = localStorage.getItem('token')
     useEffect(() => {
-        axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`,{
+        axios.get(`http://localhost:5000/onedata?project_name_id=${project_name_id}`,{
             headers:{
                 Authorization: `Bearer ${token}`,
                 'Access-Control-Allow-Origin' : '*',
@@ -54,7 +54,7 @@ const Edithome = () => {
         setLoad(true);
         setLoadingButton(true);
 
-        axios.put(`http://127.0.0.1:5000/update`, { project_name, authUser, url, description,project_name_id },{
+        axios.put(`http://localhost:5000/update`, { project_name, authUser, url, description,project_name_id },{
             headers:{
               Authorization:`Bearer ${token}`,
               'Access-Control-Allow-Origin' : '*',

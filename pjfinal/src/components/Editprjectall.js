@@ -59,7 +59,7 @@ const EditPrjectDash = () => {
 
       const fetchData = async () => {
           try {
-            const response = await axios.get(`http://127.0.0.1:5000/edit-issue?Share=${token}`, {
+            const response = await axios.get(`http://localhost:5000/edit-issue?Share=${token}`, {
               headers: {
                 'Authorization': `Bearer ${tokenuser}`,
                 'Access-Control-Allow-Origin' : '*',
@@ -144,7 +144,7 @@ useEffect(() => {
   const save = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://127.0.0.1:5000/save`, { name_pj }, {
+      await axios.post(`http://localhost:5000/save`, { name_pj }, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Access-Control-Allow-Origin' : '*',
@@ -307,7 +307,7 @@ const handleCopy = () => {
 
       
 
-  //     axios.post(`http://127.0.0.1:5000/generate-link`, { project_name, usershare }, {
+  //     axios.post(`http://localhost:5000/generate-link`, { project_name, usershare }, {
   //       headers: {
   //         'Authorization': `Bearer ${token}`
   //       }

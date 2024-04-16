@@ -2,18 +2,14 @@
   text-align: center;
 }
 
-.Applayout {
-  margin-top: 50px;
+/* .Applayout {
   display: flex;
+} */
+.spaceUp{
+  width: auto;
+  height: 100px;
 }
-
-.Sidemenu {
-  margin-right: 20px;
-  order: 1; 
-}
-
-.Home {
-  margin-right: 20px;
-  margin-top: 50px;
+/* .Home {
+  
   order: 2; 
-}
+} */

@@ -26,7 +26,7 @@ const EditProject = (props) => {
     const token = new URLSearchParams(location.search).get('token');
 
     useEffect(() => {
-      axios.get(`http://127.0.0.1:5000/edit-project?token=${token}`, {
+      axios.get(`http://localhost:5000/edit-project?token=${token}`, {
             headers: {
               'Authorization': `Bearer ${tokenuser}`,
               'Access-Control-Allow-Origin' : '*',
@@ -112,7 +112,7 @@ const handleDelete = (iddelete) => {
      
       if (result.isConfirmed) {
           
-        axios.delete(`http://127.0.0.1:5000/edit-oneurlsdelete?token=${token}&record=${iddelete}`, {
+        axios.delete(`http://localhost:5000/edit-oneurlsdelete?token=${token}&record=${iddelete}`, {
           headers: {
             Authorization: `Bearer ${tokenuser}`,
             'Access-Control-Allow-Origin' : '*',
@@ -190,7 +190,7 @@ const handleDelete = (iddelete) => {
       }
 
         axios
-        .post(`http://127.0.0.1:5000/addurlsedit`, { urls, method, parameter, token },
+        .post(`http://localhost:5000/addurlsedit`, { urls, method, parameter, token },
         {
           headers: {
             Authorization:`Bearer ${tokenuser}`,

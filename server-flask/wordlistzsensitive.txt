@@ -1174,7 +1174,7 @@
 /parameters.yml.dist
 /Partners/application/configs/application.ini
 /pdb/meta/v1/version
-/PDC/ajaxreq.php?PARAM=127.0.0.1+
+/PDC/ajaxreq.php?PARAM=localhost+
 /perl
 /perl-status
 /persistentchat/

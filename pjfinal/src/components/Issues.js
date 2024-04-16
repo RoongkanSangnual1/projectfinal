@@ -9,7 +9,7 @@ const Issues = () => {
     const user = localStorage.user;
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:5000/jsonn?user=${user}&project_name_id=${project_name_id}`)
+        axios.get(`http://localhost:5000/jsonn?user=${user}&project_name_id=${project_name_id}`)
             .then(response => { 
                 const jsonData = JSON.parse(response.data.message[0]);
                 console.lof(jsonData.payload)

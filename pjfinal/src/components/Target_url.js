@@ -36,7 +36,7 @@ const Target_url = () => {
         setLoadingButton(true);
     
         try {
-            const res = await axios.post(`http://127.0.0.1:5000/crawl`, { project_name, url, description }, {
+            const res = await axios.post(`http://localhost:5000/crawl`, { project_name, url, description }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Access-Control-Allow-Origin' : '*',
