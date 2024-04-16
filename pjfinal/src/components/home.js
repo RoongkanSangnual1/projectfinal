@@ -63,13 +63,13 @@ const Home = () => {
   const Deleteprojuct = async (id) => {
     try {
       const result = await Swal.fire({
-        title: "Are you sure?",
+        title: "Confirm Delete?",
         text: "You won't be able to revert this!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete!",
+        confirmButtonText: "Delete",
       });
 
       if (result.isConfirmed) {
@@ -137,9 +137,9 @@ const Home = () => {
 
   return (
     <div className="mainDash">
-  
+      {/* <div className="spaceUp" ></div> */}
       <Card
-        title="My Project"
+        title={<h2>My Project</h2>}
         extra={
           <>
           <div className="projcard-extra">
@@ -320,6 +320,7 @@ const Home = () => {
             </div>
           ))}
       </Card>
+      {/* <div className="spaceUp" ></div> */}
     </div>
   );
 };

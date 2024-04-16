@@ -7,10 +7,14 @@ function App() {
   return (
     <div className="App">
       <Navbar />
+      
       <div className='Applayout'>
-        <div className='spaceUp'></div>
+        <div className='spaceUpApp'></div>
         <Home className='Home' />
+  
+        <div className='spaceUpApp'></div>
       </div>
+      
     </div>
   );
 }

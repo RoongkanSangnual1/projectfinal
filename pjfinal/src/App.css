@@ -5,9 +5,10 @@
 /* .Applayout {
   display: flex;
 } */
-.spaceUp{
-  width: auto;
-  height: 100px;
+.spaceUpApp{
+  width: 100%;
+  color: #000;
+  height: 200px;
 }
 /* .Home {
   

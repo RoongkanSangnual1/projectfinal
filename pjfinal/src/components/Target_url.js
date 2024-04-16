@@ -75,8 +75,8 @@ const Target_url = () => {
     };
     return (
         <div>
-            <Navbar />
-            <div className='Applayout'>
+            <Navbar className='robonav'/>
+            <div className="spaceUpCreate"></div>
             
             <div className="container2">
                 <Link to='/home' className="exit"><CloseOutlined style={{color:"red"}} /></Link>
@@ -122,9 +122,10 @@ const Target_url = () => {
                     </div>
                 )}
             </div>
+            <div className="spaceUpCreate"></div>
             </div>
 
-        </div>
+        
     )
 }
 
