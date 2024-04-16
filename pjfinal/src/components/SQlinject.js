@@ -53,7 +53,7 @@ const SQlinject = (props) => {
     const [Delete,setDelete] = useState("")
     const [updatedSeverities, setUpdatedSeverities] = useState({});
     const [urls,setUrls] = useState([])
-    const [EVIDENCE,setEVIDENCE] = useState([])
+    const [Evidence,setEvidence] = useState([])
     const [parameter,setparameter]= useState([])
     const [Risk,setRisk] = useState([])
     const [severitySQL,SetseveritySQL] = useState([]);
@@ -69,7 +69,7 @@ const SQlinject = (props) => {
     const [severitysensitive,Setseveritysensitive] = useState([]);
     const [severityserver,Setseverityserver] = useState([]);
     const [OID, setOID] = useState('');
-    const [Recommendation,setRecommendation]= useState([])
+    const [Solutions,setSolutions]= useState([])
     const [showZero, setShowZero] = useState(false);
     const [usershare,setUershare] = useState([])
     const user = localStorage.user;
@@ -382,24 +382,24 @@ setresponsedata3(responsedata2)
         icon: "error",
       });
   }
-  // if (!EVIDENCE.length !== 0) {
+  // if (!Evidence.length !== 0) {
   //   Swal.fire({
-  //     title: "EVIDENCE",
-  //     text: "Please enter EVIDENCE",
+  //     title: "Evidence",
+  //     text: "Please enter Evidence",
   //     icon: "error",
   //   });
   // } 
       try {
-        await axios.post(`http://localhost:5000/addIssue`, {urls, EVIDENCE, Risk, Recommendation, OID, project_name_id},
+        await axios.post(`http://localhost:5000/addIssue`, {urls, Evidence, Risk, Solutions, OID, project_name_id},
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
         setUrls([]);
-        setEVIDENCE([]);
+        setEvidence([]);
         setRisk([]);
-        setRecommendation([]);
+        setSolutions([]);
         setOID('');
         await fetchData();
       } catch (err) {
@@ -503,10 +503,10 @@ setresponsedata3(responsedata2)
       if (selectedSeverity) {
         try {
           const result = await Swal.fire({
-            title: 'Are you Sure?',
+            title: 'Confirm Delete?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Confirm',
+            confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
           });
   
@@ -550,13 +550,13 @@ setresponsedata3(responsedata2)
     const getColorForSeverity = (severity) => {
       switch (severity) {
         case 'Low':
-          return '#6adb11';
+          return '#92e369';
         case 'Medium':
           return '#FFBB28';
         case 'High':
           return '#f78129';
           case 'Critical':
-            return '#FF0000';
+            return '#c20000';
         default:
           return '#000001';
       }
@@ -794,16 +794,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -811,12 +811,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -860,16 +860,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -877,12 +877,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -927,16 +927,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -944,12 +944,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -995,16 +995,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1012,12 +1012,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1063,16 +1063,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1080,12 +1080,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1132,16 +1132,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1149,12 +1149,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1199,16 +1199,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1216,12 +1216,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1266,16 +1266,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1283,12 +1283,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1335,16 +1335,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1352,12 +1352,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1402,16 +1402,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1419,12 +1419,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1470,16 +1470,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1487,12 +1487,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1543,16 +1543,16 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      EVIDENCE:
+                                      Evidence:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={EVIDENCE}
-                                        onChange={(e) => setEVIDENCE(e.target.value)}
+                                        value={Evidence}
+                                        onChange={(e) => setEvidence(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
-                                      Risk Description:
+                                      Vulnerability Description:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
@@ -1560,12 +1560,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setRisk(e.target.value)}
                                       />
                                       <br />
-                                      Recommendation:
+                                      Solutions:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Recommendation}
-                                        onChange={(e) => setRecommendation(e.target.value)}
+                                        value={Solutions}
+                                        onChange={(e) => setSolutions(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1627,7 +1627,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -1641,13 +1641,13 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[7]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[8]}
                                 </p>
@@ -1688,7 +1688,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -1758,7 +1758,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -1772,13 +1772,13 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[7]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[8]}
                                 </p>
@@ -1819,7 +1819,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -1905,13 +1905,13 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[7]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[8]}
                                 </p>
@@ -1952,7 +1952,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2023,7 +2023,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2037,13 +2037,13 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[7]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[8]}
                                 </p>
@@ -2075,7 +2075,7 @@ setresponsedata3(responsedata2)
                               value={updatedSeverities[index] || OneData[12]}
                               onChange={(e) => handleSeverityChange(e, index, OneData[10])}
                             >
-                             <option style={{ color: "#6adb11" }} value="Low">
+                             <option style={{ color: "#92e369" }} value="Low">
                         Low
                       </option>
                       <option style={{ color: "#FFBB28" }} value="Medium">
@@ -2084,7 +2084,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2153,7 +2153,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2167,13 +2167,13 @@ setresponsedata3(responsedata2)
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[7]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[8]}
                                 </p>
@@ -2214,7 +2214,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2287,7 +2287,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2310,13 +2310,13 @@ setresponsedata3(responsedata2)
                                                 </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[5]}
                                 </p>
@@ -2357,7 +2357,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2424,7 +2424,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2447,13 +2447,13 @@ setresponsedata3(responsedata2)
                                                 </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[5]}
                                 </p>
@@ -2494,7 +2494,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2564,7 +2564,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2588,13 +2588,13 @@ setresponsedata3(responsedata2)
                                                 </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[5]}
                                 </p>
@@ -2635,7 +2635,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2705,7 +2705,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2831,13 +2831,13 @@ setresponsedata3(responsedata2)
                                                 </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[5]}
                                 </p>
@@ -2878,7 +2878,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2961,7 +2961,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2984,13 +2984,13 @@ setresponsedata3(responsedata2)
                                                 </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[5]}
                                 </p>
@@ -3031,7 +3031,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -3101,7 +3101,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -3124,13 +3124,13 @@ setresponsedata3(responsedata2)
                                                 </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[5]}
                                 </p>
@@ -3171,7 +3171,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -3240,7 +3240,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>EVIDENCE</th>                                                           
+                                                    <th>Evidence</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -3263,13 +3263,13 @@ setresponsedata3(responsedata2)
                                                 </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Risk Description:</strong> 
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
                                 <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Recommendation:</strong>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
                                 {OneData[5]}
                                 </p>
@@ -3310,7 +3310,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
+                      <option style={{ color: "#c20000" }} value="Critical">
                         Critical
                       </option>
                             </select>

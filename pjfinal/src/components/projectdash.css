@@ -1,3 +1,7 @@
+.spaceUpProject{
+    width: auto;
+    height: 150px;
+}
 .ProjectDash-Head{
     display: flex;
     margin-left: 50px;

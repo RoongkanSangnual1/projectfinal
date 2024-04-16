@@ -15,7 +15,7 @@ import {
   CloseOutlined,
   FormOutlined,
 } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useHref, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
@@ -173,10 +173,11 @@ const Home = () => {
           projectdata.map((project, index) => (
             <div className="projindash">
               <Collapse
-                collapsible="header"
+                collapsible="icon"
                 size="small"
                 defaultActiveKey={["1"]}
                 expandIconPosition="start"
+                
                 expandIcon={({ isActive }) => (
                   <RightOutlined
                     className="projcollaspe-ico"
@@ -193,13 +194,13 @@ const Home = () => {
                   {
                     key: { index },
                     label: (
-                      <div className="projcollaspe-head">
+                      <div className="projcollaspe-head" onClick={() => { window.location.href = `/myproject/${project[0]}/${project[5]}`; }}>
                         <h3 className="projname">
                           Project name: {project[0]}
                           <pre style={{ color: "grey" }}>
                             {project[1]} <br />
                             {project[3] === project[4] ? (
-                              <p style={{ color: "red" }}>crawl...</p>
+                              <p style={{ color: "red" }}>scanning...</p>
                             ) : (
                               <>
                                 Start: ({project[3]}) <br />
@@ -282,20 +283,22 @@ const Home = () => {
                                 {project[2]}
                               </p>
                             </div>
-                            <Link
-                              to={`/myproject/edit/${project[0]}/${project[5]}`}
-                              className="projedit-btn"
-                              style={{ marginLeft: "650px" }}
-                            >
-                              <FormOutlined
-                                style={{ fontSize: "15px", color: "grey" }}
-                              />
-                            </Link>
+                            eiei
                           </div>
                         </Link>
                       </div>
                     ),
                     extra: (
+                      <div className="projcollaspe-extra">
+                      <Link
+                              to={`/myproject/edit/${project[0]}/${project[5]}`}
+                              // className="projedit-btn"
+                              // style={{ marginLeft: "650px" }}
+                            >
+                              <FormOutlined
+                                style={{ fontSize: "15px", color: "grey" }}
+                              />
+                            </Link>
                       <Button
                         type="link"
                         icon={
@@ -313,6 +316,7 @@ const Home = () => {
                           />
                         }
                       />
+                      </div>
                     ),
                   },
                 ]}
