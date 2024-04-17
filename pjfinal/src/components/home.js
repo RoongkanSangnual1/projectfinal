@@ -139,6 +139,7 @@ const Home = () => {
     <div className="mainDash">
       {/* <div className="spaceUp" ></div> */}
       <Card
+        className="projcard"
         title={<h2>My Project</h2>}
         extra={
           <>

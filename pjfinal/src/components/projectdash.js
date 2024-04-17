@@ -311,7 +311,7 @@ const handleCopy = () => {
 
   return (
 
-        <div className={activeTabKey1 === 'tab5' ? 'ProjectDashh' : 'ProjectDash'}>
+        <div className={activeTabKey1 === 'tab5' ? 'ProjectDash' : 'ProjectDash'}>
       <Navbar />
       <div className='spaceUpProject'></div>
       <div className='ProjectDash-Head'>
@@ -320,8 +320,8 @@ const handleCopy = () => {
                             </Link>
         <h2>{project_name_n}</h2>
       </div>
-      
-      <div className={activeTabKey1 === 'tab5' ? 'ProjectDashLayoutt' : 'ProjectDashLayout'}>
+      {/* <div className={activeTabKey1 === 'tab5' ? 'ProjectDashLayoutt' : 'ProjectDashLayout'}> */}
+      <div className={activeTabKey1 === 'tab5' ? 'ProjectDashLayout' : 'ProjectDashLayout'}>
         {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab4' ||activeTabKey1 === 'tab5') && (
           <> 
             <Card
