@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
       const insertQuery = 'INSERT INTO user (username, email, Password,role) VALUES (?, ?, ?,?)';
       dbConnection.query(insertQuery, [username, email, hashpassword,role], (inserterror, insertresults) => {
         if (insertresults) {
-          return res.status(200).send('สมัครเสร็จสิ้น');
+          return res.status(200).send('Register succuess');
         }
       });
     });
@@ -38,7 +38,7 @@ exports.login = async(req,res) =>{
     
     dbConnection.query(findQuery,[username],async (finderror,results)=>{
       if(results.length === 0){
-        return res.status(401).send('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        return res.status(401).send('Invalid username or password');
       }
       const user = results[0];
       const Cpassword = await bcrypt.compare(password,user.Password)
@@ -53,11 +53,11 @@ exports.login = async(req,res) =>{
         const role=user.role
         jwt.sign(payload,'jwtSecret',{expiresIn: '1d'},(err,token)=>{
           if(err) throw err;
-          res.status(201).json({ token, role,username,message: "เข้าสู่ระบบเรียบร้อยแล้ว" });
+          res.status(201).json({ token, role,username,message: "Login success" });
 
         })
       }else{
-        return res.status(401).send('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        return res.status(401).send('Invalid username or password');
       }
 
     })

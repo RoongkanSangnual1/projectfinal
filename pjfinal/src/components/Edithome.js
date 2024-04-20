@@ -75,6 +75,7 @@ const Edithome = () => {
         return (
             <div className="App">
             <Navbar />
+            <div className="spaceUpEdit" />
             <div className="container2">
             <Link to={`/myproject/${project_name}/${project_name_id}`} className="exit" style={{color:"red"}}><CloseOutlined  style={{color:"red"}}/></Link>
             <h2 >Edit Project</h2>

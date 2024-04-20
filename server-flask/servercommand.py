@@ -647,13 +647,14 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '11',
+                                            att_url,
                                             response.url,
                                             i,
                                             'T',
@@ -692,13 +693,14 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '11',
+                                            att_url,
                                             response.url,
                                             i,
                                             'T',
@@ -740,13 +742,14 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '11',
+                                            att_url,
                                             response.url,
                                             i,
                                             'T',
@@ -6159,22 +6162,22 @@ def edit_issue():
         url_target = mycursor.fetchall()
         print("url_target", url_target)
 
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL ,vul_evidence, payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = mycursor.fetchall()
         if select_att_ID_sql_DATA:
             owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][9],project_name_id,))
+            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][10],project_name_id,))
             owasp11_ = mycursor.fetchall()
         else:
             owasp11_ = [0]
 
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL ,vul_evidence, payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = mycursor.fetchall()
         if select_att_ID_xsssql_DATA:
             owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][9],project_name_id,))
+            mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][10],project_name_id,))
             owasp10_ = mycursor.fetchall()
         else:
             owasp10_ = [0]   

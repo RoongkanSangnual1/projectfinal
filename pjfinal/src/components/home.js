@@ -143,28 +143,28 @@ const Home = () => {
         title={<h2>My Project</h2>}
         extra={
           <>
-          <div className="projcard-extra">
-            <Form onFinish={ShowFormsummit} labelCol={{ span: 10 }}>
-              <Form.Item label="" name="">
-                <Select
-                  value={vesion}
-                  onChange={(value) => {
-                    setvesion(value);
-                    ShowFormsummit(value);
-                  }}
-                  placeholder={"Latest"}
-                  options={[
-                    { value: "2", label: "Latest" },
-                    { value: "1", label: "Oldest" },
-                  ]}
-                />
-              </Form.Item>
-            </Form>
-            <Link to="/create">
-              <Button type="primary" icon={<PlusOutlined />}>
-                Add new project
-              </Button>
-            </Link>
+            <div className="projcard-extra">
+              <Form onFinish={ShowFormsummit} labelCol={{ span: 10 }}>
+                <Form.Item label="" name="">
+                  <Select
+                    value={vesion}
+                    onChange={(value) => {
+                      setvesion(value);
+                      ShowFormsummit(value);
+                    }}
+                    placeholder={"Latest"}
+                    options={[
+                      { value: "2", label: "Latest" },
+                      { value: "1", label: "Oldest" },
+                    ]}
+                  />
+                </Form.Item>
+              </Form>
+              <Link to="/create">
+                <Button type="primary" icon={<PlusOutlined />}>
+                  Add new project
+                </Button>
+              </Link>
             </div>
           </>
         }
@@ -178,7 +178,6 @@ const Home = () => {
                 size="small"
                 defaultActiveKey={["1"]}
                 expandIconPosition="start"
-                
                 expandIcon={({ isActive }) => (
                   <RightOutlined
                     className="projcollaspe-ico"
@@ -195,7 +194,12 @@ const Home = () => {
                   {
                     key: { index },
                     label: (
-                      <div className="projcollaspe-head" onClick={() => { window.location.href = `/myproject/${project[0]}/${project[5]}`; }}>
+                      <div
+                        className="projcollaspe-head"
+                        onClick={() => {
+                          window.location.href = `/myproject/${project[0]}/${project[5]}`;
+                        }}
+                      >
                         <h3 className="projname">
                           Project name: {project[0]}
                           <pre style={{ color: "grey" }}>
@@ -284,39 +288,39 @@ const Home = () => {
                                 {project[2]}
                               </p>
                             </div>
-                            eiei
+                            
                           </div>
                         </Link>
                       </div>
                     ),
                     extra: (
                       <div className="projcollaspe-extra">
-                      <Link
-                              to={`/myproject/edit/${project[0]}/${project[5]}`}
-                              // className="projedit-btn"
-                              // style={{ marginLeft: "650px" }}
-                            >
-                              <FormOutlined
-                                style={{ fontSize: "15px", color: "grey" }}
-                              />
-                            </Link>
-                      <Button
-                        type="link"
-                        icon={
-                          <CloseOutlined
-                            className="close-button"
-                            style={{
-                              fontSize: "15px",
-                              color: "red",
-                              position: "absolute",
-                              right: "10px",
-                              top: "50%", // Position the button at the vertical center
-                              transform: "translateY(-50%)", // Adjust for half of its height
-                            }}
-                            onClick={() => Deleteprojuct(project[5])}
+                        <Link
+                          to={`/myproject/edit/${project[0]}/${project[5]}`}
+                          // className="projedit-btn"
+                          // style={{ marginLeft: "650px" }}
+                        >
+                          <FormOutlined
+                            style={{ fontSize: "15px", color: "grey" }}
                           />
-                        }
-                      />
+                        </Link>
+                        <Button
+                          type="link"
+                          icon={
+                            <CloseOutlined
+                              className="close-button"
+                              style={{
+                                fontSize: "15px",
+                                color: "red",
+                                position: "absolute",
+                                right: "10px",
+                                top: "50%", // Position the button at the vertical center
+                                transform: "translateY(-50%)", // Adjust for half of its height
+                              }}
+                              onClick={() => Deleteprojuct(project[5])}
+                            />
+                          }
+                        />
                       </div>
                     ),
                   },

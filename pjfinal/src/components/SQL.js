@@ -535,13 +535,13 @@ const SQlinject = (props) => {
     const getColorForSeverity = (severity) => {
       switch (severity) {
         case 'Low':
-          return '#6F77B1';
+          return '#92e369';
         case 'Medium':
           return '#FFBB28';
         case 'High':
           return '#FF5100';
           case 'Critical':
-            return '#FF0000';
+            return '#c20000';
         default:
           return '#000000';
       }
@@ -556,13 +556,13 @@ const SQlinject = (props) => {
       const handleDelete = async (iddelete) => {
         try {
           const result = await Swal.fire({
-            title: 'Are you sure?',
+            title: 'Confirm Delete?',
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Delete',
           });
     
           if (result.isConfirmed) {

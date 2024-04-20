@@ -81,7 +81,7 @@ const SQlinject = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        console.log('MEGA',response)
         setDelete(response.data[5].Role);
         seturl_target(response.data[1].url_target[0][0]);
         setDetails(response.data[1].url_target[0][1]);
@@ -100,6 +100,7 @@ const SQlinject = (props) => {
             } catch (error) {
               console.error("Error decoding URL:", error);
               return [index + 1, data[0], data[2], ...data];
+              
             }
           })
           .filter(item => item !== null);
@@ -116,6 +117,9 @@ const SQlinject = (props) => {
               let decodedURL = decodeURIComponent(data[0]);
               let decodedURL1 = decodeURIComponent(data[1]);
               let decodedURL2 = decodeURIComponent(data[2]);
+              console.log('console.log(decodedURL)',decodedURL)
+              console.log('console.log(decodedURL1)',decodedURL1)
+              console.log('console.log(decodedURL2)',decodedURL2)
               return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
             } catch (error) {
               console.error("Error decoding URL:", error);
@@ -338,7 +342,7 @@ const SQlinject = (props) => {
           };
             console.log(response)
             console.log("Original responsedata2:", responsedata2);
-          
+          // ข้อมูล
 
         
       } catch (error) {
@@ -1730,6 +1734,8 @@ setresponsedata3(responsedata2)
                                             <div className="projcollaspe-head">
                                               {OneData[14] === "Manual" ? (
                                                     <>
+                                                    
+                                                        {/* แก้ */}
                                                         <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
                                                         {dataIndex+1}.   {OneData[3]}
                                                         </a>
@@ -3351,7 +3357,7 @@ setresponsedata3(responsedata2)
 
 }
 )}
-<div style={{ transform: 'translateX(930px) translateY(0px)  scale(1)' }}>
+<div style={{ transform: 'translateX(1150px) translateY(0px)  scale(1)' }}>
 <Button  type='link' onClick={handleShowZero}>
         {showZero ? (<div  style={{color:"#006EF0"}} ><DoubleLeftOutlined rotate={90} /> Hide Unfound Vulnerability</div>) : (<div  style={{color:"#006EF0"}} ><DoubleLeftOutlined rotate={270}/> Show Unfound Vulnerability</div>) }
       </Button>

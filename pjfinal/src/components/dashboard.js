@@ -876,7 +876,7 @@ const Dashboard = (props) => {
     if (selectedSeverity) {
       try {
         const result = await Swal.fire({
-          title: "Are you Sure?",
+          title: "Confirm?",
           icon: "question",
           showCancelButton: true,
           confirmButtonText: "Confirm",
@@ -1106,6 +1106,7 @@ const Dashboard = (props) => {
                                 borderRadius: "5px",
                                 maxWidth: "80px",
                                 margin: "0 0",
+                                textAlign: "center"
                               }}
                             >
                               {item[1]}
