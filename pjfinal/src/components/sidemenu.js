@@ -16,7 +16,7 @@ function getItem(label, key, icon, children, type) {
 const items = [
   
   getItem('EditPayload', '/Admin', <FundOutlined />),
-  getItem('EditData', '/Home', <SignalFilled />),
+  // getItem('EditData', '/Home', <SignalFilled />),
   
 ];
 
@@ -50,6 +50,7 @@ const Sidemenu = () => {
       onClick={onClick} 
       className="sidemenu" 
       style={{
+        marginTop:'100px',
         width: 200,
         height: 1000,
       }}

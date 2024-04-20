@@ -1,4 +1,3 @@
-from cmath import e
 from flask import Flask, request, jsonify ,Response
 from flask_cors import CORS
 import requests
@@ -1573,34 +1572,57 @@ async def run_gobustersensitive(url,project_name,user):
             host= 'localhost',
             database='robo'
         )
-
         mycursor = mydb.cursor()
-        query = ("SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, '$.sensitive')) AS payload FROM owasp WHERE OID=7")
-        mycursor.execute(query,)             
-        common = mycursor.fetchall()
+        key_query = "SELECT JSON_KEYS(payloadlist) AS json_keys FROM owasp WHERE OID = 7"
+        mycursor.execute(key_query,)
+        json_keys_result = mycursor.fetchone()
   
 
-        # print(common)
-        word_list = json.loads(common[0][0])
-        # print(word_list)
-        wordlist_path = 'wordlistzsensitive.txt'
-        with open(wordlist_path, 'w') as file:
-            for item in word_list:
-                file.write(item + '\n')
-        command = [
-                        'gobuster',
+        print("json_keys_result",json_keys_result)
+        if json_keys_result:
+            json_keys_str = json_keys_result[0] 
+            print("json_keys_str",json_keys_str)
+            json_keys_list = json.loads(json_keys_str) 
+            print("json_keys_list",json_keys_list)
+            for key in json_keys_list:
+                    print(key)
+                    query = "SELECT JSON_UNQUOTE(JSON_EXTRACT(payloadlist, %s)) AS payload FROM owasp WHERE OID=7"
+                    mycursor.execute(query, (f'$.{key}',))             
+                    sql_ = mycursor.fetchall() 
+                    word_list = json.loads(sql_[0][0])
+                    # print(word_list)
+                    wordlist_path = f'Sensitive_{key}.txt'
+                    print(wordlist_path)
+                    with open(wordlist_path, 'w') as file:
+                        for item in word_list:
+                            file.write(item + '\n')
+                    results = []
+                    with open(wordlist_path, 'r') as file:
+                        data = file.read()
 
-        #    'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
-            # 'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
-            'dir',
-            '-u', url,
-            '-r',
-            '-t', '10',
-            '-w', wordlist_path,
-            '-o', f'Sensitive{project_name}{user}.txt'
-]
+                    if await is_array(data):
+                        array_data = ast.literal_eval(data)
+                        with open(wordlist_path, 'w') as file:
+                            for item in array_data:
+                                file.write(str(item) + '\n')
+                        print(f'newfile: {wordlist_path}')
+                    else:
+                        print('no newfile')
+                    output_file = f'Sensitive_{project_name}_{user}_{key}.txt'
+                    print("wordlist_path",f'Sensitive_{key}.txt')
+                    command = [
+                                    # 'gobuster',
 
-        subprocess.run(command, check=True)
+                       'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+                        # 'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
+                        'dir',
+                        '-u', url,
+                        '-r',
+                        '-t', '10',
+                        '-w', wordlist_path,
+                        '-o',output_file
+                        ]                  
+                    subprocess.run(command, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error running gobuster: {e}")
 
@@ -1614,99 +1636,110 @@ async def checkTempFuzzsensitive(i,project_name,user,scope_url,project_name_id):
             host= 'localhost',
             database='robo'
         )
-
-        file_path = f"Sensitive{project_name}{user}.txt"
-        print("project_name_id",project_name_id)
-        print("scope_url",scope_url)
         mycursor = mydb.cursor()
-    
-        select_att_ID_Server = "SELECT Vul_name  FROM owasp WHERE PID = %s AND Vul_name = %s "
-        mycursor.execute(select_att_ID_Server, (project_name_id, 'Sensitive File Disclosure'))
-        Vul_name = mycursor.fetchall()
-        if Vul_name:
-            print("Vul_name 4")
-        else:
-            select_att_ID_sql = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
-            mycursor.execute(select_att_ID_sql, (project_name_id, '7'))
-            select_att_ID_sql_DATA = mycursor.fetchall()            
-            if select_att_ID_sql_DATA:
-                mycursor = mydb.cursor()
-                query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name FROM owasp WHERE OID=7"
-                mycursor.execute(query2)
-                sql2_ = mycursor.fetchall()
-                                    
-                insert_query = "INSERT INTO owasp (Vul_des, Vul_sol, Vul_ref, Vul_name, OType, PID, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                values = (sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][4], sql2_[0][3], project_name_id, "Medium")
-                mycursor.execute(insert_query, values)
-                mydb.commit()
-            else:
-                print("ไม่มีข้อมูล")
-        select_project_name_id_query = "SELECT URL_ID FROM urllist WHERE URL = %s AND PID = %s"
-        mycursor.execute(select_project_name_id_query, (scope_url, project_name_id))             
-        url_ID = mycursor.fetchone()
-  
-        print("url_ID",url_ID[0])
-        query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType, Vul_name , Severity FROM owasp WHERE OID=7")
-        mycursor.execute(query2)             
-        sql2_ = mycursor.fetchall() 
+        key_query = "SELECT JSON_KEYS(payloadlist) AS json_keys FROM owasp WHERE OID = 7"
+        mycursor.execute(key_query,)
+        json_keys_result = mycursor.fetchone()
   
 
-        print("sql2_",sql2_)
-        if os.path.exists(file_path):
-            try: 
-                # with open(file_path, "r") as f:
-                #     lines = f.read()
-                #     if await is_array(lines):
-                #         array_data = ast.literal_eval(lines)
-                #         with open(file_path, 'w') as file:
-                #             for item in array_data:
-                #                 file.write(str(item) + '\n')
-                #                 print(f'newfile: {file_path}')
-                #             else:
-                #                 print('no newfile')
-                with open(file_path, "r") as f:
-                    lines = f.readlines()
-                lines = [line.replace('', ' ') for line in lines]
-                lines = [line for line in lines if '(Status: 500)' not in line and '(Status: 429)' not in line and '(Status: 403)' not in line and '(Status: 400)' not in line and '(Status: 301)' not in line and '()']
+        print("json_keys_result",json_keys_result)
+        if json_keys_result:
+            json_keys_str = json_keys_result[0] 
+            print("json_keys_str",json_keys_str)
+            json_keys_list = json.loads(json_keys_str) 
+            print("json_keys_list",json_keys_list)
+            for key in json_keys_list:
+                    file_path = f'Sensitive_{project_name}_{user}_{key}.txt'
+                    print("project_name_id",project_name_id)
+                    print("scope_url",scope_url)
+                    mycursor = mydb.cursor()
+                    select_att_ID_Server = "SELECT Vul_name  FROM owasp WHERE PID = %s AND Vul_name = %s "
+                    mycursor.execute(select_att_ID_Server, (project_name_id, 'Sensitive File Disclosure'))
+                    Vul_name = mycursor.fetchall()
+                    if Vul_name:
+                        print("Vul_name 4")
+                    else:
+                        select_att_ID_sql = "SELECT URL , payload FROM att_ps WHERE PID = %s AND OID = %s "
+                        mycursor.execute(select_att_ID_sql, (project_name_id, '7'))
+                        select_att_ID_sql_DATA = mycursor.fetchall()            
+                        if select_att_ID_sql_DATA:
+                            mycursor = mydb.cursor()
+                            query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name FROM owasp WHERE OID=7"
+                            mycursor.execute(query2)
+                            sql2_ = mycursor.fetchall()
+                                                
+                            insert_query = "INSERT INTO owasp (Vul_des, Vul_sol, Vul_ref, Vul_name, OType, PID, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                            values = (sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][4], sql2_[0][3], project_name_id, "Medium")
+                            mycursor.execute(insert_query, values)
+                            mydb.commit()
+                        else:
+                            print("ไม่มีข้อมูล")
+                    select_project_name_id_query = "SELECT URL_ID FROM urllist WHERE URL = %s AND PID = %s"
+                    mycursor.execute(select_project_name_id_query, (scope_url, project_name_id))             
+                    url_ID = mycursor.fetchone()
+            
+                    print("url_ID",url_ID[0])
+                    query2 = ("SELECT Vul_des , Vul_sol , Vul_ref , OType, Vul_name , Severity FROM owasp WHERE OID=7")
+                    mycursor.execute(query2)             
+                    sql2_ = mycursor.fetchall() 
+            
+
+                    print("sql2_",sql2_)
+                    if os.path.exists(file_path):
+                        try: 
+                            # with open(file_path, "r") as f:
+                            #     lines = f.read()
+                            #     if await is_array(lines):
+                            #         array_data = ast.literal_eval(lines)
+                            #         with open(file_path, 'w') as file:
+                            #             for item in array_data:
+                            #                 file.write(str(item) + '\n')
+                            #                 print(f'newfile: {file_path}')
+                            #             else:
+                            #                 print('no newfile')
+                            with open(file_path, "r") as f:
+                                lines = f.readlines()
+                            lines = [line.replace('', ' ') for line in lines]
+                            lines = [line for line in lines if '(Status: 500)' not in line and '(Status: 429)' not in line and '(Status: 403)' not in line and '(Status: 400)' not in line and '(Status: 301)' not in line and '()']
 
 
-                with open(file_path, 'w') as file:
-                    file.writelines(lines)
+                            with open(file_path, 'w') as file:
+                                file.writelines(lines)
 
-                with open(file_path, "r") as f:
-                    j = 1
+                            with open(file_path, "r") as f:
+                                j = 1
 
-                    for x in f:
-                        print(" x.split()[0]", x.split()[0])
-                        baseURL = urlparse(scope_url).scheme + '://' + urlparse(scope_url).netloc
-                        url = baseURL+x.split()[0]
-                        print(url)
-                        # print(get_response(url))
-                        mycursor = mydb.cursor()
-                        insert_query = (
-                            "INSERT INTO att_ps (URL_ID, position , PID, OID, URL, state, payload, vul_des, vul_sol, vul_ref, OType, Vul_name,Severity) "
-                            "VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                        )
-                        values = (url_ID[0], url ,project_name_id, '7', scope_url, 'T', x.split()[0], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4], sql2_[0][5])
-                        mycursor.execute(insert_query, values)
-                        mydb.commit()
+                                for x in f:
+                                    print(" x.split()[0]", x.split()[0])
+                                    baseURL = urlparse(scope_url).scheme + '://' + urlparse(scope_url).netloc
+                                    url = baseURL+x.split()[0]
+                                    print(url)
+                                    # print(get_response(url))
+                                    mycursor = mydb.cursor()
+                                    insert_query = (
+                                        "INSERT INTO att_ps (URL_ID, position , PID, OID, URL, state, payload, vul_des, vul_sol, vul_ref, OType, Vul_name,Severity) "
+                                        "VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                    )
+                                    values = (url_ID[0], url ,project_name_id, '7', scope_url, 'T', x.split()[0], sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][3], sql2_[0][4], sql2_[0][5])
+                                    mycursor.execute(insert_query, values)
+                                    mydb.commit()
 
-                        # # print(baseURL+ x.split()[0], end='\n')
-                        # j = j+1
-                        # if (url) not in visited_urls:
-                        #     response = await get_response(url,cookies_data)
-                        #     if response is not None:
-                        #         print("responsefuzz",response)
-                        #         await save_log(response, i,project_name,user,Host,http_log_data)
-                        #         i = i+1
-                if os.path.exists(file_path):
-                            try: 
-                                os.remove(file_path)
-                                print(f"{file_path}  deleted.")
-                            except IOError as e:
-                                print(f"Error reading file: {e}")
-            except IOError as e:
-                print(f"Error reading file: {e}")
+                                    # # print(baseURL+ x.split()[0], end='\n')
+                                    # j = j+1
+                                    # if (url) not in visited_urls:
+                                    #     response = await get_response(url,cookies_data)
+                                    #     if response is not None:
+                                    #         print("responsefuzz",response)
+                                    #         await save_log(response, i,project_name,user,Host,http_log_data)
+                                    #         i = i+1
+                            if os.path.exists(file_path):
+                                        try: 
+                                            os.remove(file_path)
+                                            print(f"{file_path}  deleted.")
+                                        except IOError as e:
+                                            print(f"Error reading file: {e}")
+                        except IOError as e:
+                            print(f"Error reading file: {e}")
         else:
             print(f"The file {file_path} does not exist.")
         return i
@@ -3321,13 +3354,11 @@ def savee():
 @app.route("/home", methods=['GET'])
 def home():
     try:
-        user_data = None
         token = request.headers.get('Authorization').split(' ')[1]
         if token is None:
             return jsonify({'error': 'Token is missing'}), 403        
         user = jwt.decode(token, 'jwtSecret', algorithms=["HS256"])['user']
         user_data = user.get('username', None)
-
         mydb = mysql.connector.connect(
                     user='root',
                    password='',
@@ -3338,9 +3369,6 @@ def home():
         query = "SELECT PName, PTarget, PDes, timeproject, EndTime, PID FROM project WHERE username = %s"
         mycursor.execute(query, (user_data,))
         project_data = mycursor.fetchall()
-
-
-        # ดึงข้อมูล owasp_data2
         owasp_query2 = """
             SELECT project.PName, project.PTarget, project.PDes, project.timeproject , project.EndTime , project.PID, att_ps.Severity 
             FROM att_ps
@@ -3352,20 +3380,15 @@ def home():
         """
         mycursor.execute(owasp_query2, ('T', user_data,))
         owasp_data2 = mycursor.fetchall()
-
-    
         combined_data = []
         for project_item in project_data:
             combined_item = list(project_item)  
             combined_item.extend([0, 0, 0, 0])  
-            combined_data.append(combined_item)
-
-      
+            combined_data.append(combined_item)     
         for owasp_item in owasp_data2:
             pid = owasp_item[5]  
             for combined_item in combined_data:
-                if combined_item[5] == pid:  
-                  
+                if combined_item[5] == pid:      
                     severity = owasp_item[6]
                     if severity == 'Critical':
                         combined_item[6] += 1
@@ -3375,11 +3398,6 @@ def home():
                         combined_item[8] += 1
                     elif severity == 'Low':
                         combined_item[9] += 1
-
-
-
-        
-      
         return jsonify({"project_data": combined_data})
     except Exception as e:
         print(e)

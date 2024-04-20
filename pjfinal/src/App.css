@@ -3,7 +3,7 @@
 }
 
 .Applayout {
-  margin-top: 50px;
+  /* margin-top: 50px; */
   display: flex;
 }
 
@@ -14,6 +14,7 @@
 
 .Home {
   margin-right: 20px;
-  margin-top: 50px;
+  margin-top: 80px;
+  
   order: 2; 
 }

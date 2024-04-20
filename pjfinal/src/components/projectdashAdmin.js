@@ -95,7 +95,7 @@ const ProjectDashAdmin = () => {
       const updatedShow = { ...payloadData };
     
       Object.keys(payloadData).forEach(key => {
-        if (key !== 'pathraversal' && key !== 'sql' && key!=='common_inject'&&key!=='xss_sql') { 
+        if (key !== 'pathraversal' && key !== 'sql' && key!=='common_inject'&&key!=='xss_sql'&&key!=='sensitive') { 
           const parsedPayloads = JSON.parse(payloadData[key]); 
           updatedShow[key] = parsedPayloads;
         }
@@ -110,8 +110,15 @@ const ProjectDashAdmin = () => {
       console.log(error);
     }
   };
+  useEffect(() => {
+   if(pay){
+    
+    ShowFormsummit();
+   }
+    
+  }, [pay]); 
 
-  const Formsummit2 = async (payloadone) => {
+  const Formsummit2Delete = async (payloadone) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -133,6 +140,8 @@ const ProjectDashAdmin = () => {
         });
         console.log(response);
         setOptions(options);
+        
+      ShowFormsummit();
       } catch (error) {
         console.log(error);
       }
@@ -191,15 +200,26 @@ const handleSubmit = async (event) => {
             'Content-Type': 'application/json'
           },
         });
+        console.log(response)
+        ShowFormsummit();
         Swal.fire({
           icon: 'success',
-          title: response.data, 
+          title: response.data.data, 
       });
+      if( response.data.error){
+        Swal.fire({
+          icon: 'error',
+          title: 'Error', 
+      });
+      }
       } catch (error) {
         console.error('Error:', error);
       }
     } else {
-      console.log('Please select both key and file');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please select both key and file', 
+    });
     }
   }
 };
@@ -223,6 +243,7 @@ const handleSubmit = async (event) => {
         placeholder="Select an item"
         options={[
           { value: "4", label: "Directory Traversal File Include" },
+          { value: "7", label: "Sensitive File Disclosure" },
           { value: "10", label: "Stored Cross Site Scripting" },
           { value: "11", label: "SQL Injection" },
           { value: "12", label: "Command Injection" },
@@ -257,7 +278,7 @@ const handleSubmit = async (event) => {
            style={{ backgroundColor: "white", marginLeft: "5px" }}
            type="danger"
            icon={<CloseOutlined style={{ color: "red" }} />}
-           onClick={() => Formsummit2(key)}
+           onClick={() => Formsummit2Delete(key)}
          />
       </h3>
          <ul>
