@@ -5840,7 +5840,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
             database='robo'
         )
         mycursor = mydb.cursor()
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL , vul_evidence,payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = mycursor.fetchall()       
 
@@ -5858,7 +5858,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         print("owasp11_",owasp11_)
 
         mycursor = mydb.cursor()
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL ,vul_evidence, payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = mycursor.fetchall()
       

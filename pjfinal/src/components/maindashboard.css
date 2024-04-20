@@ -52,7 +52,9 @@ display: flex;
 align-items: center;
 justify-content: space-between; 
 }
-
+.projcollaspe-head > a{
+  font-weight: 500;
+}
 .projcollaspe-content {
 display: flex;
 align-items: center;

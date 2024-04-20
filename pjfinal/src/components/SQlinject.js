@@ -507,10 +507,10 @@ setresponsedata3(responsedata2)
       if (selectedSeverity) {
         try {
           const result = await Swal.fire({
-            title: 'Confirm Delete?',
+            title: 'Confirm Severity Change?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Delete',
+            confirmButtonText: 'Confirm',
             cancelButtonText: 'Cancel',
           });
   
@@ -576,13 +576,13 @@ setresponsedata3(responsedata2)
       const handleDelete = async (iddelete) => {
         try {
           const result = await Swal.fire({
-            title: 'Are you sure?',
+            title: 'Confirm Delete?',
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Delete',
           });
     
           if (result.isConfirmed) {
@@ -1636,12 +1636,12 @@ setresponsedata3(responsedata2)
                                                 </thead>
                                                 <tbody>
                                                 <tr>
-                            <td style={{textAlign:"center"}}>
+                            <td style={{textAlign:"center",color:getColorForSeverity(OneData[12])}}>
                                       <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
                                         {OneData[1]}
                                       </a>
                                     </td>
-                                    <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+                                    <td style={{textAlign:"center",color:getColorForSeverity(OneData[12])}}>{OneData[2]}</td>
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -1736,14 +1736,14 @@ setresponsedata3(responsedata2)
                                                     <>
                                                     
                                                         {/* แก้ */}
-                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                        {dataIndex+1}.   {OneData[3]}
+                                                        <a style={{ color: getColorForSeverity(OneData[13]) }} href={OneData[2]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {OneData[2]}
                                                         </a>
-                                                          <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
+                                                          <span style={{ color: getColorForSeverity(OneData[13]) }}> Manual</span>
                                                     </>
                                                 ) : (
-                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                         {dataIndex+1}.  {OneData[3]}
+                                                    <a style={{ color: getColorForSeverity(OneData[13]) }} href={OneData[2]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {OneData[2]}
                                                     </a>
                                                 )}
                                               {Delete === 'Advance' && (
@@ -1760,43 +1760,45 @@ setresponsedata3(responsedata2)
                                           children: (
                                             
                                             <div className="collapse-content" style={{ overflow: 'auto' }}>
-                                              <table>
+                                              <table style={{ width: '100%' }}>
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>Parameter</th>
+                                                    <th>Payload</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr>
-                            <td style={{textAlign:"center"}}>
+                            <td style={{textAlign:"center",color:getColorForSeverity(OneData[13])}}>
                                       <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
                                         {OneData[1]}
                                       </a>
                                     </td>
-                                    <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+                                    <td style={{textAlign:"center",color:getColorForSeverity(OneData[13])}}>{OneData[7]}</td>
+                                    <td style={{textAlign:"center",color:getColorForSeverity(OneData[13])}}>{OneData[6]}</td>
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
                                 <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
-                                <p> {OneData[7]}</p>
+                                <p> {OneData[8]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
-                                {OneData[8]}
+                                {OneData[9]}
                                 </p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>References:</strong><br/>
-                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
+                                <a href={OneData[12]} target="_blank" rel="noopener noreferrer">
                                                       
           
-                                                      {OneData[11]}
+                                                      {OneData[12]}
                                                       </a>
                               </td>
                             </tr>
@@ -1804,7 +1806,7 @@ setresponsedata3(responsedata2)
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>WSTG-ID:</strong>
                                 <p>
-                                {OneData[9]}
+                                {OneData[10]}
                                 </p>
                               </td>
                             </tr>
@@ -1812,9 +1814,9 @@ setresponsedata3(responsedata2)
                             <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>Severity:</strong>
                             <select
-                              style={{ color: getColorForSeverity(OneData[12]) }}
-                              value={updatedSeverities[index] || OneData[12]}
-                              onChange={(e) => handleSeverityChange(e, index, OneData[10])}
+                              style={{ color: getColorForSeverity(OneData[13]) }}
+                              value={updatedSeverities[index] || OneData[13]}
+                              onChange={(e) => handleSeverityChange(e, index, OneData[11])}
                             >
                              <option style={{ color: "#6adb11" }} value="Low">
                         Low
@@ -1829,7 +1831,7 @@ setresponsedata3(responsedata2)
                         Critical
                       </option>
                             </select>
-                            <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
+                            <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[11], updatedSeverities[index] || OneData[13])}>Confirm</Button>
                           </td>
         </tr>
                                                 </tbody>

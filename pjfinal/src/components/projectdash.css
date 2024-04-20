@@ -47,6 +47,8 @@
 }
 .ProjectDashLayout p {
     padding: 10px; 
-    border-radius: 5px; 
-    word-break: break-all;
+    border-radius: 5px;
+    width: 1250px;
+    word-break: break-word;
+    text-align: justify;
 }
