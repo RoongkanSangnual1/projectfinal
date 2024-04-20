@@ -257,13 +257,13 @@ const URLlist = (props) => {
 
   const refreshData = async () => {
     const confirmationResult = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to refresh this!",
+      title: "Confirm rescan?",
+      text: "Your current result will be gone!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, refresh it!",
+      confirmButtonText: "Rescan",
     });
   
     if (confirmationResult.isConfirmed) {

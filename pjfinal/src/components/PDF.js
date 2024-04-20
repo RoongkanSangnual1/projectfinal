@@ -157,7 +157,7 @@ const PDF = (props) => {
         doc.text(`${index+1}. ${key}`, 25.4, 25.4);
         doc.setFont("MyFont", "normal");
         doc.setTextColor("black");
-        let vulcontenthead = [['No.', 'URL', 'Parameters', 'Severity']];
+        let vulcontenthead = [['No.', 'URL', 'Parameter', 'Severity']];
         
         let columnStyles_vulcontent_1 = {
           //159.2
@@ -187,16 +187,24 @@ const PDF = (props) => {
         };
         let columnStyles_vulcontent = columnStyles_vulcontent_2;
         let vulcontentbody = vulnerabilities.map((vulnerability, innerIndex) => {
-          let url, evidence, severity;
+          let url, evidence, parameter, severity;
           /* เดี๋ยวแก้เป็นพารามิเตอร์ */
-          if (key === "SQL Injection" || key === "Directory Traversal File Include") {
+          if (key === "SQL Injection" ) {
+            vulcontenthead = [['No.', 'URL', 'Parameter', 'Severity']];
+            url = vulnerability[1];
+            parameter = vulnerability[7];
+            severity = vulnerability[13];
+            columnStyles_vulcontent = columnStyles_vulcontent_1;
+            return [`${innerIndex + 1}`, url, parameter, severity];
+          }else if ( key === "Directory Traversal File Include") {
             vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
             url = vulnerability[4];
             evidence = vulnerability[5];
             severity = vulnerability[12];
             columnStyles_vulcontent = columnStyles_vulcontent_1;
             return [`${innerIndex + 1}`, url, evidence, severity];
-          } else if (key === "Reflected Cross Site Scripting") {
+          }
+           else if (key === "Reflected Cross Site Scripting") {
             vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
             url = vulnerability[1];
             evidence = vulnerability[3];

@@ -88,7 +88,7 @@ const SQlinject = (props) => {
         setusernameall(response.data[18].usernameall)
         if(response.data[2].select_att_sql_DATA[1].length !==0 ){
           SetseveritySQL(response.data[2].select_att_sql_DATA[1][0][0])
-            console.log(response.data[2].select_att_sql_DATA[1][0][0])
+            console.log('severitySQL',response.data[2].select_att_sql_DATA[1][0][0])
         }
         const Index = response.data[2].select_att_sql_DATA[0]
           .map((data, index) => {
@@ -1816,7 +1816,7 @@ setresponsedata3(responsedata2)
                             <select
                               style={{ color: getColorForSeverity(OneData[13]) }}
                               value={updatedSeverities[index] || OneData[13]}
-                              onChange={(e) => handleSeverityChange(e, index, OneData[11])}
+                              onChange={(e) => handleSeverityChange(e, index, OneData[13])}
                             >
                              <option style={{ color: "#6adb11" }} value="Low">
                         Low
