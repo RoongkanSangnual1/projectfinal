@@ -113,12 +113,12 @@ const EditPrjectDash = () => {
       const handleTabChange = () => {
         const pathName = location.pathname;
     
-        if (pathName.endsWith('tab4')) {
-          setActiveTabKey1('tab4');
-        } else if (pathName.endsWith('tab4')) {
-          setActiveTabKey1('tab4');
+        if (pathName.endsWith('tab2')) {
+          setActiveTabKey1('tab2');
+        } else if (pathName.endsWith('tab2')) {
+          setActiveTabKey1('tab2');
         } else {
-          setActiveTabKey1('tab4');
+          setActiveTabKey1('tab2');
         }
       };
     
@@ -133,9 +133,9 @@ console.log(pathName)
 
 useEffect(() => {
   const { pathname } = location;
-  if (activeTabKey1 === 'tab5' && pathname.includes('/tab4')) {
-    setActiveTabKey1('tab4');
-    const trimmedPath = pathname.replace('/tab4', '');
+  if (activeTabKey1 === 'tab1' && pathname.includes('/tab2')) {
+    setActiveTabKey1('tab2');
+    const trimmedPath = pathname.replace('/tab2', '');
     navigate(trimmedPath, { replace: true });
   }
 }, [activeTabKey1, location.pathname, navigate]);
@@ -184,7 +184,7 @@ useEffect(() => {
       <>
 <p style={{
   fontSize: '22px',
-  color: 'grey',
+  color: '#2c2c2c',
   marginTop: '0px',
   whiteSpace: 'pre-line',
   marginBottom: '0',
@@ -193,7 +193,7 @@ useEffect(() => {
 
 <p style={{
   fontSize: '22px',
-  color: 'grey',
+  color: '#2c2c2c',
   marginTop: '0px',
   whiteSpace: 'pre-line',
   marginBottom: '0',
@@ -202,13 +202,13 @@ useEffect(() => {
 
 <p className="projdes" style={{
   fontSize: '15px',
-  color: 'grey',
+  color: '#2c2c2c',
   marginTop: '0px',
   wordWrap: 'break-word',
   wordBreak: 'break-all',
   whiteSpace: 'pre-line',
   marginBottom: '0',
-  maxWidth: '1000px'  
+  textAlign:"center"
 }}> Descriptions: {Des}</p>
 
 <p style={{
@@ -245,32 +245,33 @@ useEffect(() => {
 
 
 
-    const tabList = [
-      {
-        key: 'tab1',
-        tab: 'Scan URLs',
-      },
-      // {
-      //   key: 'tab2',
-      //   tab: 'Issues',
-      // },
-      {
-        key: 'tab4',
-        tab: 'Issues',
-        path: 'tab4', 
-      },
-      {
-        key: 'tab5',
-        tab: 'Dashboard',
-        
-    },
+const tabList = [
+  {
+    key: 'tab1',
+    tab: 'Dashboard',
+    
+},
+  {
+    key: 'tab2',
+    tab: 'Scan URLs',
+  },
+  // {
+  //   key: 'tab2',
+  //   tab: 'Issues',
+  // },
+  {
+    key: 'tab3',
+    tab: 'Issues',
+    path: 'tab3', 
+  },
     ];
-  const contentList = {
-  tab1: <p><EditProject id={name_id} name={name_pj} /> </p>,
-  // tab2: <p><Issues/></p>,
-  tab4: <Editsql id={name_id} name={name_pj} />,
-  tab5:<EditDashboard id={name_id} name={name_pj} time={time} start={start} end={end} urlsAll={urlsAll}/>
-  };
+    const contentList = {
+      tab1:<EditDashboard id={name_id} name={name_pj} time={time} start={start} end={end} urlsAll={urlsAll}/>,
+      tab2: <p><EditProject id={name_id} name={name_pj} /> </p>,
+      // tab2: <p><Issues/></p>,
+      tab3: <Editsql id={name_id} name={name_pj} />,
+      
+      };
     
     dispatch({
       type:'id',
@@ -335,9 +336,11 @@ const handleCopy = () => {
   return (
 <div>
 <Navbar />
+<div className='spaceUpProject'></div>
 
-        <div className={activeTabKey1 === 'tab5' ? 'ProjectDashh' : 'ProjectDash'}>
+        <div className={activeTabKey1 === 'tab1' ? 'ProjectDash' : 'ProjectDash'}>
       {/* <Navbar /> */}
+      
       <div className='ProjectDash-Head'>
       <Link to={`/home`} className="projedit-btn" style={{ fontSize: '30px', color: '#064061', marginRight: '20px',marginTop:'20px' }}>
                              <LeftCircleOutlined />
@@ -345,8 +348,8 @@ const handleCopy = () => {
         <h2>{name_pj}</h2>
       </div>
       
-      <div className={activeTabKey1 === 'tab5' ? 'ProjectDashLayoutt' : 'ProjectDashLayout'}>
-        {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab4' ||activeTabKey1 === 'tab5') && (
+      <div className={activeTabKey1 === 'tab1' ? 'ProjectDashLayout' : 'ProjectDashLayout'}>
+        {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab2' ||activeTabKey1 === 'tab3') && (
           <> 
             <Card
               style={{
@@ -371,7 +374,7 @@ const handleCopy = () => {
                 </div>
               )}
 
-              {/* {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab4') &&(
+              {/* {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab2') &&(
                 <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(1000px) scale(1.5)', marginTop: '20px', marginLeft: '35px' }}>
                 Share
               </Button>

@@ -1,13 +1,14 @@
 .App {
   text-align: center;
+  background-color: #efefef;
 }
 
 .Applayout {
-  background-color: #eeeeee;
+  background-color: #efefef;
 }
 .spaceUpApp{
   width: 100%;
-  background-color: #eeeeee;
+  background-color: #efefef;
   height: 200px;
 }
 /* .Home {
