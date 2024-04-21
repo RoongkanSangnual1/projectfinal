@@ -185,17 +185,38 @@ const PDF = (props) => {
             cellWidth: 60,
           },
         };
+        let columnStyles_vulcontent_3 = {
+          //159.2
+          0: {
+            cellWidth: 20,
+          },
+          1: {
+            cellWidth: 69,
+          },
+          2: {
+            cellWidth: 30,
+          },
+          3: {
+            cellWidth: 20,
+          },
+          4: {
+            cellWidth: 20
+          },
+
+        };
+
         let columnStyles_vulcontent = columnStyles_vulcontent_2;
         let vulcontentbody = vulnerabilities.map((vulnerability, innerIndex) => {
-          let url, evidence, parameter, severity;
+          let url, evidence, parameter, payload, severity;
           /* เดี๋ยวแก้เป็นพารามิเตอร์ */
           if (key === "SQL Injection" ) {
-            vulcontenthead = [['No.', 'URL', 'Parameter', 'Severity']];
+            vulcontenthead = [['No.', 'URL', 'Parameter','Payload', 'Severity']];
             url = vulnerability[1];
             parameter = vulnerability[7];
+            payload = vulnerability[3]
             severity = vulnerability[13];
-            columnStyles_vulcontent = columnStyles_vulcontent_1;
-            return [`${innerIndex + 1}`, url, parameter, severity];
+            columnStyles_vulcontent = columnStyles_vulcontent_3;
+            return [`${innerIndex + 1}`, url, parameter, payload, severity];
           }else if ( key === "Directory Traversal File Include") {
             vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
             url = vulnerability[4];
@@ -246,16 +267,24 @@ const PDF = (props) => {
         doc.setFontSize(16);
         let details, Evidence, Solutions, owasp, reference;
 
-        if (key === "SQL Injection" || key === "Directory Traversal File Include" ) {
+        if (key === "SQL Injection" ) {
+          details = vulnerabilities[0][8];
+          Evidence = "From the table above, when injecting the payload into the parameter, it receives an unexpected response."
+          Solutions = vulnerabilities[0][9];
+          owasp = vulnerabilities[0][10];
+          reference = vulnerabilities[0][12];
+
+        }else if (key === "Directory Traversal File Include" ) {
           details = vulnerabilities[0][7];
-          Evidence = vulnerabilities[0][6];
+          Evidence = "From the table above, when injecting the payload into the parameter, it receives an unexpected response.";
           Solutions = vulnerabilities[0][8];
           owasp = vulnerabilities[0][9];
           reference = vulnerabilities[0][11];
 
-        } else if (key === "Reflected Cross Site Scripting") {
+        }
+         else if (key === "Reflected Cross Site Scripting") {
           details = vulnerabilities[0][7];
-          Evidence = "From following table above. When we have inject payload into parameter,it get unexpected response";
+          Evidence = "From the table above, when injecting the payload into the parameter, it receives an unexpected response.";
           Solutions = vulnerabilities[0][8];
           owasp = vulnerabilities[0][9];
           reference = vulnerabilities[0][11];

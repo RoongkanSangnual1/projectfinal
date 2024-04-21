@@ -53,7 +53,9 @@ const SQlinject = (props) => {
     const [Delete,setDelete] = useState("")
     const [updatedSeverities, setUpdatedSeverities] = useState({});
     const [urls,setUrls] = useState([])
-    const [Evidence,setEvidence] = useState([])
+    const [vul_urls,setVulurls] = useState([])
+    const [EVIDENCE,setEVIDENCE] = useState([])
+    const [payload,setpayload]= useState([])
     const [parameter,setparameter]= useState([])
     const [Risk,setRisk] = useState([])
     const [severitySQL,SetseveritySQL] = useState([]);
@@ -69,7 +71,7 @@ const SQlinject = (props) => {
     const [severitysensitive,Setseveritysensitive] = useState([]);
     const [severityserver,Setseverityserver] = useState([]);
     const [OID, setOID] = useState('');
-    const [Solutions,setSolutions]= useState([])
+    const [Recommendation,setRecommendation]= useState([])
     const [showZero, setShowZero] = useState(false);
     const [usershare,setUershare] = useState([])
     const user = localStorage.user;
@@ -81,29 +83,38 @@ const SQlinject = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log('MEGA',response)
+
         setDelete(response.data[5].Role);
         seturl_target(response.data[1].url_target[0][0]);
         setDetails(response.data[1].url_target[0][1]);
         setusernameall(response.data[18].usernameall)
         if(response.data[2].select_att_sql_DATA[1].length !==0 ){
           SetseveritySQL(response.data[2].select_att_sql_DATA[1][0][0])
-            console.log('severitySQL',response.data[2].select_att_sql_DATA[1][0][0])
+            console.log(response.data[2].select_att_sql_DATA[1][0][0])
         }
         const Index = response.data[2].select_att_sql_DATA[0]
-          .map((data, index) => {
-            try {
-              let decodedURL = decodeURIComponent(data[0]);
-              let decodedURL1 = decodeURIComponent(data[1]);
-              let decodedURL2 = decodeURIComponent(data[2]);
-              return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
-            } catch (error) {
-              console.error("Error decoding URL:", error);
-              return [index + 1, data[0], data[2], ...data];
-              
-            }
-          })
-          .filter(item => item !== null);
+      .map((data, index) => {
+        try {
+          let decodedURL = decodeURIComponent(data[0]);
+          let decodedURL1 = decodeURIComponent(data[1]);
+          let decodedURL2 = decodeURIComponent(data[2]);
+          let decodedURL3 = decodeURIComponent(data[3]);
+          let decodedURL4 = decodeURIComponent(data[4]);
+          let decodedURL5 = decodeURIComponent(data[5]);
+          let decodedURL6 = decodeURIComponent(data[6]);
+          let decodedURL7 = decodeURIComponent(data[7]);
+          let decodedURL8 = decodeURIComponent(data[8]);
+          let decodedURL9 = decodeURIComponent(data[9]);
+          let decodedURL10 = decodeURIComponent(data[10]);
+          let decodedURL11 = decodeURIComponent(data[11]);
+          
+          return [index + 1, decodedURL, decodedURL1, decodedURL2,decodedURL3,decodedURL4,decodedURL5,decodedURL6,decodedURL7,decodedURL8,decodedURL9,decodedURL10,decodedURL11];
+        } catch (error) {
+          console.error("Error decoding URL:", error);
+          return [index + 1, data[0], data[1], data[2], ...data];
+        }
+      })
+      .filter(item => item !== null);
   
 
           
@@ -117,9 +128,6 @@ const SQlinject = (props) => {
               let decodedURL = decodeURIComponent(data[0]);
               let decodedURL1 = decodeURIComponent(data[1]);
               let decodedURL2 = decodeURIComponent(data[2]);
-              console.log('console.log(decodedURL)',decodedURL)
-              console.log('console.log(decodedURL1)',decodedURL1)
-              console.log('console.log(decodedURL2)',decodedURL2)
               return [index + 1, decodedURL, decodedURL1, decodedURL2, ...data];
             } catch (error) {
               console.error("Error decoding URL:", error);
@@ -342,7 +350,7 @@ const SQlinject = (props) => {
           };
             console.log(response)
             console.log("Original responsedata2:", responsedata2);
-          // ข้อมูล
+          
 
         
       } catch (error) {
@@ -386,24 +394,24 @@ setresponsedata3(responsedata2)
         icon: "error",
       });
   }
-  // if (!Evidence.length !== 0) {
+  // if (!EVIDENCE.length !== 0) {
   //   Swal.fire({
-  //     title: "Evidence",
-  //     text: "Please enter Evidence",
+  //     title: "EVIDENCE",
+  //     text: "Please enter EVIDENCE",
   //     icon: "error",
   //   });
   // } 
       try {
-        await axios.post(`http://localhost:5000/addIssue`, {urls, Evidence, Risk, Solutions, OID, project_name_id},
+        await axios.post(`http://localhost:5000/addIssue`, {urls, EVIDENCE, Risk, Recommendation, OID, project_name_id},
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
         setUrls([]);
-        setEvidence([]);
+        setEVIDENCE([]);
         setRisk([]);
-        setSolutions([]);
+        setRecommendation([]);
         setOID('');
         await fetchData();
       } catch (err) {
@@ -413,16 +421,55 @@ setresponsedata3(responsedata2)
       setIsModalOpen1(false);
       setIsModalOpen2(false);
       setIsModalOpen3(false);
-      setIsModalOpen4(false);
+      
       setIsModalOpen5(false);
       setIsModalOpen6(false);
       setIsModalOpen7(false);
       setIsModalOpen8(false);
-      setIsModalOpen10(false);
-      setIsModalOpen11(false);
+      
       setIsModalOpen9(false);
       setIsModalOpen12(false);
     };
+    const FormsummitActive = async () => {
+      if (!isURL(urls)) {
+    return Swal.fire({
+      title: "url Error",
+      text: "url Error",
+      icon: "error",
+    });
+}
+// if (!EVIDENCE.length !== 0) {
+//   Swal.fire({
+//     title: "EVIDENCE",
+//     text: "Please enter EVIDENCE",
+//     icon: "error",
+//   });
+// } 
+    try {
+      await axios.post(`http://localhost:5000/addIssueActive`, {urls, EVIDENCE, Risk, Recommendation, OID, project_name_id,vul_urls,parameter},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      setUrls([]);
+      setEVIDENCE([]);
+      setRisk([]);
+      setRecommendation([]);
+      setOID('');
+      setVulurls([]);
+      setparameter([]);
+      await fetchData();
+    } catch (err) {
+      alert(err.response.data);
+    }
+  
+    setIsModalOpen4(false);
+    setIsModalOpen10(false);
+    setIsModalOpen11(false);
+    setIsModalOpen12(false);
+    
+  };
     
     const showModal = (OID) => {
       setOID(OID);
@@ -507,10 +554,10 @@ setresponsedata3(responsedata2)
       if (selectedSeverity) {
         try {
           const result = await Swal.fire({
-            title: 'Confirm Severity Change?',
+            title: 'Comfirm Severity Change?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Confirm',
+            confirmButtonText: 'Yes',
             cancelButtonText: 'Cancel',
           });
   
@@ -554,13 +601,13 @@ setresponsedata3(responsedata2)
     const getColorForSeverity = (severity) => {
       switch (severity) {
         case 'Low':
-          return '#92e369';
+          return '#6adb11';
         case 'Medium':
           return '#FFBB28';
         case 'High':
           return '#f78129';
           case 'Critical':
-            return '#c20000';
+            return '#FF0000';
         default:
           return '#000001';
       }
@@ -576,13 +623,13 @@ setresponsedata3(responsedata2)
       const handleDelete = async (iddelete) => {
         try {
           const result = await Swal.fire({
-            title: 'Confirm Delete?',
+            title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Delete',
+            confirmButtonText: 'Yes, delete it!',
           });
     
           if (result.isConfirmed) {
@@ -798,12 +845,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -819,8 +866,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -846,16 +893,24 @@ setresponsedata3(responsedata2)
                                   <Modal
                                     title="Add URL SQL Injection"
                                     open={isModalOpen11}
-                                    onOk={Formsummit}
+                                    onOk={FormsummitActive}
                                     onCancel={handleCancel}
                                   >
                                     <Form
                                       className="input-container"
-                                      onFinish={Formsummit}
+                                      onFinish={FormsummitActive}
                                       labelCol={{
                                         span: 5,
                                       }}
                                     >
+                                      Vulnerable URL:
+                                      <Input
+                                        type="url"
+                                        className="forminput-control"
+                                        value={vul_urls}
+                                        onChange={(e) => setVulurls(e.target.value)}
+                                      />{" "}
+                                      <br />
                                       URL:
                                       <Input
                                         type="url"
@@ -864,12 +919,20 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      Parameter:
+                                      <Input
+                                        type="text"
+                                        className="forminput-control"
+                                        value={parameter}
+                                        onChange={(e) => setparameter(e.target.value)}
+                                      />
+                                      <br />
+                                      Payload:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -885,8 +948,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -894,7 +957,7 @@ setresponsedata3(responsedata2)
                               )}
       
       
-      
+      {/* fix kaaa */}
                               {Object.keys(item)[0] === "Reflected Cross Site Scripting" && (
                                 <div className="projcollaspe-head">
                                   <h3 className="projname">
@@ -913,16 +976,24 @@ setresponsedata3(responsedata2)
                                   <Modal
                                     title="Add URL Reflected Cross Site Scripting"
                                     open={isModalOpen10}
-                                    onOk={Formsummit}
+                                    onOk={FormsummitActive}
                                     onCancel={handleCancel}
                                   >
                                     <Form
                                       className="input-container"
-                                      onFinish={Formsummit}
+                                      onFinish={FormsummitActive}
                                       labelCol={{
                                         span: 5,
                                       }}
                                     >
+                                      Vulnerable URL:
+                                      <Input
+                                        type="url"
+                                        className="forminput-control"
+                                        value={vul_urls}
+                                        onChange={(e) => setVulurls(e.target.value)}
+                                      />{" "}
+                                      <br />
                                       URL:
                                       <Input
                                         type="url"
@@ -931,12 +1002,20 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      Parameter:
+                                      <Input
+                                        type="text"
+                                        className="forminput-control"
+                                        value={parameter}
+                                        onChange={(e) => setparameter(e.target.value)}
+                                      />
+                                      <br />
+                                      Payload:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -952,8 +1031,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -981,16 +1060,24 @@ setresponsedata3(responsedata2)
                                   <Modal
                                     title="Add URL Directory Traversal File Include"
                                     open={isModalOpen4}
-                                    onOk={Formsummit}
+                                    onOk={FormsummitActive}
                                     onCancel={handleCancel}
                                   >
                                     <Form
                                       className="input-container"
-                                      onFinish={Formsummit}
+                                      onFinish={FormsummitActive}
                                       labelCol={{
                                         span: 5,
                                       }}
                                     >
+                                      Vulnerable URL:
+                                      <Input
+                                        type="url"
+                                        className="forminput-control"
+                                        value={vul_urls}
+                                        onChange={(e) => setVulurls(e.target.value)}
+                                      />{" "}
+                                      <br />
                                       URL:
                                       <Input
                                         type="url"
@@ -999,12 +1086,20 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      Parameter:
+                                      <Input
+                                        type="text"
+                                        className="forminput-control"
+                                        value={parameter}
+                                        onChange={(e) => setparameter(e.target.value)}
+                                      />
+                                      <br />
+                                      Payload:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1020,8 +1115,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1049,16 +1144,24 @@ setresponsedata3(responsedata2)
                                   <Modal
                                     title="Add URL Command Injection"
                                     open={isModalOpen12}
-                                    onOk={Formsummit}
+                                    onOk={FormsummitActive}
                                     onCancel={handleCancel}
                                   >
                                     <Form
                                       className="input-container"
-                                      onFinish={Formsummit}
+                                      onFinish={FormsummitActive}
                                       labelCol={{
                                         span: 5,
                                       }}
                                     >
+                                      Vulnerable URL:
+                                      <Input
+                                        type="url"
+                                        className="forminput-control"
+                                        value={vul_urls}
+                                        onChange={(e) => setVulurls(e.target.value)}
+                                      />{" "}
+                                      <br />
                                       URL:
                                       <Input
                                         type="url"
@@ -1067,12 +1170,20 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      Parameter:
+                                      <Input
+                                        type="text"
+                                        className="forminput-control"
+                                        value={parameter}
+                                        onChange={(e) => setparameter(e.target.value)}
+                                      />
+                                      <br />
+                                      Payload:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1088,8 +1199,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1136,12 +1247,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1157,8 +1268,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1203,12 +1314,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1224,8 +1335,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1270,12 +1381,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1291,8 +1402,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1339,12 +1450,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1360,8 +1471,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1406,12 +1517,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1427,8 +1538,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1474,12 +1585,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1495,8 +1606,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1547,12 +1658,12 @@ setresponsedata3(responsedata2)
                                         onChange={(e) => setUrls(e.target.value)}
                                       />{" "}
                                       <br />
-                                      Evidence:
+                                      EVIDENCE:
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Evidence}
-                                        onChange={(e) => setEvidence(e.target.value)}
+                                        value={EVIDENCE}
+                                        onChange={(e) => setEVIDENCE(e.target.value)}
                                       />
                                       <br />
                                       {/* Parameter:<TextArea type="text" className="forminput-control" value={parameter} onChange={(e)=>setparameter(e.target.value)}/><br/> */}
@@ -1568,8 +1679,8 @@ setresponsedata3(responsedata2)
                                       <TextArea
                                         type="text"
                                         className="forminput-control"
-                                        value={Solutions}
-                                        onChange={(e) => setSolutions(e.target.value)}
+                                        value={Recommendation}
+                                        onChange={(e) => setRecommendation(e.target.value)}
                                       />
                                     </Form>
                                   </Modal>
@@ -1631,17 +1742,17 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr>
-                            <td style={{textAlign:"center",color:getColorForSeverity(OneData[12])}}>
+                            <td style={{textAlign:"center"}}>
                                       <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
                                         {OneData[1]}
                                       </a>
                                     </td>
-                                    <td style={{textAlign:"center",color:getColorForSeverity(OneData[12])}}>{OneData[2]}</td>
+                                    <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
@@ -1692,7 +1803,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -1732,18 +1843,16 @@ setresponsedata3(responsedata2)
                                         {
                                           label: (
                                             <div className="projcollaspe-head">
-                                              {OneData[14] === "Manual" ? (
+                                              {OneData[11] === "Manual" ? (
                                                     <>
-                                                    
-                                                        {/* แก้ */}
-                                                        <a style={{ color: getColorForSeverity(OneData[13]) }} href={OneData[2]} target="_blank" rel="noopener noreferrer">
-                                                        {dataIndex+1}.   {OneData[2]}
+                                                        <a style={{ color: getColorForSeverity(OneData[9]) }} href={OneData[12]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {decodeURIComponent(OneData[12])}
                                                         </a>
-                                                          <span style={{ color: getColorForSeverity(OneData[13]) }}> Manual</span>
+                                                          <span style={{ color: getColorForSeverity(OneData[9]) }}> Manual</span>
                                                     </>
                                                 ) : (
-                                                    <a style={{ color: getColorForSeverity(OneData[13]) }} href={OneData[2]} target="_blank" rel="noopener noreferrer">
-                                                         {dataIndex+1}.  {OneData[2]}
+                                                    <a style={{ color: getColorForSeverity(OneData[9]) }} href={OneData[12]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {decodeURIComponent(OneData[12])}
                                                     </a>
                                                 )}
                                               {Delete === 'Advance' && (
@@ -1760,45 +1869,47 @@ setresponsedata3(responsedata2)
                                           children: (
                                             
                                             <div className="collapse-content" style={{ overflow: 'auto' }}>
-                                              <table style={{ width: '100%' }}>
+                                              <table>
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
                                                     <th>Parameter</th>
-                                                    <th>Payload</th>                                                           
+                                                    <th>Payload</th>  
+                                                                                               
                                                   </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr>
-                            <td style={{textAlign:"center",color:getColorForSeverity(OneData[13])}}>
+                            <td style={{textAlign:"center"}}>
                                       <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
                                         {OneData[1]}
                                       </a>
                                     </td>
-                                    <td style={{textAlign:"center",color:getColorForSeverity(OneData[13])}}>{OneData[7]}</td>
-                                    <td style={{textAlign:"center",color:getColorForSeverity(OneData[13])}}>{OneData[6]}</td>
+                                    <td style={{textAlign:"center",color:"red"}}>{OneData[3]}</td>
+                                    {/* fixja */}
+                                    <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
                             </tr>
                             <tr>
                             <td colSpan="2"  style={{ textAlign: 'left'}}>
                                 <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
-                                <p> {OneData[8]}</p>
+                                <p> {OneData[4]}</p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>Solutions:</strong>
                                 <p>
-                                {OneData[9]}
+                                {OneData[5]}
                                 </p>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>References:</strong><br/>
-                                <a href={OneData[12]} target="_blank" rel="noopener noreferrer">
+                                <a href={OneData[8]} target="_blank" rel="noopener noreferrer">
                                                       
           
-                                                      {OneData[12]}
+                                                      {OneData[8]}
                                                       </a>
                               </td>
                             </tr>
@@ -1806,7 +1917,7 @@ setresponsedata3(responsedata2)
                               <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>WSTG-ID:</strong>
                                 <p>
-                                {OneData[10]}
+                                {OneData[6]}
                                 </p>
                               </td>
                             </tr>
@@ -1814,9 +1925,9 @@ setresponsedata3(responsedata2)
                             <td colSpan="2"  style={{ textAlign: 'left' }}>
                                 <strong  style={{fontSize:"16px"}}>Severity:</strong>
                             <select
-                              style={{ color: getColorForSeverity(OneData[13]) }}
-                              value={updatedSeverities[index] || OneData[13]}
-                              onChange={(e) => handleSeverityChange(e, index, OneData[13])}
+                              style={{ color: getColorForSeverity(OneData[9]) }}
+                              value={updatedSeverities[index] || OneData[9]}
+                              onChange={(e) => handleSeverityChange(e, index, OneData[10])}
                             >
                              <option style={{ color: "#6adb11" }} value="Low">
                         Low
@@ -1827,11 +1938,11 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
-                            <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[11], updatedSeverities[index] || OneData[13])}>Confirm</Button>
+                            <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
                           </td>
         </tr>
                                                 </tbody>
@@ -1869,14 +1980,14 @@ setresponsedata3(responsedata2)
                                             <div className="projcollaspe-head">
                                              {OneData[14] === "Manual" ? (
                                                     <>
-                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                        {dataIndex+1}.   {OneData[3]}
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[15]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {decodeURIComponent(OneData[15])}
                                                         </a>
                                                           <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
                                                     </>
                                                 ) : (
-                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                         {dataIndex+1}.  {OneData[3]}
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[15]} target="_blank" rel="noopener noreferrer">
+                                                         {dataIndex+1}.  {decodeURIComponent(OneData[15])}
                                                     </a>
                                                 )}
                                               {Delete === 'Advance' && (
@@ -1960,7 +2071,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2003,14 +2114,14 @@ setresponsedata3(responsedata2)
                                             <div className="projcollaspe-head">
                                              {OneData[14] === "Manual" ? (
                                                     <>
-                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                        {dataIndex+1}.    {OneData[3]}
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[15]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.    {decodeURIComponent(OneData[15])}
                                                         </a>
                                                           <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
                                                     </>
                                                 ) : (
-                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                        {dataIndex+1}.   {OneData[3]}
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[15]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {decodeURIComponent(OneData[15])}
                                                     </a>
                                                 )}
                                               {Delete === 'Advance' && (
@@ -2031,7 +2142,8 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>Parameter</th>
+                                                    <th>Payload</th>                                                          
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2041,136 +2153,7 @@ setresponsedata3(responsedata2)
                                         {OneData[1]}
                                       </a>
                                     </td>
-                                    <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
-                            </tr>
-                            <tr>
-                            <td colSpan="2"  style={{ textAlign: 'left'}}>
-                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
-                                <p> {OneData[7]}</p>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
-                                <p>
-                                {OneData[8]}
-                                </p>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
-                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
-                                                      
-          
-                                                      {OneData[11]}
-                                                      </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>WSTG-ID:</strong>
-                                <p>
-                                {OneData[9]}
-                                </p>
-                              </td>
-                            </tr>
-                            <tr key={index}>
-                            <td colSpan="2"  style={{ textAlign: 'left' }}>
-                                <strong  style={{fontSize:"16px"}}>Severity:</strong>
-                            <select
-                              style={{ color: getColorForSeverity(OneData[12]) }}
-                              value={updatedSeverities[index] || OneData[12]}
-                              onChange={(e) => handleSeverityChange(e, index, OneData[10])}
-                            >
-                             <option style={{ color: "#92e369" }} value="Low">
-                        Low
-                      </option>
-                      <option style={{ color: "#FFBB28" }} value="Medium">
-                        Medium
-                      </option>
-                      <option style={{ color: "#f78129" }} value="High">
-                        High
-                      </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
-                        Critical
-                      </option>
-                            </select>
-                            <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
-                          </td>
-        </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
-                                          ),
-                                        },
-                                      ]}
-                                    />
-                                  ))}
-                                </>
-                              )}
-      
-      
-      
-      {Object.keys(item)[0] === "Command Injection" && (
-                                <>
-                                  {item[Object.keys(item)[0]].map((OneData, dataIndex) => (
-                                    <Collapse
-                                      key={`${index}-${dataIndex}`}
-                                      className="projcollaspe"
-                                      collapsible="header"
-                                      size="small"
-                                      defaultActiveKey={[`${index}-${dataIndex}`]}
-                                      style={{ marginTop: '5px', display: 'block', width: '100%' }}
-                                      expandIcon={({ isActive }) => (
-                                        <>
-                                          <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
-                                        </>
-                                      )}
-                                      items={[
-                                        {
-                                          label: (
-                                            <div className="projcollaspe-head">
-                                             {OneData[14] === "Manual" ? (
-                                                    <>
-                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                        {dataIndex+1}.    {OneData[3]}
-                                                        </a>
-                                                          <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
-                                                    </>
-                                                ) : (
-                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[3]} target="_blank" rel="noopener noreferrer">
-                                                        {dataIndex+1}.   {OneData[3]}
-                                                    </a>
-                                                )}
-                                              {Delete === 'Advance' && (
-                                                <Space size="middle">
-                                                  <Button
-                                                    type="danger"
-                                                    icon={<CloseOutlined className="close-button" style={{ color: 'red', marginBottom: '20px' }} />}
-                                                    onClick={() => handleDelete(OneData[10])}
-                                                  ></Button>
-                                                </Space>
-                                              )}
-                                            </div>
-                                          ),
-                                          children: (
-                                            
-                                            <div className="collapse-content" style={{ overflow: 'auto' }}>
-                                              <table>
-                                                <thead>
-                                                  <tr>
-                                                    <th>URL</th>
-                                                    <th>Evidence</th>                                                           
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                            <td style={{textAlign:"center"}}>
-                                      <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
-                                        {OneData[1]}
-                                      </a>
-                                    </td>
+                                    <td style={{textAlign:"center",color:"red"}}>{OneData[3]}</td>
                                     <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
                             </tr>
                             <tr>
@@ -2222,7 +2205,139 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
+                        Critical
+                      </option>
+                            </select>
+                            <Button  style={{marginLeft:"20px"}} onClick={() => handleConfirmButtonClick(OneData[10], updatedSeverities[index] || OneData[12])}>Confirm</Button>
+                          </td>
+        </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          ),
+                                        },
+                                      ]}
+                                    />
+                                  ))}
+                                </>
+                              )}
+      
+      
+      
+      {Object.keys(item)[0] === "Command Injection" && (
+                                <>
+                                  {item[Object.keys(item)[0]].map((OneData, dataIndex) => (
+                                    <Collapse
+                                      key={`${index}-${dataIndex}`}
+                                      className="projcollaspe"
+                                      collapsible="header"
+                                      size="small"
+                                      defaultActiveKey={[`${index}-${dataIndex}`]}
+                                      style={{ marginTop: '5px', display: 'block', width: '100%' }}
+                                      expandIcon={({ isActive }) => (
+                                        <>
+                                          <RightOutlined className="projcollaspe-ico" rotate={isActive ? 90 : 0} style={{ fontSize: '16px', marginTop: '5px' }} />
+                                        </>
+                                      )}
+                                      items={[
+                                        {
+                                          label: (
+                                            <div className="projcollaspe-head">
+                                             {OneData[14] === "Manual" ? (
+                                                    <>
+                                                        <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[15]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {decodeURIComponent(OneData[15])}
+                                                        </a>
+                                                          <span style={{ color: getColorForSeverity(OneData[12]) }}> Manual</span>
+                                                    </>
+                                                ) : (
+                                                    <a style={{ color: getColorForSeverity(OneData[12]) }} href={OneData[15]} target="_blank" rel="noopener noreferrer">
+                                                        {dataIndex+1}.   {decodeURIComponent(OneData[15])}
+                                                    </a>
+                                                )}
+                                              {Delete === 'Advance' && (
+                                                <Space size="middle">
+                                                  <Button
+                                                    type="danger"
+                                                    icon={<CloseOutlined className="close-button" style={{ color: 'red', marginBottom: '20px' }} />}
+                                                    onClick={() => handleDelete(OneData[10])}
+                                                  ></Button>
+                                                </Space>
+                                              )}
+                                            </div>
+                                          ),
+                                          children: (
+                                            
+                                            <div className="collapse-content" style={{ overflow: 'auto' }}>
+                                              <table>
+                                                <thead>
+                                                  <tr>
+                                                    <th>URL</th>
+                                                    <th>Parameter</th>
+                                                    <th>Payload</th>                                                          
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                            <td style={{textAlign:"center"}}>
+                                      <a href={OneData[1]} target="_blank" rel="noopener noreferrer">
+                                        {OneData[1]}
+                                      </a>
+                                    </td>
+                                    <td style={{textAlign:"center",color:"red"}}>{OneData[3]}</td>
+                                    <td style={{textAlign:"center",color:"red"}}>{OneData[2]}</td>
+                            </tr>
+                            <tr>
+                            <td colSpan="2"  style={{ textAlign: 'left'}}>
+                                <strong style={{fontSize:"16px"}}>Vulnerability Description:</strong> 
+                                <p> {OneData[7]}</p>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan="2"  style={{ textAlign: 'left' }}>
+                                <strong  style={{fontSize:"16px"}}>Solutions:</strong>
+                                <p>
+                                {OneData[8]}
+                                </p>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan="2"  style={{ textAlign: 'left' }}>
+                                <strong  style={{fontSize:"16px"}}>References:</strong><br/>
+                                <a href={OneData[11]} target="_blank" rel="noopener noreferrer">
+                                                      
+          
+                                                      {OneData[11]}
+                                                      </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan="2"  style={{ textAlign: 'left' }}>
+                                <strong  style={{fontSize:"16px"}}>WSTG-ID:</strong>
+                                <p>
+                                {OneData[9]}
+                                </p>
+                              </td>
+                            </tr>
+                            <tr key={index}>
+                            <td colSpan="2"  style={{ textAlign: 'left' }}>
+                                <strong  style={{fontSize:"16px"}}>Severity:</strong>
+                            <select
+                              style={{ color: getColorForSeverity(OneData[12]) }}
+                              value={updatedSeverities[index] || OneData[12]}
+                              onChange={(e) => handleSeverityChange(e, index, OneData[10])}
+                            >
+                             <option style={{ color: "#6adb11" }} value="Low">
+                        Low
+                      </option>
+                      <option style={{ color: "#FFBB28" }} value="Medium">
+                        Medium
+                      </option>
+                      <option style={{ color: "#f78129" }} value="High">
+                        High
+                      </option>
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2295,7 +2410,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2365,7 +2480,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2432,7 +2547,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2502,7 +2617,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2572,7 +2687,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2643,7 +2758,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2713,7 +2828,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -2886,7 +3001,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -2969,7 +3084,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -3039,7 +3154,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -3109,7 +3224,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -3179,7 +3294,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
@@ -3248,7 +3363,7 @@ setresponsedata3(responsedata2)
                                                 <thead>
                                                   <tr>
                                                     <th>URL</th>
-                                                    <th>Evidence</th>                                                           
+                                                    <th>EVIDENCE</th>                                                           
                                                   </tr>
                                                 </thead>
                                                 <tbody>
@@ -3318,7 +3433,7 @@ setresponsedata3(responsedata2)
                       <option style={{ color: "#f78129" }} value="High">
                         High
                       </option>
-                      <option style={{ color: "#c20000" }} value="Critical">
+                      <option style={{ color: "#FF0000" }} value="Critical">
                         Critical
                       </option>
                             </select>
