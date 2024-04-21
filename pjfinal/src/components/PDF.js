@@ -179,25 +179,25 @@ const PDF = (props) => {
             cellWidth: 20,
           },
           1: {
-            cellWidth: 79,
+            cellWidth: 109,
           },
           2: {
-            cellWidth: 60,
+            cellWidth: 30,
           },
         };
         let columnStyles_vulcontent_3 = {
           //159.2
           0: {
-            cellWidth: 20,
+            cellWidth: 15,
           },
           1: {
             cellWidth: 69,
           },
           2: {
-            cellWidth: 30,
+            cellWidth: 20,
           },
           3: {
-            cellWidth: 20,
+            cellWidth: 35,
           },
           4: {
             cellWidth: 20
@@ -212,27 +212,28 @@ const PDF = (props) => {
           if (key === "SQL Injection" ) {
             vulcontenthead = [['No.', 'URL', 'Parameter','Payload', 'Severity']];
             url = vulnerability[1];
-            parameter = vulnerability[7];
-            payload = vulnerability[3]
-            severity = vulnerability[13];
+            parameter = vulnerability[3];
+            payload = vulnerability[2]
+            severity = vulnerability[9];
             columnStyles_vulcontent = columnStyles_vulcontent_3;
             return [`${innerIndex + 1}`, url, parameter, payload, severity];
-          }else if ( key === "Directory Traversal File Include") {
-            vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
-            url = vulnerability[4];
-            evidence = vulnerability[5];
-            severity = vulnerability[12];
-            columnStyles_vulcontent = columnStyles_vulcontent_1;
-            return [`${innerIndex + 1}`, url, evidence, severity];
-          }
-           else if (key === "Reflected Cross Site Scripting") {
-            vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
+          }else if ( key === "Directory Traversal File Include" || key === "Reflected Cross Site Scripting" || key === "Command Injection") {
+            vulcontenthead = [['No.', 'URL', 'Parameter','Payload', 'Severity']];
             url = vulnerability[1];
-            evidence = vulnerability[3];
+            parameter = vulnerability[3];
+            payload = vulnerability[2]
             severity = vulnerability[12];
-            columnStyles_vulcontent = columnStyles_vulcontent_1;
-            return [`${innerIndex + 1}`, url, evidence, severity];
+            columnStyles_vulcontent = columnStyles_vulcontent_3;
+            return [`${innerIndex + 1}`, url, parameter, payload, severity];
           }
+          //  else if (key === "Reflected Cross Site Scripting") {
+          //   vulcontenthead = [['No.', 'URL', 'Parameters', 'severity']];
+          //   url = vulnerability[1];
+          //   evidence = vulnerability[3];
+          //   severity = vulnerability[12];
+          //   columnStyles_vulcontent = columnStyles_vulcontent_1;
+          //   return [`${innerIndex + 1}`, url, evidence, severity];
+          // }
           else if (key === "Sensitive File Disclosure") {
             vulcontenthead = [['No.', 'URL', 'severity']];
             url = vulnerability[2];
@@ -268,13 +269,13 @@ const PDF = (props) => {
         let details, Evidence, Solutions, owasp, reference;
 
         if (key === "SQL Injection" ) {
-          details = vulnerabilities[0][8];
+          details = vulnerabilities[0][4];
           Evidence = "From the table above, when injecting the payload into the parameter, it receives an unexpected response."
-          Solutions = vulnerabilities[0][9];
-          owasp = vulnerabilities[0][10];
-          reference = vulnerabilities[0][12];
+          Solutions = vulnerabilities[0][5];
+          owasp = vulnerabilities[0][6];
+          reference = vulnerabilities[0][8];
 
-        }else if (key === "Directory Traversal File Include" ) {
+        }else if (key === "Directory Traversal File Include" ||key === "Command Injection" ||key === "Reflected Cross Site Scripting" ) {
           details = vulnerabilities[0][7];
           Evidence = "From the table above, when injecting the payload into the parameter, it receives an unexpected response.";
           Solutions = vulnerabilities[0][8];
@@ -282,14 +283,14 @@ const PDF = (props) => {
           reference = vulnerabilities[0][11];
 
         }
-         else if (key === "Reflected Cross Site Scripting") {
-          details = vulnerabilities[0][7];
-          Evidence = "From the table above, when injecting the payload into the parameter, it receives an unexpected response.";
-          Solutions = vulnerabilities[0][8];
-          owasp = vulnerabilities[0][9];
-          reference = vulnerabilities[0][11];
-
-        } else if (key === "Sensitive File Disclosure") {
+        // else if (key === "Reflected Cross Site Scripting") {
+        //   details = vulnerabilities[0][7];
+        //   Evidence = "From the table above, when injecting the payload into the parameter, it receives an unexpected response.";
+        //   Solutions = vulnerabilities[0][8];
+        //   owasp = vulnerabilities[0][9];
+        //   reference = vulnerabilities[0][11];
+        // }
+         else if (key === "Sensitive File Disclosure") {
           details = vulnerabilities[0][7];
           Evidence = "We have found sensitive file from following URLs";
           Solutions = vulnerabilities[0][8];
@@ -301,7 +302,7 @@ const PDF = (props) => {
           Evidence = vulnerabilities[0][3];
           Solutions = vulnerabilities[0][5];
           owasp = vulnerabilities[0][6];
-          reference = vulnerabilities[0][11];
+          reference = vulnerabilities[0][9];
         }
         doc.setFontSize(12);
 
