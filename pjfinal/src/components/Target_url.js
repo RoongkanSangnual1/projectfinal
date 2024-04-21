@@ -36,7 +36,7 @@ const Target_url = () => {
         setLoadingButton(true);
     
         try {
-            const res = await axios.post(`http://127.0.0.1:5000/crawl`, { project_name, url, description }, {
+            const res = await axios.post(`http://localhost:5000/crawl`, { project_name, url, description }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Access-Control-Allow-Origin' : '*',
@@ -47,7 +47,10 @@ const Target_url = () => {
             console.log(res);
             setLoad(false);
             setLoadingButton(false);
-            setProject_name_id(res.data.project_name_id_result[0][0]);
+            if(res.data.project_name_id_result){
+                setProject_name_id(res.data.project_name_id_result[0][0]);
+            }
+           
     
             if (res.data.Change) {
                 console.log(res.data.Change.length);
@@ -74,9 +77,10 @@ const Target_url = () => {
         }
     };
     return (
-            <div className='Applayout'>
+        <div>
             <Navbar />
-
+            <div className='Applayout'>
+            
             <div className="container2">
                 <Link to='/home' className="exit"><CloseOutlined style={{color:"red"}} /></Link>
                 <h2>Create Project</h2>
@@ -122,6 +126,8 @@ const Target_url = () => {
                 )}
             </div>
             </div>
+
+        </div>
     )
 }
 

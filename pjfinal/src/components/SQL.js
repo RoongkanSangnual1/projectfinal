@@ -69,7 +69,7 @@ const SQlinject = (props) => {
     const token = localStorage.getItem('token')
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name_id}`, {
+        const response = await axios.get(`http://localhost:5000/onedata?project_name_id=${project_name_id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -335,7 +335,7 @@ const SQlinject = (props) => {
   
     const Formsummit = async () => {
       try {
-        await axios.post(`http://127.0.0.1:5000/addIssue`, {urls, EVIDENCE, Risk, Recommendation, OID, project_name_id},
+        await axios.post(`http://localhost:5000/addIssue`, {urls, EVIDENCE, Risk, Recommendation, OID, project_name_id},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -445,7 +445,7 @@ const SQlinject = (props) => {
     //     // console.log("OID", OID);
       
     //     axios
-    //     .post(`http://127.0.0.1:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
+    //     .post(`http://localhost:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
     //     {
     //       headers:{
     //           Authorization: `Bearer ${token}`,
@@ -514,7 +514,7 @@ const SQlinject = (props) => {
     const sendSeverityToAPI = async (vulnerability, newSeverity) => {
       try {
         await axios.put(
-          `http://127.0.0.1:5000/updateSeverityURL`,
+          `http://localhost:5000/updateSeverityURL`,
           {
             project_name_id,
             vulnerability,
@@ -535,13 +535,13 @@ const SQlinject = (props) => {
     const getColorForSeverity = (severity) => {
       switch (severity) {
         case 'Low':
-          return '#6F77B1';
+          return '#92e369';
         case 'Medium':
           return '#FFBB28';
         case 'High':
           return '#FF5100';
           case 'Critical':
-            return '#FF0000';
+            return '#c20000';
         default:
           return '#000000';
       }
@@ -556,17 +556,17 @@ const SQlinject = (props) => {
       const handleDelete = async (iddelete) => {
         try {
           const result = await Swal.fire({
-            title: 'Are you sure?',
+            title: 'Confirm Delete?',
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Delete',
           });
     
           if (result.isConfirmed) {
-            await axios.delete(`http://127.0.0.1:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`, {
+            await axios.delete(`http://localhost:5000/oneVulsdelete?project_name_id=${project_name_id}&record=${iddelete}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },

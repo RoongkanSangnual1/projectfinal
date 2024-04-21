@@ -72,7 +72,7 @@ const EdiSQlinject = (props) => {
     const token = new URLSearchParams(location.search).get('token');
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/edit-issue?token=${token}`, {
+        const response = await axios.get(`http://localhost:5000/edit-issue?token=${token}`, {
           headers: {
             'Authorization': `Bearer ${tokenuser}`,
             'Access-Control-Allow-Origin' : '*',
@@ -341,7 +341,7 @@ const EdiSQlinject = (props) => {
     const Formsummit = async () => {
       try {
         await         axios
-        .post(`http://127.0.0.1:5000/addIssueedit`,{urls,EVIDENCE,Risk,Recommendation,OID,token},
+        .post(`http://localhost:5000/addIssueedit`,{urls,EVIDENCE,Risk,Recommendation,OID,token},
         {
           headers:{
               Authorization: `Bearer ${tokenuser}`,
@@ -454,7 +454,7 @@ const EdiSQlinject = (props) => {
     //     // console.log("OID", OID);
       
     //     axios
-    //     .post(`http://127.0.0.1:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
+    //     .post(`http://localhost:5000/addIssue`,{urls,EVIDENCE,Risk,Recommendation,OID,project_name_id},
     //     {
     //       headers:{
     //           Authorization: `Bearer ${token}`,
@@ -523,7 +523,7 @@ const EdiSQlinject = (props) => {
     const sendSeverityToAPI = async (vulnerability, newSeverity) => {
       try {
         await axios.put(
-          `http://127.0.0.1:5000/editupdateSeverityURL`,
+          `http://localhost:5000/editupdateSeverityURL`,
           {
             token,
             vulnerability,
@@ -577,7 +577,7 @@ const EdiSQlinject = (props) => {
           });
     
           if (result.isConfirmed) {
-            await    axios.delete(`http://127.0.0.1:5000/EditoneVulsdelete?project_name_id=${token}&record=${iddelete}`,{
+            await    axios.delete(`http://localhost:5000/EditoneVulsdelete?project_name_id=${token}&record=${iddelete}`,{
               headers:{
                 Authorization:`Bearer ${tokenuser}`,
                 'Access-Control-Allow-Origin' : '*',

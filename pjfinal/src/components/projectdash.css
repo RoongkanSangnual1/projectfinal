@@ -1,7 +1,11 @@
+.spaceUpProject{
+    width: auto;
+    height: 150px;
+}
 .ProjectDash-Head{
     display: flex;
     margin-left: 50px;
-    margin-top: 10px;
+    
 }
 .ProjectDash-Head > h2{
     color: #064061;
@@ -16,11 +20,11 @@
     padding-bottom: 10px;
 }
 .ProjectDashh{
-    background-color: #ffff;
+    background-color: #efefef;
     padding-bottom: 10px;
 }
 .ProjectDashLayout{
-    width: 1200px;
+    width: 1400px;
     height: max-content;
     border-radius: 20px;
     /* box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); */
@@ -31,8 +35,8 @@
 }
 
 .ProjectDashLayoutt{
-    width: 1500px;
-    height: 1200px;
+    width: 1400px;
+    height: max-content;
 
     border-radius: 20px;
     /* box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.); */
@@ -43,6 +47,8 @@
 }
 .ProjectDashLayout p {
     padding: 10px; 
-    border-radius: 5px; 
-    word-break: break-all;
+    border-radius: 5px;
+    width: 1250px;
+    word-break: break-word;
+    text-align: justify;
 }

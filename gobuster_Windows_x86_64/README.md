@@ -311,8 +311,8 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
 2019/06/21 12:13:51 Starting gobuster
 ===============================================================
 2019/06/21 12:13:51 [-] Wildcard DNS found. IP address(es): 1.0.0.0
-Found: 127.0.0.1.xip.io
-Found: test.127.0.0.1.xip.io
+Found: localhost.xip.io
+Found: test.localhost.xip.io
 ===============================================================
 2019/06/21 12:13:53 Finished
 ===============================================================

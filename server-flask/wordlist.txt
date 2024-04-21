@@ -1,3 +1,4 @@
+?search=123
 .bash_history
 .bashrc
 .cache

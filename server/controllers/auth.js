@@ -118,6 +118,7 @@ exports.send_recovery_email = async  (req, res) => {
 };
 
 function sendEmail({ recipient_email, OTP }) {
+  
   return new Promise((resolve, reject) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
@@ -211,6 +212,12 @@ exports.share = async (req, res) => {
               console.log(projectName);
               console.log(username);
               const tyoemail = email.toString('utf-8');
+              // console.log(tyoemail);
+
+              if (!isValidEmail(tyoemail)) {
+                return res.status(400).json({ error: 'email error' });
+              }
+              
               console.log(tyoemail);
               payload = {'user_id': usershare, 'project_id': project_name,
               'project_name': [[projectName]], 'username': [[username]]}
@@ -229,6 +236,11 @@ exports.share = async (req, res) => {
   }
 };
 
+function isValidEmail(email) {
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
 
 
 
@@ -282,3 +294,4 @@ function sendEmail2(email, link) {
       });
   });
 }
+

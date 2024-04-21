@@ -40,13 +40,13 @@ const ProjectDash = () => {
     const project_name = project_name_id.project_name_id
     const project_name_n = project_name_id.project_name
     const user = localStorage.user;
-    const [activeTabKey1, setActiveTabKey1] = useState('tab1');
+    const [activeTabKey1, setActiveTabKey1] = useState('tab2');
     const navigate = useNavigate()
  
       const fetchData = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get(`http://127.0.0.1:5000/onedata?project_name_id=${project_name}`, {
+          const response = await axios.get(`http://localhost:5000/onedata?project_name_id=${project_name}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -92,12 +92,12 @@ const ProjectDash = () => {
       const handleTabChange = () => {
         const pathName = location.pathname;
     
-        if (pathName.endsWith('tab4')) {
-          setActiveTabKey1('tab4');
-        } else if (pathName.endsWith('tab4')) {
-          setActiveTabKey1('tab4');
+        if (pathName.endsWith('tab3')) {
+          setActiveTabKey1('tab3');
+        } else if (pathName.endsWith('tab3')) {
+          setActiveTabKey1('tab3');
         } else {
-          setActiveTabKey1('tab4');
+          setActiveTabKey1('tab3');
         }
       };
     
@@ -112,9 +112,9 @@ console.log(pathName)
 
 useEffect(() => {
   const { pathname } = location;
-  if (activeTabKey1 === 'tab5' && pathname.includes('/tab4')) {
-    setActiveTabKey1('tab4');
-    const trimmedPath = pathname.replace('/tab4', '');
+  if (activeTabKey1 === 'tab1' && pathname.includes('/tab3')) {
+    setActiveTabKey1('tab3');
+    const trimmedPath = pathname.replace('/tab3', '');
     navigate(trimmedPath, { replace: true });
   }
 }, [activeTabKey1, location.pathname, navigate]);
@@ -123,7 +123,7 @@ useEffect(() => {
   const save = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://127.0.0.1:5000/save`, { project_name }, {
+      await axios.post(`http://localhost:5000/save`, { project_name }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -161,7 +161,7 @@ useEffect(() => {
       <>
 <p style={{
   fontSize: '22px',
-  color: 'grey',
+  color: '#2c2c2c',
   marginTop: '0px',
   whiteSpace: 'pre-line',
   marginBottom: '0',
@@ -170,7 +170,7 @@ useEffect(() => {
 
 <p style={{
   fontSize: '22px',
-  color: 'grey',
+  color: '#2c2c2c',
   marginTop: '0px',
   whiteSpace: 'pre-line',
   marginBottom: '0',
@@ -179,13 +179,13 @@ useEffect(() => {
 
 <p className="projdes" style={{
   fontSize: '15px',
-  color: 'grey',
+  color: '#2c2c2c',
   marginTop: '0px',
   wordWrap: 'break-word',
   wordBreak: 'break-all',
   whiteSpace: 'pre-line',
   marginBottom: '0',
-  maxWidth: '1000px'  
+  textAlign:"center"
 }}> Descriptions: {Des}</p>
 
 <p style={{
@@ -225,6 +225,11 @@ useEffect(() => {
     const tabList = [
       {
         key: 'tab1',
+        tab: 'Dashboard',
+        
+    },
+      {
+        key: 'tab2',
         tab: 'Scan URLs',
       },
       // {
@@ -232,21 +237,18 @@ useEffect(() => {
       //   tab: 'Issues',
       // },
       {
-        key: 'tab4',
+        key: 'tab3',
         tab: 'Issues',
-        path: 'tab4', 
+        path: 'tab3', 
       },
-      {
-        key: 'tab5',
-        tab: 'Dashboard',
-        
-    },
+      
     ];
   const contentList = {
-  tab1: <p><URLlist id={project_name} name={project_name_n} /> </p>,
+  tab1:<Dashboard id={project_name} name={project_name_n} time={time} start={start} end={end} urlsAll={urlsAll}/>,
+  tab2: <p><URLlist id={project_name} name={project_name_n} /> </p>,
   // tab2: <p><Issues/></p>,
-  tab4: <SQlinject id={project_name} name={project_name_n} />,
-  tab5:<Dashboard id={project_name} name={project_name_n} time={time} start={start} end={end} urlsAll={urlsAll}/>
+  tab3: <SQlinject id={project_name} name={project_name_n} />,
+  
   };
     
     dispatch({
@@ -284,7 +286,7 @@ const handleCopy = () => {
 
       
 
-      axios.post(`http://127.0.0.1:5000/generate-link`, { project_name, usershare }, {
+      axios.post(`http://localhost:5000/generate-link`, { project_name, usershare }, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -311,17 +313,18 @@ const handleCopy = () => {
 
   return (
 
-        <div className={activeTabKey1 === 'tab5' ? 'ProjectDashh' : 'ProjectDash'}>
+        <div className={activeTabKey1 === 'tab1' ? 'ProjectDash' : 'ProjectDash'}>
       <Navbar />
+      <div className='spaceUpProject'></div>
       <div className='ProjectDash-Head'>
       <Link to={`/home`} className="projedit-btn" style={{ fontSize: '30px', color: '#064061', marginRight: '20px',marginTop:'20px' }}>
                              <LeftCircleOutlined />
                             </Link>
         <h2>{project_name_n}</h2>
       </div>
-      
-      <div className={activeTabKey1 === 'tab5' ? 'ProjectDashLayoutt' : 'ProjectDashLayout'}>
-        {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab4' ||activeTabKey1 === 'tab5') && (
+      {/* <div className={activeTabKey1 === 'tab1' ? 'ProjectDashLayoutt' : 'ProjectDashLayout'}> */}
+      <div className={activeTabKey1 === 'tab1' ? 'ProjectDashLayout' : 'ProjectDashLayout'}>
+        {(activeTabKey1 === 'tab2' || activeTabKey1 === 'tab3' ||activeTabKey1 === 'tab1') && (
           <> 
             <Card
               style={{
@@ -346,8 +349,8 @@ const handleCopy = () => {
                 </div>
               )}
 
-              {(activeTabKey1 === 'tab1' || activeTabKey1 === 'tab4') &&(
-                <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(1000px) scale(1.5)', marginTop: '20px', marginLeft: '35px' }}>
+              {(activeTabKey1 === 'tab2' || activeTabKey1 === 'tab3') &&(
+                <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(1200px) scale(1.5)', marginTop: '20px', marginLeft: '35px' }}>
                 Share
               </Button>
               )}

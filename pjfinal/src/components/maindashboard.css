@@ -1,12 +1,24 @@
-.mainDash { 
-  padding-top: 150px;
+.mainDash {
+    
   margin: auto;
   text-align:left;
   width:1000px;
-  height: 800px;
+  height: max-content;
+  margin-top: 150px;
+  
   
 }
-
+/* .spaceUp{
+  width: 1000px;
+  height: 100px;
+} */
+.projcard-extra{
+  display: flex;
+  margin: auto 0px;
+}
+.projcard-extra > Form {
+  margin-right: 15px;
+}
 /* .projcard-inner{
 display: flex;
 
@@ -24,13 +36,24 @@ margin-right: auto;
 .projindash{
 margin-bottom: 50px;
 }
+.projcollaspe-extra{
+  display: flex;
+  line-height: 30px;
+  margin: auto;
 
+}
+.projcollaspe-extra > Button{
+  margin-left: 15px ;
+
+}
 .projcollaspe-head {
 display: flex;
 align-items: center;
 justify-content: space-between; 
 }
-
+.projcollaspe-head > a{
+  font-weight: 500;
+}
 .projcollaspe-content {
 display: flex;
 align-items: center;
@@ -65,40 +88,47 @@ line-break: anywhere;
 }
 .severitybutton-c{
   display: flex;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  background-color: #FF0000;
+  background-color: #c20000;
   margin-left:20px;
-  text-align: center;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
   color: white;
   
   
 }
 .severitybutton-h{
   display: flex;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background-color:#FF5100;
   margin-left:20px;
   color: white;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
 }
 .severitybutton-m{
   display: flex;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background-color: #FFBB28;
   margin-left:20px;
   color: white;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
 }
 .severitybutton-l{
   display: flex;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  background-color: #6F77B1;
+  background-color: #92e369;
   margin-left:20px;
   color: white;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
 }

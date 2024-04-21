@@ -13,8 +13,7 @@ import subprocess
 import os
 import re
 app = Flask(__name__)
-CORS(app,resources={"/*":{"origins":"*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, resources={r"/*": {"origins": "*"}}, headers='Content-Type')
 
 
 
@@ -626,7 +625,7 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                       
                                         mydb = mysql.connector.connect(
                                         user='root',
-                                       password='',
+                                        password='',
                                         host= 'localhost',
                                         database='robo' )
                                         print('SQL found with 1:' + payload.strip() + 'in ' + i)  
@@ -647,13 +646,14 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '11',
+                                            att_url,
                                             response.url,
                                             i,
                                             'T',
@@ -692,13 +692,14 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '11',
+                                            att_url,
                                             response.url,
                                             i,
                                             'T',
@@ -740,13 +741,14 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '11',
+                                            att_url,
                                             response.url,
                                             i,
                                             'T',
@@ -883,7 +885,7 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
+            password='',
             host= 'localhost',
             database='robo'
         )
@@ -1500,8 +1502,8 @@ async def run_gobuster(url,project_name,user):
             for item in word_list:
                 file.write(item + '\n')
         command = [
-            'gobuster',
-            # 'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
+            # 'gobuster',
+            'C:\\Users\\b_r_r\\OneDrive\\เดสก์ท็อป\\pj2566new\\gobuster_Windows_x86_64\\gobuster.exe',
             # 'D:\\SpecialP\\projectfinal\\gobuster_Windows_x86_64\\gobuster.exe',
             'dir',
             '-u', url,
@@ -1891,7 +1893,7 @@ async def webFrameworkhtml(PTarget):
     try:
         mydb = mysql.connector.connect(
             user='root',
-           password='',
+            password='',
             host= 'localhost',
             database='robo'
         )
@@ -3361,7 +3363,7 @@ def home():
         user_data = user.get('username', None)
         mydb = mysql.connector.connect(
                     user='root',
-                   password='',
+                    password='',
                     host= 'localhost',
                     database='robo'
                 )
@@ -4863,10 +4865,10 @@ def addIssue():
 
 
         url = request.json['urls']
-        payload_ = request.json['EVIDENCE']
+        payload_ = request.json['Evidence']
         O_id = request.json['OID']
         vul_Des = request.json['Risk']
-        vul_Sol = request.json['Recommendation']
+        vul_Sol = request.json['Solutions']
         project_name_id = request.json['project_name_id']
         mycursor = mydb.cursor()
         
@@ -5824,9 +5826,9 @@ async def onedata():
         mycursor = mydb.cursor()
         query = """
            SELECT tbl1.URL, tbl1.method, tbl1.status_code, tbl1.URL_ID
-FROM urllist tbl1
-JOIN project tbl2 ON tbl1.PID = tbl2.PID
-WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_code != %s
+            FROM urllist tbl1
+            JOIN project tbl2 ON tbl1.PID = tbl2.PID
+            WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_code != %s
         """
         mycursor.execute(query, (user_data, project_name_id, 'c', '404'))
         crawl_data = mycursor.fetchall()
@@ -5856,14 +5858,580 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
             database='robo'
         )
         mycursor = mydb.cursor()
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL ,payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state,vul_evidence FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
+        select_att_ID_sql_DATA = mycursor.fetchall()       
+
+        if select_att_ID_sql_DATA:
+            mycursor = mydb.cursor()
+            Severity11_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity11_, (project_name_id, select_att_ID_sql_DATA[0][9]))
+            Severity11_X = mycursor.fetchall()
+            if Severity11_X:
+                    max_severity = max(Severity11_X, key=lambda x: (
+                        x[0] == 'Critical',
+                        x[0] == 'High',
+                        x[0] == 'Medium',
+                        x[0] == 'Low'
+                    ))
+
+                    max_severity_value = max_severity[0]
+                    update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                    update_values = (max_severity_value, select_att_ID_sql_DATA[0][9],project_name_id)
+                    mycursor.execute(update_sql, update_values)
+                    mydb.commit()
+
+                    
+
+            
+                    mycursor = mydb.cursor()
+                    owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                    mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][9], project_name_id,))
+                    owasp11_ = mycursor.fetchall()          
+        else:
+                owasp11_ = [0]
+
+    
+        mycursor = mydb.cursor()
+        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state,vul_evidence FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
+        select_att_ID_xsssql_DATA = mycursor.fetchall()
+
+      
+        if select_att_ID_xsssql_DATA:
+            mycursor = mydb.cursor()
+            Severity10_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity10_, (project_name_id,select_att_ID_xsssql_DATA[0][9]))
+            Severity10_X = mycursor.fetchall()
+            if Severity10_X:
+                    max_severity = max(Severity10_X, key=lambda x: (
+                        x[0] == 'Critical',
+                        x[0] == 'High',
+                        x[0] == 'Medium',
+                        x[0] == 'Low'
+                    ))
+
+                    max_severity_value = max_severity[0]
+                    update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                    update_values = (max_severity_value, select_att_ID_xsssql_DATA[0][9],project_name_id)
+                    mycursor.execute(update_sql, update_values)
+                    mydb.commit()
+
+            
+                    mycursor = mydb.cursor()
+                    owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                    mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][9], project_name_id,))
+                    owasp10_ = mycursor.fetchall()   
+
+        else:
+                owasp10_ = [0]
+     
+
+       
+   
+        mycursor = mydb.cursor()
+        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_traversal, (project_name_id, '4'))
+        select_att_ID_select_att_traversal_DATA = mycursor.fetchall()
+      
+    
+        if select_att_ID_select_att_traversal_DATA:
+            mycursor = mydb.cursor()
+            Severity4_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity4_, (project_name_id, select_att_ID_select_att_traversal_DATA[0][9]))
+            Severity4_X = mycursor.fetchall()
+            
+            if Severity4_X:
+                        max_severity = max(Severity4_X, key=lambda x: (
+                            x[0] == 'Critical',
+                            x[0] == 'High',
+                            x[0] == 'Medium',
+                            x[0] == 'Low'
+                        ))
+
+                        max_severity_value = max_severity[0]
+                        update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                        update_values = (max_severity_value, select_att_ID_select_att_traversal_DATA[0][9],project_name_id)
+                        mycursor.execute(update_sql, update_values)
+                        mydb.commit()
+
+                        
+
+                
+                        mycursor = mydb.cursor()
+                        owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                        mycursor.execute(owasp_query, (select_att_ID_select_att_traversal_DATA[0][9], project_name_id,))
+                        owasp4_ = mycursor.fetchall()
+        else:
+                owasp4_ = [0]
+
+
+        mycursor = mydb.cursor()
+        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_secure, (project_name_id, '2',))
+        select_att_ID_select_att_secure_DATA = mycursor.fetchall()
+
+        if select_att_ID_select_att_secure_DATA:
+            mycursor = mydb.cursor()
+            Severity2_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity2_, (project_name_id, select_att_ID_select_att_secure_DATA[0][9]))
+            Severity2_X = mycursor.fetchall()
+            if Severity2_X:
+                    max_severity = max(Severity2_X, key=lambda x: (
+                        x[0] == 'Critical',
+                        x[0] == 'High',
+                        x[0] == 'Medium',
+                        x[0] == 'Low'
+                    ))
+
+                    max_severity_value = max_severity[0]
+                    update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                    update_values = (max_severity_value, select_att_ID_select_att_secure_DATA[0][9],project_name_id)
+                    mycursor.execute(update_sql, update_values)
+                    mydb.commit()
+
+                    
+
+            
+                    mycursor = mydb.cursor()
+                    owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                    mycursor.execute(owasp_query, (select_att_ID_select_att_secure_DATA[0][9], project_name_id,))
+                    owasp2_ = mycursor.fetchall()  
+        else:
+            owasp2_ = [0]
+      
+
+
+        mycursor = mydb.cursor()
+        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_httponly, (project_name_id, '3',))
+        select_att_ID_select_att_httponly_DATA = mycursor.fetchall()
+
+
+        if select_att_ID_select_att_httponly_DATA:
+            mycursor = mydb.cursor()
+            Severity3_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity3_, (project_name_id, select_att_ID_select_att_httponly_DATA[0][9]))
+            Severity3_X = mycursor.fetchall()
+        
+            if Severity3_X:
+                    max_severity = max(Severity3_X, key=lambda x: (
+                        x[0] == 'Critical',
+                        x[0] == 'High',
+                        x[0] == 'Medium',
+                        x[0] == 'Low'
+                    ))
+
+                    max_severity_value = max_severity[0]
+                    update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                    update_values = (max_severity_value, select_att_ID_select_att_httponly_DATA[0][9],project_name_id)
+                    mycursor.execute(update_sql, update_values)
+                    mydb.commit()
+
+                    
+
+            
+                    mycursor = mydb.cursor()
+                    owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                    mycursor.execute(owasp_query, (select_att_ID_select_att_httponly_DATA[0][9], project_name_id,))
+                    owasp3_ = mycursor.fetchall()
+
+        else:
+                owasp3_ = [0]
+
+        mycursor = mydb.cursor()
+        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_expire, (project_name_id, '5'))
+        select_att_ID_select_att_expire_DATA = mycursor.fetchall()
+
+
+        if select_att_ID_select_att_expire_DATA:
+            mycursor = mydb.cursor()
+            Severity5_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity5_, (project_name_id, select_att_ID_select_att_expire_DATA[0][9]))
+            Severity5_X = mycursor.fetchall()
+      
+
+            if Severity5_X:
+                        max_severity = max(Severity5_X, key=lambda x: (
+                            x[0] == 'Critical',
+                            x[0] == 'High',
+                            x[0] == 'Medium',
+                            x[0] == 'Low'
+                        ))
+
+                        max_severity_value = max_severity[0]
+                        update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                        update_values = (max_severity_value, select_att_ID_select_att_expire_DATA[0][9],project_name_id)
+                        mycursor.execute(update_sql, update_values)
+                        mydb.commit()
+
+                        
+
+                
+                        mycursor = mydb.cursor()
+                        owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                        mycursor.execute(owasp_query, (select_att_ID_select_att_expire_DATA[0][9], project_name_id,))
+                        owasp5_ = mycursor.fetchall()
+
+        else:
+                owasp5_ = [0]
+
+        mycursor = mydb.cursor()
+        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_samsite, (project_name_id, '6'))
+        select_att_ID_select_att_samsite_DATA = mycursor.fetchall()
+      
+
+
+        if select_att_ID_select_att_samsite_DATA:
+            mycursor = mydb.cursor()
+            Severity6_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity6_, (project_name_id, select_att_ID_select_att_samsite_DATA[0][9]))
+            Severity6_X = mycursor.fetchall()
+        
+      
+
+            if Severity6_X:
+                        max_severity = max(Severity6_X, key=lambda x: (
+                            x[0] == 'Critical',
+                            x[0] == 'High',
+                            x[0] == 'Medium',
+                            x[0] == 'Low'
+                        ))
+
+                        max_severity_value = max_severity[0]
+                        update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                        update_values = (max_severity_value, select_att_ID_select_att_samsite_DATA[0][9],project_name_id)
+                        mycursor.execute(update_sql, update_values)
+                        mydb.commit()
+
+                        
+
+                
+                        mycursor = mydb.cursor()
+                        owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                        mycursor.execute(owasp_query, (select_att_ID_select_att_samsite_DATA[0][9], project_name_id,))
+                        owasp6_ = mycursor.fetchall()
+
+        else:
+                owasp6_ = [0]
+   
+
+        mycursor = mydb.cursor()
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_Server, (project_name_id, '1',))
+        select_att_ID_select_att_server_DATA = mycursor.fetchall()
+        # print(select_att_ID_select_att_server_DATA[0][9],project_name_id)
+      
+
+
+        if select_att_ID_select_att_server_DATA:
+            mycursor = mydb.cursor()
+            Severity1_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity1_, (project_name_id, select_att_ID_select_att_server_DATA[0][9]))
+            Severity1_X = mycursor.fetchall()
+  
+      
+
+            if Severity1_X:
+                        max_severity = max(Severity1_X, key=lambda x: (
+                            x[0] == 'Critical',
+                            x[0] == 'High',
+                            x[0] == 'Medium',
+                            x[0] == 'Low'
+                        ))
+
+                        max_severity_value = max_severity[0]
+                        update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                        update_values = (max_severity_value, select_att_ID_select_att_server_DATA[0][9],project_name_id)
+                        mycursor.execute(update_sql, update_values)
+                        mydb.commit()
+
+                        
+
+                
+                        mycursor = mydb.cursor()
+                        owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                        mycursor.execute(owasp_query, (select_att_ID_select_att_server_DATA[0][9], project_name_id,))
+                        owasp1_ = mycursor.fetchall()
+
+        else:
+                owasp1_ = [0]
+   
+
+        mycursor = mydb.cursor()
+        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_Server, (project_name_id, '8'))
+        select_att_ID_select_att_HSTS_DATA = mycursor.fetchall()
+      
+        if select_att_ID_select_att_HSTS_DATA:
+             
+            mycursor = mydb.cursor()
+            Severity8_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity8_, (project_name_id, select_att_ID_select_att_HSTS_DATA[0][9]))
+            Severity8_X = mycursor.fetchall()
+
+     
+
+            if Severity8_X:
+                        max_severity = max(Severity8_X, key=lambda x: (
+                            x[0] == 'Critical',
+                            x[0] == 'High',
+                            x[0] == 'Medium',
+                            x[0] == 'Low'
+                        ))
+
+                        max_severity_value = max_severity[0]
+                        update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                        update_values = (max_severity_value, select_att_ID_select_att_HSTS_DATA[0][9],project_name_id)
+                        mycursor.execute(update_sql, update_values)
+                        mydb.commit()
+
+                        
+
+                
+                        mycursor = mydb.cursor()
+                        owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                        mycursor.execute(owasp_query, (select_att_ID_select_att_HSTS_DATA[0][9], project_name_id,))
+                        owasp8_ = mycursor.fetchall()
+
+        else:
+                owasp8_ = [0]
+   
+        mycursor = mydb.cursor()
+        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_Sensitive, (project_name_id, '7'))
+        select_att_ID_sensitive = mycursor.fetchall()
+      
+        if select_att_ID_sensitive:
+            mycursor = mydb.cursor()
+            Severity7_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity7_, (project_name_id, 'Sensitive File Disclosure'))
+            Severity7_X = mycursor.fetchall()
+
+        
+        
+
+            if Severity7_X:
+                    max_severity = max(Severity7_X, key=lambda x: (
+                        x[0] == 'Critical',
+                        x[0] == 'High',
+                        x[0] == 'Medium',
+                        x[0] == 'Low'
+                    ))
+
+                    max_severity_value = max_severity[0]
+                    update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                    update_values = (max_severity_value, 'Sensitive File Disclosure', project_name_id)
+                    mycursor.execute(update_sql, update_values)
+                    mydb.commit()
+
+                    
+
+            
+                    mycursor = mydb.cursor()
+                    owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                    mycursor.execute(owasp_query, (select_att_ID_sensitive[0][9], project_name_id,))
+                    owasp7_ = mycursor.fetchall()
+
+        else:
+            owasp7_ = [0]
+
+        mycursor = mydb.cursor()
+        select_att_ID_web = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_web, (project_name_id, '9'))
+        select_att_ID_webb = mycursor.fetchall()
+        
+        if select_att_ID_webb:
+            mycursor = mydb.cursor()
+            Severity9_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity9_, (project_name_id, 'Web Application Framework Infomation Leakage'))
+            Severity9_X = mycursor.fetchall()
+    
+        
+
+            if Severity9_X:
+                    max_severity = max(Severity9_X, key=lambda x: (
+                        x[0] == 'Critical',
+                        x[0] == 'High',
+                        x[0] == 'Medium',
+                        x[0] == 'Low'
+                    ))
+
+                    max_severity_value = max_severity[0]
+                    update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                    update_values = (max_severity_value, 'Web Application Framework Infomation Leakage', project_name_id)
+                    mycursor.execute(update_sql, update_values)
+                    mydb.commit()
+
+                    
+
+            
+                    mycursor = mydb.cursor()
+                    owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                    mycursor.execute(owasp_query, (select_att_ID_webb[0][9], project_name_id,))
+                    owasp9_ = mycursor.fetchall()
+
+        else:
+            owasp9_ = [0]
+
+      
+
+        mycursor = mydb.cursor()
+        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        mycursor.execute(select_att_ID_command, (project_name_id, '12'))
+        select_att_ID_command_DATA = mycursor.fetchall()
+
+        if select_att_ID_command_DATA:
+            mycursor = mydb.cursor()
+            Severity12_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+            mycursor.execute(Severity12_, (project_name_id, 'Command Injection'))
+            Severity12_X = mycursor.fetchall()
+
+        
+
+            if Severity12_X:
+                        max_severity = max(Severity12_X, key=lambda x: (
+                            x[0] == 'Critical',
+                            x[0] == 'High',
+                            x[0] == 'Medium',
+                            x[0] == 'Low'
+                        ))
+
+                        max_severity_value = max_severity[0]
+                        update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                        update_values = (max_severity_value, 'Command Injection', project_name_id)
+                        mycursor.execute(update_sql, update_values)
+                        mydb.commit()
+
+                        
+
+                
+                        mycursor = mydb.cursor()
+                        owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                        mycursor.execute(owasp_query, (select_att_ID_command_DATA[0][9], project_name_id,))
+                        owasp12_ = mycursor.fetchall()
+
+        else:
+                owasp12_ = [0]
+        # print(",owasp",owasp1_,owasp2_,owasp3_,owasp4_,owasp5_,owasp6_,owasp7_,owasp8_,owasp9_,owasp10_,owasp11_,owasp12_)
+        mycursor = mydb.cursor()
+        valueTime_query = "SELECT timeproject FROM project WHERE PID = %s"
+        mycursor.execute(valueTime_query, (project_name_id,))
+        valueTimep = mycursor.fetchall()
+      
+
+        mycursor = mydb.cursor()
+        valueEND_query = "SELECT EndTime FROM project WHERE PID = %s"
+        mycursor.execute(valueEND_query, (project_name_id,))
+        valueENDp = mycursor.fetchall()
+      
+
+        mycursor = mydb.cursor()
+        owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
+        mycursor.execute(owasp_query, (project_name_id,))
+        owasp_ = mycursor.fetchall()
+        # print(owasp_)
+      
+
+        mycursor = mydb.cursor()
+        select_insert_crawl = "SELECT statecrawl FROM project WHERE PID = %s"
+        mycursor.execute(select_insert_crawl, (project_name_id,))             
+        State__crawl = mycursor.fetchall() 
+      
+        if State__crawl:
+            print("mee")
+        else:
+            print("no")
+
+        if valueTimep and valueENDp and valueTimep[0][0] == valueENDp[0][0]:
+            valueENDpp = None
+        else:
+            valueENDpp = valueENDp
+
+
+
+        mycursor = mydb.cursor()
+        userall ="SELECT username FROM user WHERE role = 'Advance'"
+        mycursor.execute(userall)
+        usernameall = mycursor.fetchall()
+        print(usernameall)
+
+        # mycursor.close()
+        return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA":[select_att_ID_sql_DATA,owasp11_]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,owasp10_]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,owasp4_]}, 
+                       {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,owasp2_]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,owasp3_]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,owasp5_]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,owasp6_]}
+                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},
+                       {"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]},{"owasp_":owasp_},{"State__crawl":State__crawl},{"usernameall":usernameall})
+    except Exception as e:
+        app.logger.error(str(e))
+        return jsonify({"server error": str(e)})
+
+
+@app.route('/edit-issue', methods=['GET'])
+def edit_issue():
+    try:
+        mydb = mysql.connector.connect(
+            user='root',
+           password='',
+            host= 'localhost',
+            database='robo'
+        )
+
+        token = request.args.get('Share')
+        token_user = request.headers.get('Authorization').split(" ")[1]
+        user = jwt.decode(token_user, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+        Role = user.get('role', None)
+        # print(token)
+        decoded_token = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])
+        user_id = decoded_token.get('user_id', '')
+        project_name_id = decoded_token.get('project_id', '')
+        print("user_id", user_id, project_name_id)
+        print("user_data", user_data)
+        print("Role", Role)
+        if user_id is None or project_name_id is None:
+            return jsonify({'error': 'Invalid token'}), 401
+    # เชคสิทธิ์
+        if user_id not in user_data:
+            return jsonify({'error': 'User Error'}), 403
+        # print(crawl_data)
+
+        mycursor = mydb.cursor()
+        query = """
+                SELECT tbl1.URL, tbl1.method, tbl1.status_code, tbl1.URL_ID
+        FROM urllist tbl1
+        JOIN project tbl2 ON tbl1.PID = tbl2.PID
+        WHERE tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_code != %s
+                """
+        mycursor.execute(query, (project_name_id, 'c', '404'))
+        crawl_data = mycursor.fetchall()
+
+
+
+
+
+        targets_url = "SELECT PTarget , PDes,PName,timeproject,EndTime FROM project WHERE PID = %s"
+        mycursor.execute(targets_url, (project_name_id,))
+        url_target = mycursor.fetchall()
+        print("url_target", url_target)
+
+
+        mydb = mysql.connector.connect(
+            user='root',
+           password='',
+            host= 'localhost',
+            database='robo'
+        )
+        mycursor = mydb.cursor()
+        select_att_ID_sql = "SELECT URL , vul_evidence,payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = mycursor.fetchall()       
 
         if select_att_ID_sql_DATA:
             mycursor = mydb.cursor()
             owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][9],project_name_id,))
+            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][10],project_name_id,))
             owasp11_ = mycursor.fetchall()
           
             
@@ -5874,7 +6442,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         print("owasp11_",owasp11_)
 
         mycursor = mydb.cursor()
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL ,vul_evidence, payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = mycursor.fetchall()
       
@@ -5883,7 +6451,7 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         if select_att_ID_xsssql_DATA:
             mycursor = mydb.cursor()
             owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][9],project_name_id,))
+            mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][10],project_name_id,))
             owasp10_ = mycursor.fetchall()
           
 
@@ -6102,228 +6670,6 @@ WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_c
         mycursor.execute(select_insert_crawl, (project_name_id,))             
         State__crawl = mycursor.fetchall() 
       
-        if State__crawl:
-            print("mee")
-        else:
-            print("no")
-
-        if valueTimep and valueENDp and valueTimep[0][0] == valueENDp[0][0]:
-            valueENDpp = None
-        else:
-            valueENDpp = valueENDp
-
-
-
-        mycursor = mydb.cursor()
-        userall ="SELECT username FROM user WHERE role = 'Advance'"
-        mycursor.execute(userall)
-        usernameall = mycursor.fetchall()
-        print(usernameall)
-
-        # mycursor.close()
-        return jsonify({"crawl_data": crawl_data}, {"url_target": url_target}, {"select_att_sql_DATA":[select_att_ID_sql_DATA,owasp11_]}, {"select_att_ID_xsssql_DATA": [select_att_ID_xsssql_DATA,owasp10_]}, {"select_att_ID_select_att_traversal_DATA": [select_att_ID_select_att_traversal_DATA,owasp4_]}, 
-                       {"Role": Role},{"select_att_ID_select_att_secure_DATA":[select_att_ID_select_att_secure_DATA,owasp2_]},{"select_att_ID_select_att_httponly_DATA":[select_att_ID_select_att_httponly_DATA,owasp3_]},{"select_att_ID_select_att_expire_DATA":[select_att_ID_select_att_expire_DATA,owasp5_]},{"select_att_ID_select_att_samsite_DATA":[select_att_ID_select_att_samsite_DATA,owasp6_]}
-                       ,{"select_att_ID_select_att_server_DATA":[select_att_ID_select_att_server_DATA,owasp1_]},{"select_att_ID_select_att_HSTS_DATA":[select_att_ID_select_att_HSTS_DATA,owasp8_]},{"valueENDpp":valueENDpp},{"select_att_ID_sensitive":[select_att_ID_sensitive,owasp7_]},{"select_att_ID_webb":[select_att_ID_webb,owasp9_]},
-                       {"select_att_ID_command_DATA":[select_att_ID_command_DATA,owasp12_]},{"owasp_":owasp_},{"State__crawl":State__crawl},{"usernameall":usernameall})
-    except Exception as e:
-        app.logger.error(str(e))
-        return jsonify({"server error": str(e)})
-
-
-@app.route('/edit-issue', methods=['GET'])
-def edit_issue():
-    try:
-        mydb = mysql.connector.connect(
-            user='root',
-           password='',
-            host= 'localhost',
-            database='robo'
-        )
-
-        token = request.args.get('Share')
-        token_user = request.headers.get('Authorization').split(" ")[1]
-        user = jwt.decode(token_user, 'jwtSecret', algorithms=["HS256"])['user']
-        user_data = user.get('username', None)
-        Role = user.get('role', None)
-        # print(token)
-        decoded_token = jwt.decode(token, 'jwtSecret', algorithms=['HS256'])
-        user_id = decoded_token.get('user_id', '')
-        project_name_id = decoded_token.get('project_id', '')
-        print("user_id", user_id, project_name_id)
-        print("user_data", user_data)
-        print("Role", Role)
-        if user_id is None or project_name_id is None:
-            return jsonify({'error': 'Invalid token'}), 401
-    # เชคสิทธิ์
-        if user_id not in user_data:
-            return jsonify({'error': 'User Error'}), 403
-        # print(crawl_data)
-
-        mycursor = mydb.cursor()
-        query = """
-                SELECT tbl1.URL, tbl1.method, tbl1.status_code, tbl1.URL_ID
-        FROM urllist tbl1
-        JOIN project tbl2 ON tbl1.PID = tbl2.PID
-        WHERE tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_code != %s
-                """
-        mycursor.execute(query, (project_name_id, 'c', '404'))
-        crawl_data = mycursor.fetchall()
-
-
-
-
-
-        targets_url = "SELECT PTarget , PDes,PName,timeproject,EndTime FROM project WHERE PID = %s"
-        mycursor.execute(targets_url, (project_name_id,))
-        url_target = mycursor.fetchall()
-        print("url_target", url_target)
-
-        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
-        select_att_ID_sql_DATA = mycursor.fetchall()
-        if select_att_ID_sql_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][9],project_name_id,))
-            owasp11_ = mycursor.fetchall()
-        else:
-            owasp11_ = [0]
-
-        select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
-        select_att_ID_xsssql_DATA = mycursor.fetchall()
-        if select_att_ID_xsssql_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][9],project_name_id,))
-            owasp10_ = mycursor.fetchall()
-        else:
-            owasp10_ = [0]   
-
-
-
-        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_traversal, (project_name_id, '4'))
-        select_att_ID_select_att_traversal_DATA = mycursor.fetchall()
-        if select_att_ID_select_att_traversal_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_select_att_traversal_DATA[0][9],project_name_id,))
-            owasp4_ = mycursor.fetchall()
-        else:
-            owasp4_ = [0]
-
-
-        select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state   FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_secure, (project_name_id, '2'))
-        select_att_ID_select_att_secure_DATA = mycursor.fetchall()
-        if select_att_ID_select_att_secure_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_select_att_secure_DATA[0][9],project_name_id,))
-            owasp2_ = mycursor.fetchall()
-        else:
-            owasp2_ = [0]
-
-        select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_httponly, (project_name_id, '3'))
-        select_att_ID_select_att_httponly_DATA = mycursor.fetchall()
-        if select_att_ID_select_att_httponly_DATA:           
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_select_att_httponly_DATA[0][9],project_name_id,))
-            owasp3_ = mycursor.fetchall()
-        else:
-            owasp3_ = [0]
-
-
-        select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_expire, (project_name_id, '5'))
-        select_att_ID_select_att_expire_DATA = mycursor.fetchall()
-        if select_att_ID_select_att_expire_DATA:       
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_select_att_expire_DATA[0][9],project_name_id,))
-            owasp5_ = mycursor.fetchall()
-        else:
-            owasp5_ = [0]
-
-        select_att_ID_samsite = "SELECT URL , res_header,Vul_des , Vul_sol  ,OType, ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_samsite, (project_name_id, '6'))
-        select_att_ID_select_att_samsite_DATA = mycursor.fetchall()
-        if select_att_ID_select_att_samsite_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_select_att_samsite_DATA[0][9],project_name_id,))
-            owasp6_ = mycursor.fetchall()
-        else:
-            owasp6_ = [0]
-
-
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_Server, (project_name_id, '1'))
-        select_att_ID_select_att_server_DATA = mycursor.fetchall()
-        print(select_att_ID_select_att_server_DATA[0][9])
-        if select_att_ID_select_att_server_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_select_att_server_DATA[0][9],project_name_id,))
-            owasp1_ = mycursor.fetchall()
-
-        else:
-            owasp1_ = [0]
-
-        select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_Server, (project_name_id, '8'))
-        select_att_ID_select_att_HSTS_DATA = mycursor.fetchall()
-        if select_att_ID_select_att_HSTS_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_select_att_HSTS_DATA[0][9],project_name_id,))
-            owasp8_ = mycursor.fetchall()
-        else:
-            owasp8_ = [0]
-
-        select_att_ID_Sensitive = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_Sensitive, (project_name_id, '7'))
-        select_att_ID_sensitive = mycursor.fetchall()
-        if select_att_ID_sensitive:      
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_sensitive[0][9],project_name_id,))
-            owasp7_ = mycursor.fetchall()
-        else:
-            owasp7_ = [0]
-            
-        select_att_ID_web = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state   FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_web, (project_name_id, '9'))
-        select_att_ID_webb = mycursor.fetchall()
-        if select_att_ID_webb:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_webb[0][9],project_name_id,))
-            owasp9_ = mycursor.fetchall()
-        else:
-            owasp9_ = [0]
-
-
-        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
-        mycursor.execute(select_att_ID_command, (project_name_id, '12'))
-        select_att_ID_command_DATA = mycursor.fetchall()
-        if select_att_ID_command_DATA:
-            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_command_DATA[0][9],project_name_id,))
-            owasp12_ = mycursor.fetchall()
-        else:
-            owasp12_ = [0]
-
-
-        valueTime_query = "SELECT timeproject FROM project WHERE PID = %s"
-        mycursor.execute(valueTime_query, (project_name_id,))
-        valueTimep = mycursor.fetchall()
-
-        valueEND_query = "SELECT EndTime FROM project WHERE PID = %s"
-        mycursor.execute(valueEND_query, (project_name_id,))
-        valueENDp = mycursor.fetchall()
-
-
-        owasp_query = "SELECT Vul_name, Severity ,OID FROM owasp WHERE PID = %s"
-        mycursor.execute(owasp_query, (project_name_id,))
-        owasp_ = mycursor.fetchall()
-        print(owasp_)
-
-        select_insert_crawl = "SELECT statecrawl FROM project WHERE PID = %s"
-        mycursor.execute(select_insert_crawl, (project_name_id,))             
-        State__crawl = mycursor.fetchall() 
         if State__crawl:
             print("mee")
         else:

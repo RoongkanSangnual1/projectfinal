@@ -22,7 +22,21 @@ const Login = () => {
   const [otpVisible, setOtpVisible] = useState(false);
   const [resetPasswordVisible, setResetPasswordVisible] = useState(false);
 
+
+
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   const navigateToOtp = () => {
+    if (!isValidEmail(email)) {
+       Swal.fire({
+        title: "email Error",
+        icon: "error",
+    });
+      return;
+    }
     if (email) {
       const OTP = Math.floor(Math.random() * 9000 + 1000);
       console.log(OTP);
