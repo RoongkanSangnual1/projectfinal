@@ -201,7 +201,7 @@ const Dashboard = (props) => {
       );
 
       setDelete(response.data[4].Role);
-      console.log(response.data[9].SeverityServer[3]);
+      console.log(response);
       if (response.data[1].SeveritySQL[0][0] === 0) {
         setSeveritySQLCritical(response.data[1].SeveritySQL[0][0]);
       } else {
@@ -509,8 +509,8 @@ const Dashboard = (props) => {
       if (response.data[15].SeverityWeb[1][0] === 0) {
         setSeverityWebHigh(response.data[15].SeverityWeb[1][0]);
       } else {
-        setSeverityWebHigh(response.data[15].SeveritySentitive[1].length);
-        setSeverityWebUrlHigh(response.data[15].SeveritySentitive[1]);
+        setSeverityWebHigh(response.data[15].SeverityWeb[1].length);
+        setSeverityWebUrlHigh(response.data[15].SeverityWeb[1]);
       }
 
       if (response.data[15].SeverityWeb[2][0] === 0) {

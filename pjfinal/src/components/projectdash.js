@@ -349,11 +349,11 @@ const handleCopy = () => {
                 </div>
               )}
 
-              {(activeTabKey1 === 'tab2' || activeTabKey1 === 'tab3') &&(
+              {/* {(activeTabKey1 === 'tab2' || activeTabKey1 === 'tab3') &&(
                 <Button onClick={showModal} type="primary" icon={<ShareAltOutlined />} style={{ transform: 'translateX(1200px) scale(1.5)', marginTop: '20px', marginLeft: '35px' }}>
                 Share
               </Button>
-              )}
+              )} */}
   
               
             </Card>

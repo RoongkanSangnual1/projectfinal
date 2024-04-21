@@ -1,19 +1,13 @@
 .App {
   text-align: center;
+  background-color: #efefef;
 }
 
 .Applayout {
-  margin-top: 50px;
-  display: flex;
+  background-color: #eeeeee;
 }
-
-.Sidemenu {
-  margin-right: 20px;
-  order: 1; 
+.spaceUpApp{
+  width: 100%;
+  background-color: #eeeeee;
+  height: 200px;
 }
-
-.Home {
-  margin-right: 20px;
-  margin-top: 50px;
-  order: 2; 
-} 

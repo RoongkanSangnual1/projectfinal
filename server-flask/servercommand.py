@@ -644,9 +644,9 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                              
                                         req_body_str = str(response.request.body)
 
-                                   
+                                #    fix
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity,vul_evidence) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
@@ -654,7 +654,6 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             project_name_id_result[0][0],
                                             '11',
                                             att_url,
-                                            response.url,
                                             i,
                                             'T',
                                             payload.strip(),
@@ -672,7 +671,8 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             sql2_[0][2],
                                             sql2_[0][3],
                                             sql2_[0][4],
-                                            sql2_[0][5]
+                                            sql2_[0][5],
+                                            response.url,
                                         )
 
                                    
@@ -692,7 +692,7 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity,vul_evidence) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
@@ -700,7 +700,6 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             project_name_id_result[0][0],
                                             '11',
                                             att_url,
-                                            response.url,
                                             i,
                                             'T',
                                             payload.strip(),
@@ -718,7 +717,8 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             sql2_[0][2],
                                             sql2_[0][3],
                                             sql2_[0][4],
-                                            sql2_[0][5]
+                                            sql2_[0][5],
+                                            response.url
                                         )
 
                                    
@@ -741,7 +741,7 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                         insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL,vul_evidence, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity, vul_evidence) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                         values = (
@@ -749,7 +749,6 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             project_name_id_result[0][0],
                                             '11',
                                             att_url,
-                                            response.url,
                                             i,
                                             'T',
                                             payload.strip(),
@@ -767,7 +766,8 @@ async def brutesql(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             sql2_[0][2],
                                             sql2_[0][3],
                                             sql2_[0][4],
-                                            sql2_[0][5]
+                                            sql2_[0][5],
+                                            response.url,
                                         )
 
                                    
@@ -1015,14 +1015,14 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                     insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity,vul_evidence) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                     values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '10',
-                                            response.url,
+                                            att_url,
                                             i,
                                             'T',
                                             payload.strip(),
@@ -1040,7 +1040,8 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             sql2_[0][2],
                                             sql2_[0][3],
                                             sql2_[0][4],
-                                            sql2_[0][5]
+                                            sql2_[0][5],
+                                            response.url,
                                         )
 
                                    
@@ -1060,14 +1061,14 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
 
                                    
                                     insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity, vul_evidence) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                     values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '10',
-                                            response.url,
+                                            att_url,
                                             i,
                                             'T',
                                             payload.strip(),
@@ -1085,7 +1086,8 @@ async def brutexss(att_url,baseper,att_params,att_paramsname,select_url_id_data,
                                             sql2_[0][2],
                                             sql2_[0][3],
                                             sql2_[0][4],
-                                            sql2_[0][5]
+                                            sql2_[0][5],
+                                            response.url,
                                         )
 
                                    
@@ -1228,14 +1230,14 @@ async def brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_ur
 
                                    
                                 insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity,vul_evidence) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                 values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '4',
-                                            response.url,
+                                            att_url,
                                             i,
                                             'T',
                                             payload.strip(),
@@ -1253,7 +1255,8 @@ async def brutepathtraversal(att_url,baseper,att_params,att_paramsname,select_ur
                                             sql2_[0][2],
                                             sql2_[0][3],
                                             sql2_[0][4],
-                                            sql2_[0][5]
+                                            sql2_[0][5],
+                                            att_url
                                         )
 
                                    
@@ -1380,14 +1383,14 @@ async def brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_d
 
                                    
                                 insert_query = (
-                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                            "INSERT INTO att_ps (URL_ID, PID, OID, URL, position, state, payload, status_code, reason, res_header, res_body, req_header, req_body, method, URI, length, vul_des, vul_sol, vul_ref, OType, Vul_name, Severity, vul_evidence) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                                         )
 
                                 values = (
                                             select_url_id_data[0],
                                             project_name_id_result[0][0],
                                             '12',
-                                            response.url,
+                                            att_url,
                                             i,
                                             'T',
                                             payload.strip(),
@@ -1405,7 +1408,8 @@ async def brutecommand(att_url,baseper,att_params,att_paramsname,select_url_id_d
                                             sql2_[0][2],
                                             sql2_[0][3],
                                             sql2_[0][4],
-                                            sql2_[0][5]
+                                            sql2_[0][5],
+                                            response.url
                                         )
 
                                    
@@ -1468,9 +1472,9 @@ async def detect_pathtraversal(pathtraversal):
                             print("พบ detect word listpathraversal")
                             mycursor = mydb.cursor()
                             insert_query = (
-                                "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,vul_des , vul_sol , vul_ref , OType, Vul_name ,Severity) VALUES (%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s,%s)"
+                                "INSERT INTO att_ps (URL_ID, PID, OID, URL,state,payload,vul_des , vul_sol , vul_ref , OType, Vul_name ,Severity, vul_evidence) VALUES (%s,%s,%s, %s, %s ,%s ,%s ,%s,%s ,%s ,%s ,%s,%s)"
                             ),
-                            values = (Server_data[3], Server_data[2], '4', Server_data[0], 'T', Server_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5])
+                            values = (Server_data[3], Server_data[2], '4', Server_data[0], 'T', Server_data[1],sql2_[0][0],sql2_[0][1],sql2_[0][2],sql2_[0][3],sql2_[0][4],sql2_[0][5],Server_data[0])
                             mycursor.execute(insert_query, values)
                             mydb.commit()
                         else:
@@ -4865,10 +4869,10 @@ def addIssue():
 
 
         url = request.json['urls']
-        payload_ = request.json['Evidence']
+        payload_ = request.json['EVIDENCE']
         O_id = request.json['OID']
         vul_Des = request.json['Risk']
-        vul_Sol = request.json['Solutions']
+        vul_Sol = request.json['Recommendation']
         project_name_id = request.json['project_name_id']
         mycursor = mydb.cursor()
         
@@ -4920,6 +4924,86 @@ def addIssue():
         sql2_ = mycursor.fetchall()
         query = ('INSERT INTO att_ps(URL_ID,URL, position, PID, vul_des, vul_Sol, OID, payload,state,vul_name, Vul_ref, OType,Severity) VALUES(%s, %s,%s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s)')
         mycursor.execute(query, (url_id[0][0],url, url, project_name_id, vul_Des or sql2_[0][0] , vul_Sol or  sql2_[0][1], O_id, payload_,"Manual",O_name[0],sql2_[0][2],sql2_[0][3],sql2_[0][5]))
+        mydb.commit()
+        print(f"Inserted into att_ps")
+        return jsonify("Add URLS สำเร็จ")
+    except Exception as e:
+        return jsonify({"server error": str(e)})
+    
+
+@app.route("/addIssueActive", methods=['POST'])
+def addIssueActive():
+    try:
+        mydb = mysql.connector.connect(
+            user='root',
+           password='',
+            host= 'localhost',
+            database='robo'
+        )
+
+        token_user = request.headers.get('Authorization').split(" ")[1]
+        user = jwt.decode(token_user, 'jwtSecret', algorithms=["HS256"])['user']
+        user_data = user.get('username', None)
+
+
+        url = request.json['urls']
+        payload_ = request.json['EVIDENCE']
+        O_id = request.json['OID']
+        vul_Des = request.json['Risk']
+        vul_Sol = request.json['Recommendation']
+        project_name_id = request.json['project_name_id']
+        vul_url = request.json['vul_urls']
+        parameter = request.json['parameter']
+        mycursor = mydb.cursor()
+        
+        print("O_id",O_id)
+        mycursor = mydb.cursor()
+        user_query = "SELECT username FROM project WHERE username = %s AND PID = %s"
+        mycursor.execute(user_query, (user_data, project_name_id))
+        username = mycursor.fetchall()
+        print(username)
+     
+        if username[0][0] not in user_data:
+            return jsonify({'error': 'User Error'}), 403
+        
+
+        query = 'SELECT Vul_name FROM owasp WHERE OID= %s'
+        mycursor.execute(query, (O_id,))
+        O_name = mycursor.fetchone() 
+        print(f"O_name",O_name[0])
+
+        query = 'SELECT Vul_name FROM owasp WHERE PID= %s AND Vul_name =%s '
+        mycursor.execute(query, (project_name_id,O_name[0]))
+        O_namee = mycursor.fetchall() 
+        if O_namee:
+            print("มีแล้ว")
+        else:
+             mycursor = mydb.cursor()
+             query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name ,Severity FROM owasp WHERE OID= %s"
+             mycursor.execute(query2, (O_id,))
+             sql2_ = mycursor.fetchall()
+
+             insert_query = "INSERT INTO owasp (Vul_des, Vul_sol, Vul_ref, Vul_name, OType, PID, Severity) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+             values = (sql2_[0][0], sql2_[0][1], sql2_[0][2], sql2_[0][4], sql2_[0][3], project_name_id,sql2_[0][5])
+             mycursor.execute(insert_query, values)
+
+
+
+        
+        query = ('INSERT INTO urllist(URL, method, PID, state, status_code) VALUES(%s, %s, %s, %s, %s)')
+        mycursor.execute(query, (vul_url, "GET", project_name_id, 'c', "200"))
+        mydb.commit()
+        print(f"Inserted into urllist")
+
+        query = ('SELECT URL_ID FROM urllist WHERE PID = %s AND URL = %s')
+        mycursor.execute(query, (project_name_id,vul_url),)
+        url_id = mycursor.fetchall()
+        print(f"Selected URL_ID")
+        query2 = "SELECT Vul_des, Vul_sol, Vul_ref, OType, Vul_name ,Severity FROM owasp WHERE OID= %s"
+        mycursor.execute(query2, (O_id,))
+        sql2_ = mycursor.fetchall()
+        query = ('INSERT INTO att_ps(URL_ID,URL, position, PID, vul_des, vul_Sol, OID, payload,state,vul_name, Vul_ref, OType,Severity,vul_evidence) VALUES(%s,%s, %s,%s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s)')
+        mycursor.execute(query, (url_id[0][0],url, parameter, project_name_id, vul_Des or sql2_[0][0] , vul_Sol or  sql2_[0][1], O_id, payload_,"Manual",O_name[0],sql2_[0][2],sql2_[0][3],sql2_[0][5],vul_url))
         mydb.commit()
         print(f"Inserted into att_ps")
         return jsonify("Add URLS สำเร็จ")
@@ -5784,6 +5868,7 @@ def updateeditSeverityupdateSeverity():
 
 
 
+
 @app.route("/onedata", methods=['GET'])
 async def onedata():
     try:
@@ -5821,14 +5906,14 @@ async def onedata():
             host= 'localhost',
             database='robo'
         )
-    
+
 
         mycursor = mydb.cursor()
         query = """
            SELECT tbl1.URL, tbl1.method, tbl1.status_code, tbl1.URL_ID
-            FROM urllist tbl1
-            JOIN project tbl2 ON tbl1.PID = tbl2.PID
-            WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_code != %s
+FROM urllist tbl1
+JOIN project tbl2 ON tbl1.PID = tbl2.PID
+WHERE tbl2.username = %s AND tbl2.PID = %s AND tbl1.state = %s AND tbl1.status_code != %s
         """
         mycursor.execute(query, (user_data, project_name_id, 'c', '404'))
         crawl_data = mycursor.fetchall()
@@ -5850,54 +5935,56 @@ async def onedata():
       
 
         # print(url_target)
-
         mydb = mysql.connector.connect(
             user='root',
            password='',
             host= 'localhost',
             database='robo'
         )
+
         mycursor = mydb.cursor()
-        select_att_ID_sql = "SELECT URL ,payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state,vul_evidence FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL , payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state,vul_evidence FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = mycursor.fetchall()       
 
         if select_att_ID_sql_DATA:
-            mycursor = mydb.cursor()
-            Severity11_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
-            mycursor.execute(Severity11_, (project_name_id, select_att_ID_sql_DATA[0][9]))
-            Severity11_X = mycursor.fetchall()
-            if Severity11_X:
-                    max_severity = max(Severity11_X, key=lambda x: (
-                        x[0] == 'Critical',
-                        x[0] == 'High',
-                        x[0] == 'Medium',
-                        x[0] == 'Low'
-                    ))
+                    mycursor = mydb.cursor()
+                    Severity11_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
+                    mycursor.execute(Severity11_, (project_name_id, select_att_ID_sql_DATA[0][9]))
+                    Severity11_X = mycursor.fetchall()
+                    if Severity11_X:
+                            max_severity = max(Severity11_X, key=lambda x: (
+                                x[0] == 'Critical',
+                                x[0] == 'High',
+                                x[0] == 'Medium',
+                                x[0] == 'Low'
+                            ))
 
-                    max_severity_value = max_severity[0]
-                    update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
-                    update_values = (max_severity_value, select_att_ID_sql_DATA[0][9],project_name_id)
-                    mycursor.execute(update_sql, update_values)
-                    mydb.commit()
+                            max_severity_value = max_severity[0]
+                            update_sql = "UPDATE owasp SET Severity = %s WHERE Vul_name = %s AND PID = %s"
+                            update_values = (max_severity_value, select_att_ID_sql_DATA[0][9],project_name_id)
+                            mycursor.execute(update_sql, update_values)
+                            mydb.commit()
+
+                            
 
                     
-
-            
-                    mycursor = mydb.cursor()
-                    owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
-                    mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][9], project_name_id,))
-                    owasp11_ = mycursor.fetchall()          
+                            mycursor = mydb.cursor()
+                            owasp_query = "SELECT Severity FROM owasp WHERE Vul_name = %s AND PID = %s"
+                            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][9], project_name_id,))
+                            owasp11_ = mycursor.fetchall()          
         else:
                 owasp11_ = [0]
 
-    
+
         mycursor = mydb.cursor()
         select_att_ID_sql = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state,vul_evidence FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = mycursor.fetchall()
-
       
+     
+
+ 
         if select_att_ID_xsssql_DATA:
             mycursor = mydb.cursor()
             Severity10_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
@@ -5925,16 +6012,16 @@ async def onedata():
 
         else:
                 owasp10_ = [0]
-     
 
-       
-   
+
+        print("owasp10_",owasp10_)
         mycursor = mydb.cursor()
-        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state,vul_evidence FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_traversal, (project_name_id, '4'))
         select_att_ID_select_att_traversal_DATA = mycursor.fetchall()
       
     
+
         if select_att_ID_select_att_traversal_DATA:
             mycursor = mydb.cursor()
             Severity4_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
@@ -5970,7 +6057,9 @@ async def onedata():
         select_att_ID_secure = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_secure, (project_name_id, '2',))
         select_att_ID_select_att_secure_DATA = mycursor.fetchall()
+      
 
+ 
         if select_att_ID_select_att_secure_DATA:
             mycursor = mydb.cursor()
             Severity2_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
@@ -5999,14 +6088,13 @@ async def onedata():
                     owasp2_ = mycursor.fetchall()  
         else:
             owasp2_ = [0]
-      
 
 
         mycursor = mydb.cursor()
         select_att_ID_httponly = "SELECT URL , res_header,Vul_des , Vul_sol, OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_httponly, (project_name_id, '3',))
         select_att_ID_select_att_httponly_DATA = mycursor.fetchall()
-
+     
 
         if select_att_ID_select_att_httponly_DATA:
             mycursor = mydb.cursor()
@@ -6043,7 +6131,7 @@ async def onedata():
         select_att_ID_expire = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_expire, (project_name_id, '5'))
         select_att_ID_select_att_expire_DATA = mycursor.fetchall()
-
+      
 
         if select_att_ID_select_att_expire_DATA:
             mycursor = mydb.cursor()
@@ -6117,15 +6205,12 @@ async def onedata():
         else:
                 owasp6_ = [0]
    
-
         mycursor = mydb.cursor()
         select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_Server, (project_name_id, '1',))
         select_att_ID_select_att_server_DATA = mycursor.fetchall()
         # print(select_att_ID_select_att_server_DATA[0][9],project_name_id)
       
-
-
         if select_att_ID_select_att_server_DATA:
             mycursor = mydb.cursor()
             Severity1_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
@@ -6159,12 +6244,13 @@ async def onedata():
         else:
                 owasp1_ = [0]
    
-
         mycursor = mydb.cursor()
         select_att_ID_Server = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_Server, (project_name_id, '8'))
         select_att_ID_select_att_HSTS_DATA = mycursor.fetchall()
       
+      
+
         if select_att_ID_select_att_HSTS_DATA:
              
             mycursor = mydb.cursor()
@@ -6204,6 +6290,7 @@ async def onedata():
         mycursor.execute(select_att_ID_Sensitive, (project_name_id, '7'))
         select_att_ID_sensitive = mycursor.fetchall()
       
+
         if select_att_ID_sensitive:
             mycursor = mydb.cursor()
             Severity7_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
@@ -6242,7 +6329,6 @@ async def onedata():
         select_att_ID_web = "SELECT URL , res_header,Vul_des , Vul_sol , OType , ATT_ID , payload,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_web, (project_name_id, '9'))
         select_att_ID_webb = mycursor.fetchall()
-        
         if select_att_ID_webb:
             mycursor = mydb.cursor()
             Severity9_ = "SELECT Severity FROM att_ps WHERE PID = %s AND vul_name = %s "
@@ -6276,12 +6362,12 @@ async def onedata():
         else:
             owasp9_ = [0]
 
-      
 
         mycursor = mydb.cursor()
-        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state,vul_evidence FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_command, (project_name_id, '12'))
         select_att_ID_command_DATA = mycursor.fetchall()
+         
 
         if select_att_ID_command_DATA:
             mycursor = mydb.cursor()
@@ -6315,6 +6401,7 @@ async def onedata():
 
         else:
                 owasp12_ = [0]
+
         # print(",owasp",owasp1_,owasp2_,owasp3_,owasp4_,owasp5_,owasp6_,owasp7_,owasp8_,owasp9_,owasp10_,owasp11_,owasp12_)
         mycursor = mydb.cursor()
         valueTime_query = "SELECT timeproject FROM project WHERE PID = %s"
@@ -6368,6 +6455,8 @@ async def onedata():
         return jsonify({"server error": str(e)})
 
 
+
+
 @app.route('/edit-issue', methods=['GET'])
 def edit_issue():
     try:
@@ -6416,22 +6505,14 @@ def edit_issue():
         url_target = mycursor.fetchall()
         print("url_target", url_target)
 
-
-        mydb = mysql.connector.connect(
-            user='root',
-           password='',
-            host= 'localhost',
-            database='robo'
-        )
-        mycursor = mydb.cursor()
-        select_att_ID_sql = "SELECT URL , vul_evidence,payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL ,vul_evidence, payload ,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '11'))
         select_att_ID_sql_DATA = mycursor.fetchall()       
 
         if select_att_ID_sql_DATA:
             mycursor = mydb.cursor()
             owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][10],project_name_id,))
+            mycursor.execute(owasp_query, (select_att_ID_sql_DATA[0][9],project_name_id,))
             owasp11_ = mycursor.fetchall()
           
             
@@ -6439,10 +6520,7 @@ def edit_issue():
         else:
             owasp11_ = [0]
 
-        print("owasp11_",owasp11_)
-
-        mycursor = mydb.cursor()
-        select_att_ID_sql = "SELECT URL ,vul_evidence, payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+        select_att_ID_sql = "SELECT URL ,vul_evidence, payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_sql, (project_name_id, '10'))
         select_att_ID_xsssql_DATA = mycursor.fetchall()
       
@@ -6451,7 +6529,7 @@ def edit_issue():
         if select_att_ID_xsssql_DATA:
             mycursor = mydb.cursor()
             owasp_query = "SELECT Severity FROM owasp WHERE Vul_name=%s AND PID = %s"
-            mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][10],project_name_id,))
+            mycursor.execute(owasp_query, (select_att_ID_xsssql_DATA[0][9],project_name_id,))
             owasp10_ = mycursor.fetchall()
           
 
@@ -6459,9 +6537,9 @@ def edit_issue():
         else:
             owasp10_ = [0]   
 
-        print("owasp10_",owasp10_)
-        mycursor = mydb.cursor()
-        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+
+
+        select_att_ID_traversal = "SELECT URL , payload,position,Vul_des , Vul_sol , OType, ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_traversal, (project_name_id, '4'))
         select_att_ID_select_att_traversal_DATA = mycursor.fetchall()
       
@@ -6628,8 +6706,8 @@ def edit_issue():
         else:
             owasp9_ = [0]
 
-        mycursor = mydb.cursor()
-        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state FROM att_ps WHERE PID = %s AND OID = %s "
+
+        select_att_ID_command = "SELECT URL , payload,position ,Vul_des , Vul_sol , OType , ATT_ID,vul_ref,Severity,vul_name,state  FROM att_ps WHERE PID = %s AND OID = %s "
         mycursor.execute(select_att_ID_command, (project_name_id, '12'))
         select_att_ID_command_DATA = mycursor.fetchall()
          

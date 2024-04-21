@@ -13,14 +13,14 @@ exports.register = async (req, res) => {
     const FindQuery = 'SELECT * FROM user WHERE username = ? OR email = ?';
     dbConnection.query(FindQuery, [username, email], async (resulfinderrorts, results) => {
       if (results.length > 0) {
-        return res.status(400).send('มีคนใช้แล้ว');
+        return res.status(400).send('Register failed');
       }
       const salt = await bcrypt.genSalt(10);
       const hashpassword = await bcrypt.hash(password, salt);
       const insertQuery = 'INSERT INTO user (username, email, Password,role) VALUES (?, ?, ?,?)';
       dbConnection.query(insertQuery, [username, email, hashpassword,role], (inserterror, insertresults) => {
         if (insertresults) {
-          return res.status(200).send('สมัครเสร็จสิ้น');
+          return res.status(200).send('Register succuess');
         }
       });
     });
