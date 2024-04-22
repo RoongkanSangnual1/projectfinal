@@ -883,63 +883,141 @@ const handleSeverityChange = (e, index, vulnerability) => {
 
 return (
   <div>
-    <ResponsiveContainer width={850} height={400}>
+    <div className="dashboard-fs">
+      <ResponsiveContainer width={550} height={500}>
+        <h2 style={{ textAlign: "center" }}>Scan Summary</h2>
+        <BarChart
+          data={barChartData}
+          style={{ fontSize: "12px" }}
+          layout="vertical"
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis type="number" />
+          <YAxis dataKey="name" type="category" />
+          <Tooltip />
+          <Legend
+            payload={subCategories.map((category, index) => ({
+              value: category,
+              type: "square",
+              color: colors[index],
+            }))}
+          />
+          <Bar dataKey="total" fill="#black" label={{ position: "top" }} />
+        </BarChart>
+        
+      </ResponsiveContainer>
+      
+      <div
+        className="summaryList"
+        style={{
+          // flex: 1,
+          // marginLeft: "900px",
+          marginTop: "50px",
+          borderRadius: "10px",
+          width: "500px",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "left",
+            border: "1px solid #ccc",
+            borderRadius: "10px 10px 0 0",
+            padding: "5px 10px",
+            fontSize: "16px",
+          }}
+        >
+          {" "}
+          Scan All URL :
+          <h1 style={{ fontSize: "16px", color: "#1b317e" }}>
+            {urlsAll}
+          </h1>{" "}
+        </h2>
+        <h2
+          style={{
+            textAlign: "left",
+            border: "1px solid #ccc",
+            padding: "5px 10px",
+            fontSize: "16px",
+          }}
+        >
+          All Vulnerabilities:
+          <h1 style={{ fontSize: "16px", color: "#1b317e" }}> {totalC}</h1>
+        </h2>
+        <h2
+          style={{
+            textAlign: "left",
+            border: "1px solid #ccc",
+            padding: "5px 10px",
+            fontSize: "16px",
+          }}
+        >
+          Start Time:{" "}
+          <h1 style={{ fontSize: "16px", color: "#1b317e" }}>{start}</h1>
+        </h2>
+        <h2
+          style={{
+            textAlign: "left",
+            border: "1px solid #ccc",
+            padding: "5px 10px",
+            fontSize: "16px",
+          }}
+        >
+          Finish Time:{" "}
+          <h1 style={{ fontSize: "16px", color: "#1b317e" }}>{end}</h1>
+        </h2>
+        <h2
+          style={{
+            textAlign: "left",
+            border: "1px solid #ccc",
+            borderRadius: "0 0 10px 10px",
+            padding: "5px 10px",
+            fontSize: "16px",
+          }}
+        >
+          Total Time:
+          <h1 style={{ fontSize: "16px", color: "#1b317e" }}> {time}</h1>
+        </h2>
+      </div>
+      
+    </div>
+    <div className="dashboard-s2" >
+          {/* <h1 style={{ width: "50%" ,  margin: "0 auto" }}>Summary</h1> */}
+          {owaspData.length > 0 && (
+            <div>
+              <div className="collapse-content">
+                <table style={{ border: "1px solid #ccc", margin: "0 auto" }}>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: "left" }}>Vulnerability</th>
+                      <th style={{ textAlign: "left" }}>Severity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {owaspData.map((item, index) => (
+                      <tr key={index}>
+                        <td
+                          style={{
+                            color: getColorForSeverity(item[1]),
+                            textAlign: "left",
+                          }}
+                        >
+                          {index + 1}. {item[0]}
+                        </td>
+                        <td style={{ textAlign: "left" }}>
+                          <p
+                            style={{
+                              color: getColorForSeverity(item[1]),
+                              border: "1px solid #cbcbcb",
+                              borderRadius: "5px",
+                              maxWidth: "80px",
+                              margin: "0 0",
+                              textAlign: "center"
+                            }}
+                          >
+                            {item[1]}
+                          </p>
 
-  <h2 style={{ textAlign: 'center' }}>Scan Summary</h2>
-  <BarChart data={barChartData} style={{ fontSize: "12px" }} layout="vertical">
-  <CartesianGrid strokeDasharray="3 3" />
-  <XAxis type="number" />
-  <YAxis dataKey="name" type="category" />
-  <Tooltip />
-  <Legend payload={subCategories.map((category, index) => ({
-    value: category,
-    type: 'square',
-    color: colors[index],
-  }))} />
-  <Bar dataKey="total" fill="#black" label={{ position: 'top' }} />
-</BarChart>
-  <div className="dashboard-s2" style={{ marginTop: "50px"}}>
-    {/* <h1 style={{ width: "50%" ,  margin: "0 auto" }}>Summary</h1> */}
-    {owaspData.length > 0 && ( 
-      <div>
-        <div className="collapse-content">
-          <table style={{  border: "1px solid #ccc",  margin: "0 auto" }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: "left" }}>Vulnerability</th>
-                <th style={{ textAlign: "left" }}>Severity</th>
-              </tr>
-            </thead>
-            <tbody>
-            {owaspData.map((item, index) => (
-                  <tr key={index}>
-                    <td style={{ color: getColorForSeverity(item[1]), textAlign: "left" }}>
-                      {index+1}. {item[0]}
-                    </td>
-                    <td style={{ textAlign: "left" }}>
-                    <p style={{ color: getColorForSeverity(item[1]), border: '1px solid #cbcbcb', borderRadius: '5px' ,maxWidth: '80px', margin: '0 0' }}>
-  {item[1]}
-</p>
-
-                    {/* <select
-                      style={{ color: getColorForSeverity(item[1]) }}
-                      value={updatedSeverities[index] || item[1]}
-                      onChange={(e) => handleSeverityChange(e, index, item[0])}
-                    >
-                      <option style={{ color: "#6adb11" }} value="Low">
-                        Low
-                      </option>
-                      <option style={{ color: "#FFBB28" }} value="Medium">
-                        Medium
-                      </option>
-                      <option style={{ color: "#f78129" }} value="High">
-                        High
-                      </option>
-                      <option style={{ color: "#FF0000" }} value="Critical">
-                        Critical
-                      </option>
-                    </select> */}
-                    {/* <Button
+                          {/* <Button
                       style={{ marginLeft: "20px" }}
                       onClick={() =>
                         handleConfirmButtonClick(
@@ -949,8 +1027,8 @@ return (
                       }
                     >
                       Confirm
-                    </Button> */}
-                    {/* {Delete === "Advance" && (
+                    </Button>
+                    {Delete === "Advance" && (
                       <Space size="middle">
                         <Button
                           type="danger"
@@ -966,90 +1044,126 @@ return (
                         </Button>
                       </Space>
                     )} */}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+    <div
+      className="dashboard-s3"
+      // style={{
+      //   position: "relative",
+      //   marginTop: "500px",
+      // }}
+    >
+      <ResponsiveContainer width={1200} height={400}>
+        <BarChart data={transformedData} style={{ fontSize: "12px" }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          {subCategories.map((subCategory, index) => (
+            <Bar
+              key={`bar-${subCategory}-${index}`}
+              dataKey={`value_${subCategory.toLowerCase()}`}
+              fill={colors[index % colors.length]}
+              label={{ position: "top" }}
+            />
+          ))}
+          <Legend
+            iconType="square"
+            align="right"
+            verticalAlign="middle"
+            layout="vertical"
+          />
+        </BarChart>
+      </ResponsiveContainer>
+
+      
+    </div>
+    <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          border: "2px solid #ccc",
+          padding: "5px",
+          borderRadius: "20px",
+          marginTop: "30px",
+        }}
+      >
+        <h1 className="heading">
+          All Vulnerabilities: <span className="total">{totalC}</span>
+        </h1>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          {datanumber.map((category, index) => (
+            <div
+              key={`legend-${index}`}
+              style={{
+                margin: "10px",
+                marginLeft: "10px",
+                flexBasis: "40%",
+                border: "1px solid #ccc",
+                padding: "10px",
+              }}
+            >
+              <Button
+                style={{ marginRight: "10px" }}
+                onClick={() => toggleCategory(category.name)}
+              >
+                {category.name}
+              </Button>
+              <div>
+                {category.c.map((subCategory, subIndex) => (
+                  <div
+                    key={`legend-sub-${subIndex}`}
+                    style={{ marginRight: "20px" }}
+                  >
+                    {subCategory.c !== 0 && (
+                      <span
+                        style={{ color: colors[subIndex % colors.length] }}
+                      >
+                        <br />
+                        {subCategory.name} ({subCategory.c})<br />
+                        {openCategory[category.name] && (
+                          <>
+                            {subCategory.url.map((url, urlIndex) => (
+                              <Link
+                                key={`link-${urlIndex}`}
+                                style={{
+                                  color: colors[subIndex % colors.length],
+                                }}
+                                to={`/myproject/${project_name_n}/${project_name_id}/tab4`}
+                              >
+                                {urlIndex + 1}. {decodeURIComponent(url[1])}{" "}
+                                <br />
+                              </Link>
+                            ))}
+                          </>
+                        )}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    )}
   </div>
-</ResponsiveContainer>
-<div style={{ flex: 1, marginLeft: '900px', marginTop: '-360px', borderRadius: '10px', width: '500px' }}>
-  <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '10px 10px 0 0', padding: '5px 10px', fontSize: '16px' }}> Scan All URL :<h1 style={{ fontSize: '16px', color:"#1b317e"}}>{urlsAll}</h1> </h2>
-  <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>All Vulnerabilities:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {totalC}</h1></h2>
-  <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Start Time: <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{start}</h1></h2>
-  <h2 style={{ textAlign: 'left', border: "1px solid #ccc", padding: '5px 10px', fontSize: '16px' }}>Finish Time:{start!==end&&(
-       <h1 style={{ fontSize: '16px', color:"#1b317e"}}>{end}</h1>
-    )}</h2>
-      <h2 style={{ textAlign: 'left', border: "1px solid #ccc", borderRadius: '0 0 10px 10px', padding: '5px 10px', fontSize: '16px' }}>Total Time:<h1 style={{ fontSize: '16px', color:"#1b317e"}}> {time}</h1></h2>
-</div>
-<div style={{ width: '100%', height: '400px', position: 'relative',marginTop: '600px' }}>
-<ResponsiveContainer width={1470} height={400}>
-    <BarChart data={transformedData} style={{ fontSize: "12px" }}>
-  <CartesianGrid strokeDasharray="3 3" />
-  <XAxis dataKey="name" />
-  <YAxis />
-  <Tooltip />
-  {subCategories.map((subCategory, index) => (
-    <Bar
-      key={`bar-${subCategory}-${index}`}
-      dataKey={`value_${subCategory.toLowerCase()}`}
-      fill={colors[index % colors.length]}
-      label={{ position: "top" }}
-    />
-  ))}
-  <Legend
-    iconType="square"
-    align="right"
-    verticalAlign="middle"
-    layout="vertical"
-  />
-</BarChart>
-
-    </ResponsiveContainer>
-
-
-<div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", border: "2px solid #ccc", padding: "5px", borderRadius: "20px", marginTop: "30px"}}>
-<h1 className="heading">All Vulnerabilities: <span className="total">{totalC}</span></h1>
-<div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
-  {datanumber.map((category, index) => (
-    <div key={`legend-${index}`} style={{ margin: "10px", marginLeft: "10px", flexBasis: "40%", border: "1px solid #ccc", padding: "10px" }}>
-      <Button style={{ marginRight: "10px" }} onClick={() => toggleCategory(category.name)}>{category.name}</Button>
-      <div>
-        {category.c.map((subCategory, subIndex) => (
-          <div key={`legend-sub-${subIndex}`} style={{ marginRight: "20px" }}>
-            {subCategory.c !== 0 && (
-              <span style={{ color: colors[subIndex % colors.length] }}>
-                <br/>{subCategory.name} ({subCategory.c})<br/>
-                {openCategory[category.name] && (
-                  <>
-                 {subCategory.url.map((url, urlIndex) => (
-<Link key={`link-${urlIndex}`} style={{ color: colors[subIndex % colors.length] }} to={`/myproject/${project_name_n}/${project_name_id}/tab4`}>
-  {urlIndex + 1}. {decodeURIComponent(url[1])} <br/>
-</Link>
-))}
-
-                  </>
-                )}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  ))}
-</div>
-</div>
-</div>
-  
-
-
-</div>
 );
-
-                      }
+};
 
 
 export default EditDashboard;

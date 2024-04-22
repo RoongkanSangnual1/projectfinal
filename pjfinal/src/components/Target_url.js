@@ -80,7 +80,7 @@ const Target_url = () => {
         <div>
             <Navbar />
             <div className='Applayout'>
-            
+            <div className="spaceUpCreate" />
             <div className="container2">
                 <Link to='/home' className="exit"><CloseOutlined style={{color:"red"}} /></Link>
                 <h2>Create Project</h2>
@@ -125,6 +125,7 @@ const Target_url = () => {
                     </div>
                 )}
             </div>
+            <div className="spaceUpCreate" />
             </div>
 
         </div>

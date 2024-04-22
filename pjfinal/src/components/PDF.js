@@ -8,11 +8,13 @@ import { fontBold } from "./THSarabunNew_Bold-bold"
 const PDF = (props) => {
   const token = localStorage.getItem('token');
   const name_id = props.id;
-  console.log(props)
+  console.log("props",props)
   // console.log("newResData:", responsedata2);
   // console.log("oldResData:", responsedata);
   const data = props.responsedata.filter(item => Object.values(item)[0]?.length !== 0);
   console.log("DATAAAA", data);
+  const owasp = props.owasp
+  console.log(owasp)
   let datalength = data.length;
   
 
@@ -48,14 +50,20 @@ const PDF = (props) => {
     return currentY;
   }
 
-  data.forEach((item, index) => {
-    const key = Object.keys(item)[0];
-    const severity = getSeverityByKey(key);
-    console.log("key", key);
-    console.log("severity", severity);
-    body2.push([`${index + 1}`, key, severity, ...Object.values(item)[0]]);
-    }
-    );
+  // data.forEach((item, index) => {
+  //   const key = Object.keys(item)[0];
+  //   const severity = getSeverityByKey(key);
+  //   console.log("key", key);
+  //   console.log("severity", severity);
+  //   body2.push([`${index + 1}`, key, severity, ...Object.values(item)[0]]);
+  //   }
+  //   );
+
+    owasp.forEach((item, index) => {
+     
+      body2.push([`${index + 1}`,...item]);
+      }
+      );
   // owaspfounddata.forEach((item, index) => {
   //   const key = item[0];
   //   const severity = getSeverityByKey(key); 

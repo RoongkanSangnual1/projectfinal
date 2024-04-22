@@ -4,7 +4,7 @@
     z-index: 1;
 }
 
-.spaceUpCreate,spaceUpEdit{
+.spaceUpCreate,.spaceUpEdit{
     width: auto;
     height: 150px;
 }
@@ -18,7 +18,7 @@
     height: 600px;
     margin: auto; 
     padding: 20px;
-    
+    background-color: #fff;
     border-radius: 20px;
     box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
 

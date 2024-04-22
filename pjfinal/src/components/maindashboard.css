@@ -4,7 +4,7 @@
   text-align:left;
   width:1000px;
   height: max-content;
-  margin-top: 150px;
+  
   
   
 }
@@ -131,4 +131,9 @@ line-break: anywhere;
   color: white;
   justify-content: center; /* Horizontally center the content */
   align-items: center; /* Vertically center the content */
+}
+
+.urltable{
+  width: 1320px;
+  margin-top: 10px;
 }

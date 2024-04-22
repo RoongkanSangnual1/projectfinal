@@ -11,7 +11,10 @@
 .Applayout2 {
   display: flex;
 }
-
+.spaceUpAdmin{
+  height: 150px;
+  background-color: #efefef;
+}
 .select-container {
   margin-top: 20px;
   width: 500px;
@@ -20,7 +23,9 @@
 
 .payload {
   padding: 20px;
-  width: 1400px;
+  width: 100%;
+  min-height: 500px;
+  height: max-content;
   margin-top: 100px;
   border: 1px solid #ddd;
   border-radius: 5px;

@@ -20,22 +20,22 @@ const Router = () =>{
         <BrowserRouter>
         <Routes>
             <Route></Route>
-            <Route path="/" element={<Startpage/>}></Route>
-            <Route path="/register" element={<Register/>}></Route>
-            <Route path="/home" element={<App/>}></Route>
-            <Route path="/login" element={<Login/>}></Route>
-            <Route path="/Dashboard" element={<DashboardAll/>}></Route>
-            <Route path="/OTP" element={<OTPInput />} />
-            <Route path="/create" element={<Target_url/>}></Route>
-            <Route path="/Admin" element={<ProjectDashAdmin/>}></Route>
+            <Route exact path="/" element={<Startpage/>}></Route>
+            <Route exact path="/register" element={<Register/>}></Route>
+            <Route exact path="/home" element={<App/>}></Route>
+            <Route exact path="/login" element={<Login/>}></Route>
+            <Route exact path="/Dashboard" element={<DashboardAll/>}></Route>
+            <Route exact path="/OTP" element={<OTPInput />} />
+            <Route exact path="/create" element={<Target_url/>}></Route>
+            <Route exact path="/Admin" element={<ProjectDashAdmin/>}></Route>
             {/* <Route path="/:project_name" element={<Onedata/>}></Route> */}
-            <Route path="/myproject/:project_name/:project_name_id" element={<ProjectDash/>}></Route>
-            <Route path="/myproject/:project_name/:project_name_id/tab4" element={<ProjectDash/>}></Route>
+            <Route exact path="/myproject/:project_name/:project_name_id" element={<ProjectDash/>}></Route>
+            <Route exact path="/myproject/:project_name/:project_name_id/tab4" element={<ProjectDash/>}></Route>
 
-            <Route path="/myproject/edit/:project_name/:project_name_id" element={<Edithome/>}></Route>
+            <Route exact path="/myproject/edit/:project_name/:project_name_id" element={<Edithome/>}></Route>
             {/* <Route path="/edit-project/" element={<EditProject/>}></Route> */}
-             <Route path="/edit-project/" element={<EditPrjectDash/>}></Route>
-            <Route path="/404" element={<Notfound />}/>
+             <Route exact path="/edit-project/" element={<EditPrjectDash/>}></Route>
+            <Route path="*" element={<Notfound />}/>
             
             
 

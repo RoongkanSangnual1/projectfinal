@@ -138,13 +138,13 @@ const URLlist = (props) => {
     Swal.fire({
 
 
-      title: "Are you sure?",
+      title: "Confirm Delete?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Delete",
     }).then((result) => {
 
       if (result.isConfirmed) {
@@ -348,7 +348,7 @@ const URLlist = (props) => {
           />
         </Form>
       </Modal>
-      <Table dataSource={projectOneData} columns={columns} />
+      <Table dataSource={projectOneData} columns={columns} className="urltable" />
     </div>
   );
 };

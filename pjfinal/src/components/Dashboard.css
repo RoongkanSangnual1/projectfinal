@@ -28,6 +28,10 @@
   width: 1200px;
   overflow: auto;
 }
+.collapse-content2 {
+  width: 1200px;
+  overflow: auto;
+}
  .Sum{
     background: #fff;
     padding: 10px;
@@ -36,7 +40,6 @@
     box-shadow: 0 0 10px rgb(0, 0, 0, 0.07);
     margin:auto;
   }
-  
   
 
   .highlight-container {
@@ -58,8 +61,8 @@
     
   }
   .heading {
-    margin: 0;
-    margin-left: 580px;
+    display: flex;
+    margin: auto;
     font-size: 24px;
     color: #333; 
     border: 2px solid #ccc;

@@ -80,7 +80,7 @@ const ProjectDashAdmin = () => {
     try {
       console.log(`4${Owasp}`);
       setPay(Owasp)
-      const response = await axios.post(`http://127.0.0.1:5000/payload4`, { Owasp }, {
+      const response = await axios.post(`http://localhost:5000/payload4`, { Owasp }, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Access-Control-Allow-Origin': '*',
@@ -131,7 +131,7 @@ const ProjectDashAdmin = () => {
   
     if (result.isConfirmed) {     
       try {
-        const response = await axios.post(`http://127.0.0.1:5000/payload5`, { payloadone, Owasp }, {
+        const response = await axios.post(`http://localhost:5000/payload5`, { payloadone, Owasp }, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Access-Control-Allow-Origin': '*',
@@ -181,19 +181,19 @@ const handleKeyInput = (event) => {
 
 const handleSubmit = async (event) => {
   const result = await Swal.fire({
-    title: 'Are you sure?',
+    title: 'Confirm Delete?',
     text: "You won't be able to revert this!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!',
+    confirmButtonText: 'Delete',
   });
 
   if (result.isConfirmed) {
     if (selectedFile && inputKey) {
       try {
-        const response = await axios.post(`http://127.0.0.1:5000/payload3`, { selectedFile, Owasp, inputKey }, {
+        const response = await axios.post(`http://localhost:5000/payload3`, { selectedFile, Owasp, inputKey }, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Access-Control-Allow-Origin': '*',
@@ -230,8 +230,9 @@ const handleSubmit = async (event) => {
       {role === 'Admin' && (
         <div className="App">
           <Navbar />
+          <div className='spaceUpAdmin' />
           <div className="Applayout2">
-            <Sidemenu className="Sidemenu" />
+          
             <div className="payload">
   <h3>Show Payload</h3>
   <Form onFinish={ShowFormsummit} labelCol={{ span: 10 }}>

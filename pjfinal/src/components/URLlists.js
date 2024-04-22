@@ -400,7 +400,7 @@ const URLlist = (props) => {
           />
         </Form>
       </Modal>
-      <Table dataSource={projectOneData} columns={columns} />
+      <Table dataSource={projectOneData} columns={columns} className="urltable" />
     </div>
   );
 };

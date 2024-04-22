@@ -1,6 +1,7 @@
 .spaceUpProject{
     width: auto;
     height: 150px;
+    background-color: #efefef;
 }
 .ProjectDash-Head{
     display: flex;

@@ -110,6 +110,7 @@ const Edithome = () => {
                     </Form>
                 </div>
             </div>
+            <div className="spaceUpEdit" />
           </div>
           );
 }
